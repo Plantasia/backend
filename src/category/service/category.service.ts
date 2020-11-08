@@ -25,5 +25,4 @@ export class CategoryService {
        await this.categoryRepository.delete(id);
   }
 
-  
 }
