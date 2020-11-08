@@ -8,7 +8,7 @@ export class CategoryService {
 
   constructor(
    @InjectRepository(Category)
-   private categoryRepository : Repository<Category>
+   private readonly categoryRepository : Repository<Category>
   ){};
 
 
@@ -23,6 +23,11 @@ export class CategoryService {
 
     async remove(id: string): Promise<void>{
        await this.categoryRepository.delete(id);
+  }
+
+  async create(id:number) :Promise<Category>{
+    const  cat = new Category
+    return this.categoryRepository.save(cat);
   }
 
 }

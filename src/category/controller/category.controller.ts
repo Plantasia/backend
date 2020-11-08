@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Post } from '@nestjs/common';
 import { CategoryService } from '../service/category.service';
 
 @Controller()
@@ -7,6 +7,11 @@ export class CategoryController {
 
   @Get()
   getHello(): string {
-    return null;
+   return ('Hello World');
+  }
+  
+  @Post()
+  create():void{
+    return null
   }
 }
