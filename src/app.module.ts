@@ -8,10 +8,11 @@ import { TopicsController } from './topics/controllers/topics.controller';
 import {CategoryService } from './category/service/category.service';
 
 import { UserController } from './user/user.controller';
+import { CommonModule } from './common/common.module';
 
 @Module({
   imports: [TypeOrmModule.forRoot()
-  ,CategoryModule],
+  ,CategoryModule, CommonModule],
   controllers: [TopicsController, UserController],
   providers: [CategoryService],
 })
