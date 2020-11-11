@@ -1,27 +1,31 @@
-import { Get, Injectable, Param } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { CreateCategoryDTO } from '../DTO/create-category.dto';
-import { Category } from '../entities/category.entity';
+import {Injectable, Inject} from '@nestjs/common';
+import {CreateCategoryDTO} from '../DTO/create-category.dto'
+import { Category } from '../model/category.model';
 import { uuid } from 'uuidv4';
+import { userInfo } from 'os';
 
 @Injectable()
 export class CategoryService {
   constructor(
-    @InjectRepository(Category)
-    private readonly categoryRepository: Repository<Category>,
+    @Inject('CATEGORIES_REPOSITORY')
+    private categoryRepository: typeof Category,
   ) {}
 
   findAll(): Promise<Category[]> {
-    return this.categoryRepository.find();
+    return this.categoryRepository.findAll();
   }
 
   findOne(id: string): Promise<Category> {
-    return this.categoryRepository.findOne(id);
+    return this.categoryRepository.findOne({
+      where :{
+        id,
+      },
+    });
   }
 
   async remove(id: string): Promise<void> {
-    await this.categoryRepository.delete(id);
+    const  category =  await this.findOne(id);
+    await  category.destroy();
   }
 
   async create(createCategoryDTO: CreateCategoryDTO): Promise<Category> {
@@ -31,7 +35,7 @@ export class CategoryService {
     category.description = createCategoryDTO.description;
     category.imageStorage = createCategoryDTO.imageStorage;
 
-    return this.categoryRepository.save(category);
+    return category.save();
   }
 
   async update(

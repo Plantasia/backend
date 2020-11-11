@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { CategoryModule } from './category/module/category.module';
 import { Connection } from 'typeorm';
 import { TopicsController } from './topics/controllers/topics.controller';
 import { CategoryService } from './category/service/category.service';
 import { UserController } from './user/user.controller';
 import { ConfigModule } from '@nestjs/config';
+import {DatabaseModule} from './database/database-module/database-module.module';
 @Module({
-  imports: [ConfigModule.forRoot(), TypeOrmModule.forRoot(), CategoryModule],
+  imports: [ConfigModule.forRoot(),DatabaseModule, CategoryModule,],
   controllers: [TopicsController, UserController],
   providers: [CategoryService],
 })
