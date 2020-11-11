@@ -1,20 +1,21 @@
 import { Module } from '@nestjs/common';
-import {TypeOrmModule} from '@nestjs/typeorm';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { CategoryModule } from './category/module/category.module';
-import {CategoryController} from './category/controller/category.controller';
-import { Connection} from 'typeorm';
-import {Category} from './category/entities/category.entity';
+import { Connection } from 'typeorm';
 import { TopicsController } from './topics/controllers/topics.controller';
-import {CategoryService } from './category/service/category.service';
-
+import { CategoryService } from './category/service/category.service';
 import { UserController } from './user/user.controller';
-
+import { ConfigModule } from '@nestjs/config';
+import DatabaseConfig from '../ormconfig';
 @Module({
-  imports: [TypeOrmModule.forRoot()
-  ,CategoryModule],
+  imports: [
+    ConfigModule.forRoot(),
+    TypeOrmModule.forRoot(DatabaseConfig),
+    CategoryModule,
+  ],
   controllers: [TopicsController, UserController],
   providers: [CategoryService],
 })
 export class AppModule {
-  constructor( private connection: Connection){}
+  constructor(private connection: Connection) {}
 }
