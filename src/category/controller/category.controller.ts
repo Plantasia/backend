@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Post, Render } from '@nestjs/common';
 import { CategoryService } from '../service/category.service';
 import { CreateCategoryDTO} from '../DTO/create-category.dto'
-import { Category } from '../entities/category.entity';
+import { Category } from '../model/category.model';
 import {uuid} from 'uuidv4';
 //import {MappingRegistryService} from '../../common/mapping-registry-service';
 
