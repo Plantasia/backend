@@ -7,4 +7,4 @@ module.exports = {
   synchronize: process.env.TYPEORM_SYNCHRONIZE,
   username: process.env.USERNAME,
   entities: ["dist/**/*.entity{.ts,.js}"],
-} 
+}

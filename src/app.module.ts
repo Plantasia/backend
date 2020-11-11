@@ -6,11 +6,10 @@ import { TopicsController } from './topics/controllers/topics.controller';
 import { CategoryService } from './category/service/category.service';
 import { UserController } from './user/user.controller';
 import { ConfigModule } from '@nestjs/config';
-import DatabaseConfig from '../ormconfig';
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    TypeOrmModule.forRoot(DatabaseConfig),
+    TypeOrmModule.forRoot(),
     CategoryModule,
   ],
   controllers: [TopicsController, UserController],
