@@ -7,11 +7,7 @@ import { CategoryService } from './category/service/category.service';
 import { UserController } from './user/user.controller';
 import { ConfigModule } from '@nestjs/config';
 @Module({
-  imports: [
-    ConfigModule.forRoot(),
-    TypeOrmModule.forRoot(),
-    CategoryModule,
-  ],
+  imports: [ConfigModule.forRoot(), TypeOrmModule.forRoot(), CategoryModule],
   controllers: [TopicsController, UserController],
   providers: [CategoryService],
 })

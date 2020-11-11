@@ -7,46 +7,43 @@ import { uuid } from 'uuidv4';
 
 @Injectable()
 export class CategoryService {
-
   constructor(
-   @InjectRepository(Category)
-   private readonly categoryRepository : Repository<Category>
-  ){};
+    @InjectRepository(Category)
+    private readonly categoryRepository: Repository<Category>,
+  ) {}
 
-
-    findAll(): Promise<Category[]>{
-      return this.categoryRepository.find();
-    }
-
-
-    findOne(id:string): Promise<Category>{
-      return this.categoryRepository.findOne(id)
-    }
-
-    async remove(id: string): Promise<void>{
-       await this.categoryRepository.delete(id);
+  findAll(): Promise<Category[]> {
+    return this.categoryRepository.find();
   }
 
-  async create(createCategoryDTO:CreateCategoryDTO) :Promise<Category>{
-    const  category = new Category;
+  findOne(id: string): Promise<Category> {
+    return this.categoryRepository.findOne(id);
+  }
 
-    category.author =  createCategoryDTO.author;
-    category.name= createCategoryDTO.name;
+  async remove(id: string): Promise<void> {
+    await this.categoryRepository.delete(id);
+  }
+
+  async create(createCategoryDTO: CreateCategoryDTO): Promise<Category> {
+    const category = new Category();
+
+    category.author = createCategoryDTO.author;
+    category.name = createCategoryDTO.name;
     category.description = createCategoryDTO.description;
     category.imageStorage = createCategoryDTO.imageStorage;
 
-
     return this.categoryRepository.save(category);
-  } 
+  }
 
-    async update (id: string,createCategoryDTO:CreateCategoryDTO): Promise<Category>{
-      return null
+  async update(
+    id: string,
+    createCategoryDTO: CreateCategoryDTO,
+  ): Promise<Category> {
+    return null;
 
-      /*
+    /*
       return this.categoryRepository.update(id, 
 
         )*/
-
   }
-
 }
