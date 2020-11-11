@@ -27,7 +27,6 @@ export class CategoryService {
   async create(createCategoryDTO: CreateCategoryDTO): Promise<Category> {
     const category = new Category();
 
-    category.author = createCategoryDTO.author;
     category.name = createCategoryDTO.name;
     category.description = createCategoryDTO.description;
     category.imageStorage = createCategoryDTO.imageStorage;

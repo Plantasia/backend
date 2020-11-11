@@ -6,5 +6,13 @@ module.exports = {
   password: process.env.DATABASE_PASSWORD,
   synchronize: process.env.TYPEORM_SYNCHRONIZE,
   username: process.env.USERNAME,
-  entities: ["dist/**/*.entity{.ts,.js}"],
+  entities: ["dist/**/**/*.entity{.ts,.js}"],
+  migrations: ["dist/src/migrations/*.js"],
+  migrationsTableName: "plantasia_migrations",
+  migrationsRun: true,
+  cli: {
+    "migrationsDir":  "src/migrations"
+  },
+  logging: true,
+
 } 

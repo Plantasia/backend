@@ -12,9 +12,6 @@ export class Category {
   description: string;
 
   @Column()
-  author: string;
-
-  @Column()
   imageStorage: string;
 
   @Column({ default: true })
