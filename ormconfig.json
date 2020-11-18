@@ -9,7 +9,7 @@
    "logging": false,
    "entities": ["dist/**/*.entity{ .ts,.js}"],
    "migrations": [
-      "dist/migrations/*{ .ts, .js }"
+      "build/migration/*.js"
    ],
    "cli": {
       "entitiesDir": "dist/entity",
