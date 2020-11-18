@@ -1,26 +1,26 @@
 import {Injectable, Inject} from '@nestjs/common';
-import {Sequelize} from 'sequelize-typescript';
-import {InjectModel} from '@nestjs/sequelize'
+import { InjectRepository } from '@nestjs/typeorm';
 
-import {CreateCategoryDTO} from '../DTO/create-category.dto'
-import { Category } from '../model/category.model';
+import {CreateCategoryDTO} from './create-category.dto';
+import { Category } from './category.entity';
 import { uuid } from 'uuidv4';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class CategoryService {
   constructor(
     //@Inject('CATEGORIES_REPOSITORY')
-    @InjectModel(Category)
-    private categoryModel: typeof Category,
-    private readonly sequelize: Sequelize,
+    @InjectRepository(Category)
+    private categoryRepository: Repository<Category>,
+
   ) {}
 
   async findAll(): Promise<Category[]> {
-    return this.categoryModel.findAll();
+    return this.categoryRepository.find();
   }
 
   async findOne(id: string): Promise<Category> {
-    return this.categoryModel.findOne({
+    return this.categoryRepository.findOne({
       where :{
         id,
       },
@@ -28,23 +28,17 @@ export class CategoryService {
   }
 
   async remove(id: string): Promise<void> {
-    const  category =  await this.findOne(id);
-    await  category.destroy();
+    await this.categoryRepository.delete(id);
   }
 
   async create(createCategoryDTO: CreateCategoryDTO): Promise<Category> {
     const category = new Category();
 
     category.name = createCategoryDTO.name;
+    category.author = createCategoryDTO.author;
     category.description = createCategoryDTO.description;
     category.imageStorage = createCategoryDTO.imageStorage;
-    /** NOTE: The id 'll be generated but boundary(view)
-     *  only 'll read this,
-     *  Due to this, createCategoryDTO
-     *  doesn't need to be having this stored
-     */
-    category.id = uuid();
-    return category.save();
+    return this.categoryRepository.save(category);
   }
 
   async update(
@@ -54,7 +48,7 @@ export class CategoryService {
     return null;
 
     /*
-      return this.categoryModel.update(id, 
+      return this.categoryRepository.update(id, 
 
         )*/
   }

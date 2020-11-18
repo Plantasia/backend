@@ -1,27 +1,15 @@
 import { Module } from '@nestjs/common';
-import { CategoryModule } from './category/module/category.module';
-import { SequelizeModule } from '@nestjs/sequelize';
-import { TopicsController } from './topics/controllers/topics.controller';
-import { CategoryService } from './category/service/category.service';
-import { UserController } from './user/user.controller';
+import { CategoryModule } from './category/category.module';
 import { ConfigModule } from '@nestjs/config';
-import {DatabaseModule} from './database/database-module/database-module.module';
+import {TypeOrmModule } from '@nestjs/typeorm';
 @Module({
   imports: [//ConfigModule.forRoot(),
-            
 
-      SequelizeModule.forRoot({
-      dialect: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'root',
-      password: 'porangaba2305',
-      database: 'plantasia',
-      autoLoadModels: true,
-      synchronize: true,
+
+    TypeOrmModule.forRoot({
     }),CategoryModule],
 
 })
 export class AppModule {
-  constructor() {}
+  constructor() {};
 }
