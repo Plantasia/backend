@@ -7,12 +7,12 @@
    "database": "plantasia",
    "synchronize": true,
    "logging": false,
-   "entities": ["dist/**/*.entity{ .ts,.js}"],
+   "entities": ["build/**/*.entity{ .ts,.js}"],
    "migrations": [
       "build/migration/*.js"
    ],
    "cli": {
-      "entitiesDir": "dist/entity",
+      "entitiesDir": "build/entity",
       "migrationsDir": "src/migration",
       "subscribersDir": "src/subscriber"
    }
