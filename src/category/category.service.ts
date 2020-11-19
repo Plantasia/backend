@@ -38,18 +38,15 @@ export class CategoryService {
     category.author = createCategoryDTO.author;
     category.description = createCategoryDTO.description;
     category.imageStorage = createCategoryDTO.imageStorage;
-    return this.categoryRepository.save(category);
+    const cat = await this.categoryRepository.create(category)
+
+    return this.categoryRepository.save(cat);
   }
 
-  async update(
-    id: string,
-    createCategoryDTO: CreateCategoryDTO,
-  ): Promise<Category> {
-    return null;
+  async update(id: string, data: CreateCategoryDTO ):
+  Promise<Category> {
 
-    /*
-      return this.categoryRepository.update(id, 
-
-        )*/
+      await this.categoryRepository.update(id, data);
+      return this.categoryRepository.findOne(id);
   }
 }
