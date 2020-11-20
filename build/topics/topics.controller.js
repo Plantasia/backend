@@ -17,12 +17,14 @@ const common_1 = require("@nestjs/common");
 const topics_service_1 = require("./topics.service");
 const create_topic_dto_1 = require("./create-topic.dto");
 let TopicsController = class TopicsController {
-    constructor(topicsService, readonly) {
+    constructor(topicsService) {
         this.topicsService = topicsService;
-        this.readonly = readonly;
     }
     findAll() {
         return this.topicsService.findAll();
+    }
+    update(id, createTopicDTO) {
+        return this.topicsService.update(id, createTopicDTO);
     }
     create(category_id, createTopicDTO) {
         /** This assures us integrity references into DB */
@@ -44,10 +46,17 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], TopicsController.prototype, "findAll", null);
 __decorate([
+    common_1.Put(':id'),
+    __param(0, common_1.Param('id')), __param(1, common_1.Body()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, create_topic_dto_1.CreateTopicDTO]),
+    __metadata("design:returntype", Promise)
+], TopicsController.prototype, "update", null);
+__decorate([
     common_1.Post(':id'),
     __param(0, common_1.Param('id')), __param(1, common_1.Body()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, create_topic_dto_1.createTopicDTO]),
+    __metadata("design:paramtypes", [String, create_topic_dto_1.CreateTopicDTO]),
     __metadata("design:returntype", Promise)
 ], TopicsController.prototype, "create", null);
 __decorate([
@@ -66,7 +75,7 @@ __decorate([
 ], TopicsController.prototype, "delete", null);
 TopicsController = __decorate([
     common_1.Controller('topics'),
-    __metadata("design:paramtypes", [topics_service_1.TopicsService, Object])
+    __metadata("design:paramtypes", [topics_service_1.TopicsService])
 ], TopicsController);
 exports.TopicsController = TopicsController;
 //# sourceMappingURL=topics.controller.js.map

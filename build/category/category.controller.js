@@ -21,10 +21,6 @@ let CategoryController = class CategoryController {
     constructor(categoryService) {
         this.categoryService = categoryService;
     }
-    /*@Get()
-    getHello(): string {
-     return ('Hello World');
-    }*/
     create(createCategoryDTO) {
         return this.categoryService.create(createCategoryDTO);
     }
@@ -36,6 +32,9 @@ let CategoryController = class CategoryController {
     }
     remove(id) {
         return this.categoryService.remove(id);
+    }
+    update(id, createCategoryDTO) {
+        return this.categoryService.update(id, createCategoryDTO);
     }
 };
 __decorate([
@@ -65,6 +64,13 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], CategoryController.prototype, "remove", null);
+__decorate([
+    common_1.Put(':id'),
+    __param(0, common_1.Param('id')), __param(1, common_1.Body()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, create_category_dto_1.CreateCategoryDTO]),
+    __metadata("design:returntype", Promise)
+], CategoryController.prototype, "update", null);
 CategoryController = __decorate([
     common_1.Controller('categories'),
     __metadata("design:paramtypes", [category_service_1.CategoryService])

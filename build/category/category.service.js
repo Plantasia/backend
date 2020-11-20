@@ -34,6 +34,7 @@ let CategoryService = class CategoryService {
         });
     }
     async remove(id) {
+        console.log('deleted!!');
         await this.categoryRepository.delete(id);
     }
     async create(createCategoryDTO) {

@@ -28,15 +28,15 @@ __decorate([
     __metadata("design:type", String)
 ], Topic.prototype, "textBody", void 0);
 __decorate([
-    typeorm_1.Column(),
+    typeorm_1.Column({ default: '--------' }),
     __metadata("design:type", String)
 ], Topic.prototype, "imageStorage", void 0);
 __decorate([
-    typeorm_1.Column(),
-    __metadata("design:type", String)
+    typeorm_1.Column({ default: 0 }),
+    __metadata("design:type", Number)
 ], Topic.prototype, "reaction", void 0);
 __decorate([
-    typeorm_1.Column(),
+    typeorm_1.Column({ default: true }),
     __metadata("design:type", Boolean)
 ], Topic.prototype, "isActive", void 0);
 __decorate([
@@ -56,7 +56,7 @@ __decorate([
     __metadata("design:type", user_entity_1.default)
 ], Topic.prototype, "user", void 0);
 Topic = __decorate([
-    typeorm_1.Entity()
+    typeorm_1.Entity('topics')
 ], Topic);
 exports.Topic = Topic;
 //# sourceMappingURL=topic.entity.js.map

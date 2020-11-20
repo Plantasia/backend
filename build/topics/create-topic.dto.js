@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createTopicDTO = void 0;
-class createTopicDTO {
+exports.CreateTopicDTO = void 0;
+class CreateTopicDTO {
 }
-exports.createTopicDTO = createTopicDTO;
+exports.CreateTopicDTO = CreateTopicDTO;
 //# sourceMappingURL=create-topic.dto.js.map

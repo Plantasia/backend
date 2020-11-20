@@ -13,6 +13,7 @@ exports.AppModule = void 0;
 const common_1 = require("@nestjs/common");
 const category_module_1 = require("./category/category.module");
 const typeorm_1 = require("@nestjs/typeorm");
+const topic_module_1 = require("./topics/topic.module");
 let AppModule = class AppModule {
     constructor() { }
     ;
@@ -20,7 +21,7 @@ let AppModule = class AppModule {
 AppModule = __decorate([
     common_1.Module({
         imports: [
-            typeorm_1.TypeOrmModule.forRoot({}), category_module_1.CategoryModule
+            typeorm_1.TypeOrmModule.forRoot({}), category_module_1.CategoryModule, topic_module_1.TopicModule
         ],
     }),
     __metadata("design:paramtypes", [])

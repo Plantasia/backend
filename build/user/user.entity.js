@@ -38,11 +38,11 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "password", void 0);
 __decorate([
-    typeorm_1.Column(),
+    typeorm_1.Column({ default: true }),
     __metadata("design:type", Boolean)
 ], User.prototype, "isActive", void 0);
 __decorate([
-    typeorm_1.Column(),
+    typeorm_1.Column({ default: 0 }),
     __metadata("design:type", Number)
 ], User.prototype, "quarantineNum", void 0);
 __decorate([
@@ -58,7 +58,7 @@ __decorate([
     __metadata("design:type", Array)
 ], User.prototype, "topic", void 0);
 User = __decorate([
-    typeorm_1.Entity()
+    typeorm_1.Entity('users')
 ], User);
 exports.default = User;
 //# sourceMappingURL=user.entity.js.map

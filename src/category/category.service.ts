@@ -50,8 +50,4 @@ export class CategoryService {
       await this.categoryRepository.update(id, data);
       return this.categoryRepository.findOne(id);
   }
-<<<<<<< HEAD
-
-=======
->>>>>>> feature/v1.3Marcos
 }

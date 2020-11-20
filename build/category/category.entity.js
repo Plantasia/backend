@@ -31,7 +31,7 @@ __decorate([
     __metadata("design:type", String)
 ], Category.prototype, "description", void 0);
 __decorate([
-    typeorm_1.Column(),
+    typeorm_1.Column({ default: '---------' }),
     __metadata("design:type", String)
 ], Category.prototype, "imageStorage", void 0);
 __decorate([
@@ -51,7 +51,7 @@ __decorate([
     __metadata("design:type", Array)
 ], Category.prototype, "topics", void 0);
 Category = __decorate([
-    typeorm_1.Entity()
+    typeorm_1.Entity('categories')
 ], Category);
 exports.Category = Category;
 //# sourceMappingURL=category.entity.js.map
