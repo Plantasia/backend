@@ -2,7 +2,7 @@ import {Entity,Column, PrimaryGeneratedColumn, ManyToOne, OneToOne, CreateDateCo
 import { Category } from '../category/category.entity';
 import User from '../user/user.entity';
 
-@Entity()
+@Entity('topics')
 export  class Topic{
 
 @PrimaryGeneratedColumn('uuid')

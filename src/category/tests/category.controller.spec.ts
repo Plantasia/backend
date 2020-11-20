@@ -14,9 +14,5 @@ describe('AppController', () => {
     appController = app.get<CategoryController>(CategoryController);
   });
 
-  describe('root', () => {
-    it('should return "Hello World!"', () => {
-      expect(CategoryController.getHello()).toBe('Hello World!');
-    });
   });
 });

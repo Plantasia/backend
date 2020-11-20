@@ -13,11 +13,6 @@ export class CategoryController {
     private readonly categoryService: CategoryService,
   ){}
 
-  @Get()
-  getHello(): string {
-   return ('Hello World');
-  }
-
   @Post()
   create( @Body() createCategoryDTO:CreateCategoryDTO):Promise<Category>{
     return this.categoryService.create(createCategoryDTO);

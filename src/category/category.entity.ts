@@ -1,7 +1,7 @@
 import {Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn} from 'typeorm';
 import { Topic } from '../topics/topic.entity';
 
-@Entity()
+@Entity('categories')
 export class Category {
 
   @PrimaryGeneratedColumn('uuid')
