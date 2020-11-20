@@ -11,6 +11,8 @@ export class createCategory1605697433254 implements MigrationInterface {
                 type:"varchar",
                 isPrimary: true,
                 generationStrategy:'uuid',
+                default:'uuid_generate_v4()',
+                isNullable:false,
             },
             {
                 name:"name",
@@ -39,7 +41,6 @@ export class createCategory1605697433254 implements MigrationInterface {
 }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
-        
         await queryRunner.dropTable('categories');
     }
 

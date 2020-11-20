@@ -33,7 +33,7 @@ export class CategoryService {
 
   async create(createCategoryDTO: CreateCategoryDTO): Promise<Category> {
     const category = new Category();
-
+    
     category.name = createCategoryDTO.name;
     category.author = createCategoryDTO.author;
     category.description = createCategoryDTO.description;

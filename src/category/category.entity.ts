@@ -1,10 +1,10 @@
-import {Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn} from 'typeorm';
+import {Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn} from 'typeorm';
 import { Topic } from '../topics/topic.entity';
 
 @Entity()
 export class Category {
 
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   id:number;
 
   @Column()
@@ -21,6 +21,12 @@ export class Category {
 
   @Column({ default: true })
   isActive: boolean;
+
+  @CreateDateColumn()
+  created_at: Date;
+
+  @CreateDateColumn()
+  updated_at: Date
 
   @OneToMany(()=>Topic, topic=>topic.category)
   topics:Topic[];

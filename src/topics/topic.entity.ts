@@ -1,14 +1,15 @@
-import {Entity,Column, PrimaryGeneratedColumn, ManyToOne} from  'typeorm'
+import {Entity,Column, PrimaryGeneratedColumn, ManyToOne, OneToOne, CreateDateColumn} from  'typeorm'
 import { Category } from '../category/category.entity';
+import User from '../user/user.entity';
 
 @Entity()
 export  class Topic{
 
-@PrimaryGeneratedColumn()
-id:number;
+@PrimaryGeneratedColumn('uuid')
+id:string;
 
 @Column()
-name: number;
+name: string;
 
 @Column()
 textBody: string;
@@ -19,6 +20,18 @@ imageStorage:string;
 @Column()
 reaction: string;
 
+@Column()
+isActive:boolean
+
 @ManyToOne(()=>Category, category=>category.topics)
 category:Category
+
+@CreateDateColumn()
+created_at: Date;
+
+@CreateDateColumn()
+updated_at:Date
+
+@ManyToOne(()=>User, user=> user.topic)
+user:User;
 }
