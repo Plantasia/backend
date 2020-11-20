@@ -33,7 +33,7 @@ export class CategoryService {
 
   async create(createCategoryDTO: CreateCategoryDTO): Promise<Category> {
     const category = new Category();
-    
+
     category.name = createCategoryDTO.name;
     category.author = createCategoryDTO.author;
     category.description = createCategoryDTO.description;
@@ -49,4 +49,5 @@ export class CategoryService {
       await this.categoryRepository.update(id, data);
       return this.categoryRepository.findOne(id);
   }
+
 }

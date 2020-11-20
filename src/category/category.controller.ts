@@ -13,10 +13,10 @@ export class CategoryController {
     private readonly categoryService: CategoryService,
   ){}
 
-  @Get()
+  /*@Get()
   getHello(): string {
    return ('Hello World');
-  }
+  }*/
 
   @Post()
   create( @Body() createCategoryDTO:CreateCategoryDTO):Promise<Category>{
