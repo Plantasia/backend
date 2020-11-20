@@ -2,15 +2,13 @@ import { NestFactory } from '@nestjs/core';
 import { resolve } from 'path';
 import { AppModule } from './app.module';
 
-async function bootstrap() {
-  const APP_DIRECTORY = resolve(__dirname, '..');
 
-  const app = await NestFactory.create(AppModule);
+  async function bootstrap() {
+    const app = await NestFactory.create(AppModule);
+    await app.listen(3000);
+    console.log(`Application is running on: ${await app.getUrl()}`);
+  }
+  bootstrap();
 
-  //app.setViewEngine('hbs');
-  //app.setBaseViewsDir(resolve(APP_DIRECTORY, 'views'));
-  //app.useStaticAssets(resolve(APP_DIRECTORY, 'public'));
 
-  await app.listen(process.env.PORT, process.env.HOST);
-}
-bootstrap();
+
