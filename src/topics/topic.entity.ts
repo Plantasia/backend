@@ -17,10 +17,10 @@ textBody: string;
 @Column()
 imageStorage:string;
 
-@Column()
-reaction: string;
+@Column({default:0})
+reaction: number
 
-@Column()
+@Column({default:true})
 isActive:boolean
 
 @ManyToOne(()=>Category, category=>category.topics)

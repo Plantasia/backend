@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { createTopicDTO } from './create-topic.dto';
+import { CreateTopicDTO } from './create-topic.dto';
 import { Topic } from './topic.entity'
 import {CategoryService } from '../category/category.service'
 
@@ -16,7 +16,7 @@ export class TopicsService {
 
   ){}
 
-  async create( createTopicDTO: createTopicDTO): Promise<Topic>{
+  async create( createTopicDTO: CreateTopicDTO): Promise<Topic>{
     const topic = new Topic;
 
     topic.name = createTopicDTO.name
@@ -25,14 +25,12 @@ export class TopicsService {
     const category_id = createTopicDTO.category_id;
     topic.category = await this.categoryService.findOne(category_id)
 
-
-
-
     /** this creates an entity instance */
     const t = await this.topicRepository.create(topic);
 
     /**now, we're  saving into DB */
     return this.topicRepository.save(t);
+     
 
   }
 

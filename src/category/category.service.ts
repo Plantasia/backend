@@ -28,6 +28,7 @@ export class CategoryService {
   }
 
   async remove(id: string): Promise<void> {
+    console.log('deleted!!')
     await this.categoryRepository.delete(id);
   }
 
