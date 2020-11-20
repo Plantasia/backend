@@ -1,8 +1,9 @@
-import { Body, Controller, Delete, Get, Param, Post, Render } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Render } from '@nestjs/common';
 import { CategoryService } from '../category/category.service';
 import { CreateCategoryDTO} from '../category/create-category.dto'
 import { Category } from '../category/category.entity';
 import {uuid} from 'uuidv4';
+import { UpdateDateColumn } from 'typeorm';
 //import {MappingRegistryService} from '../../common/mapping-registry-service';
 
 
@@ -34,5 +35,11 @@ export class CategoryController {
    remove(@Param('id') id:string): Promise<void>{
     return this.categoryService.remove(id)
    }
+
+  @Put(':id')
+  update(@Param('id') id:string, @Body() createCategoryDTO: CreateCategoryDTO ): Promise<Category>{
+    return this.categoryService.update(id,createCategoryDTO);
+
+  }
 
 }

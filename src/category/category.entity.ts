@@ -16,7 +16,7 @@ export class Category {
   @Column()
   description: string;
 
-  @Column()
+  @Column({default:'---------'})
   imageStorage: string;
 
   @Column({ default: true })

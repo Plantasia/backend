@@ -14,13 +14,13 @@ name: string;
 @Column()
 textBody: string;
 
-@Column()
+@Column({default:'--------'})
 imageStorage:string;
 
-@Column()
-reaction: string;
+@Column({default:0})
+reaction: number
 
-@Column()
+@Column({default:true})
 isActive:boolean
 
 @ManyToOne(()=>Category, category=>category.topics)

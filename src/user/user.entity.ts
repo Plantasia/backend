@@ -22,10 +22,10 @@ email: string
 @Column()
 password: string;
 
-@Column()
+@Column({default:true})
 isActive: boolean;
 
-@Column()
+@Column({default:0})
 quarantineNum: number;
 
 @CreateDateColumn()
