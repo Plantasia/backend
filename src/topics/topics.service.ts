@@ -29,8 +29,11 @@ export class TopicsService {
     const t = await this.topicRepository.create(topic);
 
     /**now, we're  saving into DB */
-    return this.topicRepository.save(t);
-     
+     this.topicRepository.save(t);
+
+     return this.topicRepository.findOne({
+       where:{}
+     })
 
   }
 

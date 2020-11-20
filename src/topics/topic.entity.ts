@@ -14,7 +14,7 @@ name: string;
 @Column()
 textBody: string;
 
-@Column()
+@Column({default:'--------'})
 imageStorage:string;
 
 @Column({default:0})
