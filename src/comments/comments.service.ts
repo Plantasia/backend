@@ -21,16 +21,32 @@ export class CommentService {
 
   ) {}
 
-  async create(createCategoryDTO: CreateCommentDTO): Promise<Comments> {
+  async findOne(id: string): Promise<Comments> {
+    return this.commentsRepository.findOne({
+      where :{
+        id,
+      },
+    });
+  }
+
+  async findAll():Promise<Comments[]>{
+    return this.commentsRepository.find();
+  }
+
+  async remove(id: string): Promise<void> {
+    await this.commentsRepository.delete(id);
+  }
+
+  async create(createcommentsDTO: CreateCommentDTO): Promise<Comments> {
     const comment = new Comments();
     const topic = new Topic;
     //const user = new User;
-    comment.text = createCategoryDTO.text;
-    comment.reaction = createCategoryDTO.reaction;
-    comment.disable = createCategoryDTO.disable;
-    comment.hasParentComment = createCategoryDTO.hasParenteComment;
-    comment.idParentComment = createCategoryDTO.idParentComment;
-    const topic_id = createCategoryDTO.topic_id;
+    comment.text = createcommentsDTO.text;
+    comment.reaction = createcommentsDTO.reaction;
+    comment.disable = createcommentsDTO.disable;
+    comment.hasParentComment = createcommentsDTO.hasParenteComment;
+    comment.idParentComment = createcommentsDTO.idParentComment;
+    const topic_id = createcommentsDTO.topic_id;
     comment.topic = await this.topicService.findOne(topic_id);
     //const user_id = createCategoryDTO.user_id;
     //comment.user = await this.userRepository.findOne(user.id);
@@ -39,6 +55,13 @@ export class CommentService {
     return this.commentsRepository.findOne({
         where:{}
       })
+  }
+
+  async update(id: string, data: CreateCommentDTO ):
+  Promise<Comments> {
+
+      await this.commentsRepository.update(id, data);
+      return this.commentsRepository.findOne(id);
   }
 
 

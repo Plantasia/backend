@@ -12,21 +12,28 @@ export class CommentController {
     private readonly commentService: CommentService,
   ){}
 
-  /*@Get()
-  getHello(): string {
-   return ('Hello World');
-  }*/
+  @Get()
+  findAll(): Promise<Comments[]>{
+    return this.commentService.findAll()
 
-  @Post()
-  create( @Body() CreateCommentDTO:CreateCommentDTO):Promise<Comments>{
-    return this.commentService.create(CreateCommentDTO);
   }
 
-  //@Get()
-  //findAll(): Promise<Comments>{
 
-  //  return this.categoryService.findAll();
-  //}
+  @Post()
+  create( @Body() createCommentDTO:CreateCommentDTO):Promise<Comments>{
+    return this.commentService.create(createCommentDTO);
+  }
+
+  @Get(':id')
+   findOne(@Param('id') id:string): Promise<Comments>{
+
+    return this.commentService.findOne(id);
+   }
+
+   @Delete(':id')
+   remove(@Param('id') id:string): Promise<void>{
+    return this.commentService.remove(id)
+   }
 
 
 
