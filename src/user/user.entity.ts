@@ -8,9 +8,6 @@ export default class User{
 id:string;
 
 @Column()
-name: string;
-
-@Column()
 userDescription: string;
 
 @Column()
@@ -37,6 +34,7 @@ created_at:Date;
 @CreateDateColumn()
 updated_at: Date;
 
-@OneToMany(()=>Topic, topic=>topic.id)
-topic: Topic;
+@OneToMany(()=>Topic, topic=>topic.user)
+topic: Topic[]
+
 }
