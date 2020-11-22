@@ -13,7 +13,7 @@ export class UserController {
     private readonly userService: UserService,
   ){}
 
-  //@UseGuards(JwtAuthGuard) só colocalar isso em cima de cada rota, e será necessario um token de acesso
+  @UseGuards(JwtAuthGuard) 
   @Get()
   findAll(): Promise<User[]>{
     return this.userService.findAll()
