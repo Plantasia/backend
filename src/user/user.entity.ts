@@ -1,7 +1,7 @@
 import {Entity,Column, PrimaryGeneratedColumn, OneToMany, CreateDateColumn} from 'typeorm';
 import {Topic} from '../topics/topic.entity'
 
-@Entity()
+@Entity('users')
 export default class User{
 
 @PrimaryGeneratedColumn('uuid')
@@ -25,10 +25,10 @@ email: string
 @Column()
 password: string;
 
-@Column({default:0})
+@Column({default:true})
 isActive: boolean;
 
-@Column()
+@Column({default:0})
 quarantineNum: number;
 
 @CreateDateColumn()

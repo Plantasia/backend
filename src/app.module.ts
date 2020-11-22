@@ -6,13 +6,15 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { CommentsModule } from './comments/comments.module';
 import { TopicModule } from './topics/topic.module';
 import { UserModule } from './user/user.module';
+
 @Module({
   imports: [
 
 
 
     TypeOrmModule.forRoot({
-    }), CategoryModule, CommentsModule, UserModule, AuthModule],
+    }), CategoryModule, CommentsModule, UserModule, AuthModule,TopicModule],
+
 
 })
 export class AppModule {

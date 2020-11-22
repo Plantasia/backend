@@ -1,0 +1,18 @@
+
+{
+  "watch": ["src"],
+  "ext": "ts",
+  "ignore": ["src/**/*.spec.ts"],
+  "exec": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register src/main.ts ",
+  "name": "Debug Jest Tests",
+  "type": "node",
+  "request": "launch",
+  "runtimeArgs": [
+    "--inspect-brk",
+    "${workspaceRoot}/node_modules/.bin/jest",
+    "--runInBand",
+    "--coverage",
+    "false"
+  ],
+  "console": "integratedTerminal"
+}
