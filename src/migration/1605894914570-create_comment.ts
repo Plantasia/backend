@@ -1,9 +1,9 @@
 import {MigrationInterface, QueryRunner, Table} from "typeorm";
 
-export class createUser1605879828481 implements MigrationInterface {
+export class createComment1605894914570 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {
-        new Table({ name:"user",
+        new Table({ name:"comments",
          columns:[
              {
                  name:"id",
@@ -15,44 +15,36 @@ export class createUser1605879828481 implements MigrationInterface {
              },
 
              {
-                 name:"name",
+                 name:"bodyText",
                  type:"text",
                  isNullable:false,
              },
              {
-                 name:"userDescription",
+                 name:"reaction",
                  type:"text",
                  isNullable:false,
              },
              {
-                 name:"role",
-                 type:"text",
+                 name:"disabe",
+                 type:"boolean",
                  isNullable:true
              },
              {
-                name:"avatr",
-                type:"texte",
+                name:"hasParentComment",
+                type:"booleran",
                 isNullable:false
             },
             {
-                name:"email",
+                name:"idParentComment",
                 type:"text",
                 isNullable:false
             },
             {
-                name:"password",
-                type:"text",
-                isNullable:false
-            },
-            {
-                name:"isActive",
-                type:"boolean",
-                isNullable:false
-            },
-            {
-                name:"quarentineNum",
-                type:"int",
-                isNullable:false
+                name:"indexOrder",
+                type: 'int',
+                isNullable:true,
+                isGenerated: true,
+                generationStrategy: 'increment'
             }
          ]
      })

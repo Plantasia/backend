@@ -8,6 +8,9 @@ export default class User{
 id:string;
 
 @Column()
+name: string;
+
+@Column()
 userDescription: string;
 
 @Column()
@@ -22,7 +25,7 @@ email: string
 @Column()
 password: string;
 
-@Column({default:true})
+@Column({default:0})
 isActive: boolean;
 
 @Column({default:0})
@@ -34,7 +37,6 @@ created_at:Date;
 @CreateDateColumn()
 updated_at: Date;
 
-@OneToMany(()=>Topic, topic=>topic.user)
-topic: Topic[]
-
+@OneToMany(()=>Topic, topic=>topic.id)
+topic: Topic;
 }
