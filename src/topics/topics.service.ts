@@ -23,17 +23,32 @@ export class TopicsService {
     topic.textBody = createTopicDTO.textBody;
     topic.imageStorage = createTopicDTO.imageStorage;
     const category_id = createTopicDTO.category_id;
-    topic.category = await this.categoryService.findOne(category_id)
+    const user_id =createTopicDTO.user_id;
+
+    /**
+     * #########################//
+     *
+     * ERROR: Type '{ code: status.NOT_FOUND; details: string; }' is missing the following properties from type 'ServiceError': name, message.
+     *
+     * ##########################
+     * Possible solutions:
+     *
+     * https://stackoverflow.com/questions/55790897/type-is-missing-the-following-properties
+     *
+     * https://github.com/grpc/grpc-node/issues/858
+     *
+     *
+
+     //*Resolve this:
+    /*topic.category =  await this.categoryService.findOne(category_id);
+     topic.user =  await this.categoryService.findOne(user_id); */
 
     /** this creates an entity instance */
     const t = await this.topicRepository.create(topic);
 
     /**now, we're  saving into DB */
-     this.topicRepository.save(t);
+    return this.topicRepository.save(t);
 
-     return this.topicRepository.findOne({
-       where:{}
-     })
 
   }
 

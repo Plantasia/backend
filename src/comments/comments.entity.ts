@@ -1,4 +1,5 @@
-import {Entity,Column, PrimaryGeneratedColumn, OneToMany, CreateDateColumn, ManyToMany, ManyToOne} from 'typeorm';
+import { userInfo } from 'os';
+import {Entity,Column, PrimaryGeneratedColumn, UpdateDateColumn, OneToMany, CreateDateColumn, ManyToMany, ManyToOne} from 'typeorm';
 import {Topic} from '../topics/topic.entity'
 import {User} from '../user/user.entity';
 
@@ -26,7 +27,12 @@ idParentComment: string;
 @CreateDateColumn()
 created_at:Date;
 
-@CreateDateColumn()
+@UpdateDateColumn()
 updated_at: Date;
 
+@ManyToOne(()=>User,user=>user.comments)
+user:User
+
+@ManyToOne(()=>Topic, topic=>topic.comments)
+topic: Topic
 }

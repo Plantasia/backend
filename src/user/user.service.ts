@@ -67,9 +67,10 @@ export class UserService {
     //user.topic = await this.topicService.findOne(topic_id);
 
     const com = await this.userRepository.create(user)
-     this.userRepository.save(com);
-     console.log('User created!')
-     return user;
+    console.log('User created!')
+    return this.userRepository.save(com);
+
+
   }
 
   async update(id: string, data: CreateUserDTO ):

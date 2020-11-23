@@ -21,9 +21,8 @@ export class UserController {
   }
 
   @Post()
-  create(@Res() res:Response, @Body() createUserDTO:CreateUserDTO):Promise<User>{
-    //res.status(HttpStatus.OK).json([this.userService.create(createUserDTO)]); 
-    return null
+  create(@Body() createUserDTO:CreateUserDTO):Promise<User>{
+    return this.userService.create(createUserDTO);
   }
 
   @Get(':id')

@@ -21,11 +21,10 @@ export class TopicsController {
       return this.topicsService.update(id,createTopicDTO);
     }
 
-  @Post(':id')
-  create(@Param('id') category_id:string,   @Body() createTopicDTO:CreateTopicDTO  ): Promise<Topic>{
+  @Post()
+  create(@Body() createTopicDTO:CreateTopicDTO  ): Promise<Topic>{
     /** This assures us integrity references into DB */
-    createTopicDTO.category_id = category_id
-
+    console.log('123')
 
     return this.topicsService.create(createTopicDTO);
   }

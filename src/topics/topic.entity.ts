@@ -1,9 +1,12 @@
-import {Entity,Column, PrimaryGeneratedColumn, ManyToOne, OneToOne, CreateDateColumn, OneToMany} from  'typeorm'
+import {Entity,Column, PrimaryGeneratedColumn,UpdateDateColumn, ManyToOne, OneToOne, CreateDateColumn, OneToMany} from  'typeorm'
 import { Category } from '../category/category.entity';
 import {User} from '../user/user.entity';
+import {Comment} from '../comments/comments.entity';
 
 @Entity('topics')
 export  class Topic{
+  topic: Category;
+  [x: string]: Category;
 
 @PrimaryGeneratedColumn('uuid')
 id:string;
@@ -23,17 +26,23 @@ reaction: number
 @Column({default:true})
 isActive:boolean
 
-@ManyToOne(()=>Category, category=>category.topics)
-category:Category
 
 @CreateDateColumn()
 created_at: Date;
 
-@CreateDateColumn()
+
+@UpdateDateColumn()
 updated_at:Date
 
-@ManyToOne(()=>User, user=> user.topic)
+@ManyToOne(()=>User, user=> user.topics)
 user:User;
+
+@ManyToOne(()=>Category, category=>category.topics)
+category:Category
+
+@OneToMany(()=>Comment, comments=>comments.topic)
+comments:Comment[]
+  topic: Category;
 
 
 }

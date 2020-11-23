@@ -1,5 +1,6 @@
-import {Entity,Column, PrimaryGeneratedColumn, OneToMany, CreateDateColumn} from 'typeorm';
-import {Topic} from '../topics/topic.entity'
+import {Entity,Column,UpdateDateColumn, PrimaryGeneratedColumn, OneToMany, CreateDateColumn} from 'typeorm';
+import {Topic} from '../topics/topic.entity';
+import {Comment} from '../comments/comments.entity';
 
 @Entity('users')
 export  class User{
@@ -34,13 +35,14 @@ quarantineNum: number;
 @CreateDateColumn()
 created_at:Date;
 
-@CreateDateColumn()
+@UpdateDateColumn()
 updated_at: Date;
 
-@OneToMany(()=>Topic, topic=>topic.id)
-topic: Topic;
-/*
-@OneToMany(()=>Comment, comment=> comment.user)
-comments: Comment[]*/
+@OneToMany(()=>Comment, comment=>comment.user)
+comments:Comment[]
+
+@OneToMany(()=>Topic, topic=>topic.user)
+topics: Topic[];
+
 
 }

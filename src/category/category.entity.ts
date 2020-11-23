@@ -1,4 +1,4 @@
-import {Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn} from 'typeorm';
+import {Column, CreateDateColumn,UpdateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn} from 'typeorm';
 import { Topic } from '../topics/topic.entity';
 
 @Entity('categories')
@@ -25,7 +25,7 @@ export class Category {
   @CreateDateColumn()
   created_at: Date;
 
-  @CreateDateColumn()
+  @UpdateDateColumn()
   updated_at: Date
 
   @OneToMany(()=>Topic, topic=>topic.category)
