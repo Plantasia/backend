@@ -2,7 +2,7 @@ import {Entity,Column, PrimaryGeneratedColumn, OneToMany, CreateDateColumn} from
 import {Topic} from '../topics/topic.entity'
 
 @Entity('users')
-export default class User{
+export  class User{
 
 @PrimaryGeneratedColumn('uuid')
 id:string;
@@ -10,13 +10,13 @@ id:string;
 @Column()
 name: string;
 
-@Column()
+@Column({default:''})
 userDescription: string;
 
 @Column()
 role:string;
 
-@Column()
+@Column({default:''})
 avatar: string;
 
 @Column()
@@ -39,4 +39,8 @@ updated_at: Date;
 
 @OneToMany(()=>Topic, topic=>topic.id)
 topic: Topic;
+/*
+@OneToMany(()=>Comment, comment=> comment.user)
+comments: Comment[]*/
+
 }

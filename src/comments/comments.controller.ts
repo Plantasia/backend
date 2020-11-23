@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Post, Render } from '@nestjs/common';
 import { CommentService } from '../comments/comments.service';
 import { CreateCommentDTO } from '../comments/create-comment.dto'
-import { Comments } from '../comments/comments.entity';
+import { Comment } from '../comments/comments.entity';
 import {uuid} from 'uuidv4';
 
 
@@ -13,19 +13,19 @@ export class CommentController {
   ){}
 
   @Get()
-  findAll(): Promise<Comments[]>{
+  findAll(): Promise<Comment[]>{
     return this.commentService.findAll()
 
   }
 
 
   @Post()
-  create( @Body() createCommentDTO:CreateCommentDTO):Promise<Comments>{
+  create( @Body() createCommentDTO:CreateCommentDTO):Promise<Comment>{
     return this.commentService.create(createCommentDTO);
   }
 
   @Get(':id')
-   findOne(@Param('id') id:string): Promise<Comments>{
+   findOne(@Param('id') id:string): Promise<Comment>{
 
     return this.commentService.findOne(id);
    }

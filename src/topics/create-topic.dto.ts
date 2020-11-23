@@ -6,4 +6,5 @@ export class CreateTopicDTO{
   public readonly textBody: string;
   public readonly imageStorage:string;
   public          category_id :string;
+  public          user_id: string;
 }

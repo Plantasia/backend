@@ -1,10 +1,9 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Render } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Render, } from '@nestjs/common';
 import { CategoryService } from '../category/category.service';
 import { CreateCategoryDTO} from '../category/create-category.dto'
 import { Category } from '../category/category.entity';
 import {uuid} from 'uuidv4';
-import { UpdateDateColumn } from 'typeorm';
-//import {MappingRegistryService} from '../../common/mapping-registry-service';
+import {ApiResponse} from '@nestjs/swagger'
 
 
 
@@ -32,6 +31,10 @@ export class CategoryController {
    }
 
    @Delete(':id')
+
+   @ApiResponse({
+    status:400,
+    description:"Error: Id is incorrect or category not exists" })
    remove(@Param('id') id:string): Promise<void>{
     return this.categoryService.remove(id)
    }

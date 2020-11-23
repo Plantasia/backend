@@ -1,6 +1,6 @@
-import {Entity,Column, PrimaryGeneratedColumn, ManyToOne, OneToOne, CreateDateColumn} from  'typeorm'
+import {Entity,Column, PrimaryGeneratedColumn, ManyToOne, OneToOne, CreateDateColumn, OneToMany} from  'typeorm'
 import { Category } from '../category/category.entity';
-import User from '../user/user.entity';
+import {User} from '../user/user.entity';
 
 @Entity('topics')
 export  class Topic{
@@ -34,4 +34,6 @@ updated_at:Date
 
 @ManyToOne(()=>User, user=> user.topic)
 user:User;
+
+
 }

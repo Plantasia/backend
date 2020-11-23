@@ -2,9 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateCommentDTO } from './create-comment.dto';
-import { Comments } from './comments.entity';
+import { Comment } from './comments.entity';
 import { Topic } from '../topics/topic.entity';
 import {TopicsService} from '../topics/topics.service';
+import { User } from '../user/user.entity'
+import { UserService } from '../user/user.service';
 
 //import  User  from '../user/user.entity';
 
@@ -12,16 +14,14 @@ import {TopicsService} from '../topics/topics.service';
 @Injectable()
 export class CommentService {
   constructor(
-    //@Inject('CATEGORIES_REPOSITORY')
-    @InjectRepository(Comments)
-    private commentsRepository: Repository<Comments>,
-    private topicService: TopicsService
-    //private userRepository: Repository<User>
-
+    @InjectRepository(Comment)
+    private commentsRepository: Repository<Comment>,
+    private topicService: TopicsService,
+    private userService:UserService
 
   ) {}
 
-  async findOne(id: string): Promise<Comments> {
+  async findOne(id: string): Promise<Comment> {
     return this.commentsRepository.findOne({
       where :{
         id,
@@ -29,7 +29,7 @@ export class CommentService {
     });
   }
 
-  async findAll():Promise<Comments[]>{
+  async findAll():Promise<Comment[]>{
     return this.commentsRepository.find();
   }
 
@@ -37,19 +37,33 @@ export class CommentService {
     await this.commentsRepository.delete(id);
   }
 
-  async create(createcommentsDTO: CreateCommentDTO): Promise<Comments> {
-    const comment = new Comments();
+  async create(data: CreateCommentDTO): Promise<Comment> {
+    /**
+     * Instantiating dependencies
+     */
+    const comment = new Comment();
     const topic = new Topic;
-    //const user = new User;
-    comment.text = createcommentsDTO.text;
-    comment.reaction = createcommentsDTO.reaction;
-    comment.disable = createcommentsDTO.disable;
-    comment.hasParentComment = createcommentsDTO.hasParenteComment;
-    comment.idParentComment = createcommentsDTO.idParentComment;
-    const topic_id = createcommentsDTO.topic_id;
-    comment.topic = await this.topicService.findOne(topic_id);
-    //const user_id = createCategoryDTO.user_id;
-    //comment.user = await this.userRepository.findOne(user.id);
+    const user = new User;
+
+    /**Abstracting specified data to store into db */
+    comment.text = data.text;
+    comment.reaction = data.reaction;
+    comment.disable = data.disable;
+    comment.hasParentComment = data.hasParenteComment;
+    comment.idParentComment = data.idParentComment;
+    const topic_id = data.topic_id;
+    const user_id = data.user_id;
+
+
+    /**To associating this comment to its "topic" and "user" */
+    this.topicService.findOne(topic_id);
+    this.userService.findOne(user_id);
+
+
+    //comment.user = await this.userService.findOne(user_id);
+    //comment.topic = await this.topicService.findOne(topic_id);
+
+
     const com = await this.commentsRepository.create(comment)
     this.commentsRepository.save(com);
     return this.commentsRepository.findOne({
@@ -58,7 +72,7 @@ export class CommentService {
   }
 
   async update(id: string, data: CreateCommentDTO ):
-  Promise<Comments> {
+  Promise<Comment> {
 
       await this.commentsRepository.update(id, data);
       return this.commentsRepository.findOne(id);

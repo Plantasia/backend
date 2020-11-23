@@ -5,7 +5,6 @@ export class CreateUserDTO {
     public readonly avatar: string;
     public readonly email: string;
     public readonly password: string;
-    public readonly isActove: boolean;
+    public readonly isActive: boolean;
     public readonly quarentineNum: number;
-    public          topic_id :string;
   }

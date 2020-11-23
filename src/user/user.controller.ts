@@ -1,19 +1,19 @@
-import { Body, Controller, Delete, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Req, Res,Response, UseGuards, HttpStatus } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDTO } from './create-user.dto';
-import  User  from './user.entity';
+import {User} from './user.entity';
 import {uuid} from 'uuidv4';
 import {JwtAuthGuard} from '../auth/jwt-auth.guard'
 
 
 
-@Controller('user')
+@Controller('users')
 export class UserController {
   constructor(
     private readonly userService: UserService,
   ){}
 
-  @UseGuards(JwtAuthGuard) 
+  //@UseGuards(JwtAuthGuard)
   @Get()
   findAll(): Promise<User[]>{
     return this.userService.findAll()
@@ -21,8 +21,9 @@ export class UserController {
   }
 
   @Post()
-  create( @Body() createUserDTO:CreateUserDTO):Promise<User>{
-    return this.userService.create(createUserDTO);
+  create(@Res() res:Response, @Body() createUserDTO:CreateUserDTO):Promise<User>{
+    //res.status(HttpStatus.OK).json([this.userService.create(createUserDTO)]); 
+    return null
   }
 
   @Get(':id')
@@ -36,6 +37,10 @@ export class UserController {
     return this.userService.remove(id)
    }
 
+   @Put(':id')
+   update(@Param('id') id:string, @Body() createUserDTO:CreateUserDTO): Promise<User>{
+    return this.userService.update(id, createUserDTO);
+   }
 
 
 }

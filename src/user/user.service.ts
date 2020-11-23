@@ -2,20 +2,16 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserDTO  } from './create-user.dto';
-import  User  from './user.entity';
+import  {User}  from './user.entity';
 import { Topic } from '../topics/topic.entity';
 import {TopicsService} from '../topics/topics.service';
 
 @Injectable()
 export class UserService {
   constructor(
-    //@Inject('CATEGORIES_REPOSITORY')
     @InjectRepository(User)
     private userRepository: Repository<User>,
     private topicService: TopicsService
-    //private userRepository: Repository<User>
-
-
   ) {}
 
   async findOne(id: string): Promise<User> {
@@ -31,6 +27,14 @@ export class UserService {
       where :{
         email,
       },
+    });
+  }
+
+  async findById(id:string): Promise<User>{
+    return this.userRepository.findOne({
+      where:{
+        id,
+      }
     });
   }
 
@@ -51,17 +55,21 @@ export class UserService {
     user.avatar = createUserDTO.avatar;
     user.email = createUserDTO.email;
     user.password = createUserDTO.password;
-    user.isActive = createUserDTO.isActove;
+    user.isActive = createUserDTO.isActive;
     user.quarantineNum = createUserDTO.quarentineNum;
-    const topic_id = createUserDTO.topic_id;
-    user.topic = await this.topicService.findOne(topic_id);
+
+    /**Topic has a user,
+     * but topic table
+     * doesn't need to has
+     * its knowledge
+     */
+    //const topic_id = createUserDTO.topic_id;
+    //user.topic = await this.topicService.findOne(topic_id);
+
     const com = await this.userRepository.create(user)
-    this.userRepository.save(com);
-   
-    return this.userRepository.save(com);
-    //return this.userRepository.findOne({
-    //    where:{}
-    //  })
+     this.userRepository.save(com);
+     console.log('User created!')
+     return user;
   }
 
   async update(id: string, data: CreateUserDTO ):

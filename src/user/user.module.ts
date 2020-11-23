@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserService } from './user.service';
 import { UserController  } from './user.controller'
-import User  from './user.entity';
+import {User}  from './user.entity';
 import {TopicsService} from '../topics/topics.service';
 import { Topic } from '../topics/topic.entity';
 import {CategoryService } from '../category/category.service'
