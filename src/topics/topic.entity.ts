@@ -5,9 +5,6 @@ import {Comment} from '../comments/comments.entity';
 
 @Entity('topics')
 export  class Topic{
-  topic: Category;
-  [x: string]: Category;
-
 @PrimaryGeneratedColumn('uuid')
 id:string;
 
