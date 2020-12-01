@@ -8,3 +8,13 @@ export class CreateUserDTO {
     public readonly isActive: boolean;
     public readonly quarentineNum: number;
   }
+
+  /** MUST TO CREATE A NEW USER
+   
+  * {
+	 "name":"string",
+	 "email":"marcos_v.23@hotmail.com",
+	 "role": "string",
+   "password":"string"
+   
+    } */

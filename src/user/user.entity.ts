@@ -14,7 +14,7 @@ name: string;
 @Column({default:''})
 userDescription: string;
 
-@Column()
+@Column({default:'usuario'})
 role:string;
 
 @Column({default:''})
