@@ -19,7 +19,11 @@ export class CommentService {
     private topicService: TopicsService,
     private userService:UserService
 
-  ) {}
+  ) {
+    this.commentsRepository =commentsRepository;
+    this.topicService= topicService;
+    this.userService=userService;
+  }
 
   async findOne(id: string): Promise<Comment> {
     return this.commentsRepository.findOne({
@@ -54,7 +58,7 @@ export class CommentService {
     const topic_id = data.topic_id;
     const user_id = data.user_id;
 
-
+    
     /**To associating this comment to its "topic" and "user" */
     this.topicService.findOne(topic_id);
     this.userService.findOne(user_id);

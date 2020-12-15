@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { CreateTopicDTO } from './create-topic.dto';
 import { Topic } from './topic.entity'
 import {CategoryService } from '../category/category.service'
+import { stringify } from 'querystring';
 
 @Injectable()
 export class TopicsService {
@@ -22,8 +23,8 @@ export class TopicsService {
     topic.name = createTopicDTO.name
     topic.textBody = createTopicDTO.textBody;
     topic.imageStorage = createTopicDTO.imageStorage;
-    const category_id = createTopicDTO.category_id;
-    const user_id =createTopicDTO.user_id;
+    //topic.user = createTopicDTO.user_id;
+    //topic.category = createTopicDTO.category_id;
 
     /**
      * #########################//

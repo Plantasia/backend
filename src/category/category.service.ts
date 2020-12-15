@@ -11,7 +11,6 @@ import { ApiBadGatewayResponse } from '@nestjs/swagger'
 @Injectable()
 export class CategoryService {
   constructor(
-    //@Inject('CATEGORIES_REPOSITORY')
     @InjectRepository(Category)
     private categoryRepository: Repository<Category>,
 
