@@ -3,6 +3,8 @@ import { TopicsService } from './topics.service';
 import {Topic} from './topic.entity'
 import { CreateTopicDTO } from './create-topic.dto';
 import {JwtAuthGuard} from '../auth/jwt-auth.guard'
+import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { use } from 'passport';
 
 
 
@@ -27,12 +29,26 @@ export class TopicsController {
     }
 
   @UseGuards(JwtAuthGuard)
+  @ApiOperation({summary: 'Creating Topic'})
+  @ApiResponse({status:400, description:'Bad request! '})
+  @ApiResponse({status:401, description:'Category and User must be specified! Please, check this'})
+  @ApiResponse({status:201, description:'Topic sucessfully created'})
+  @ApiResponse({status:403, description: 'Operation not permitted'})
   @Post()
   create(@Body() createTopicDTO:CreateTopicDTO  ): Promise<Topic>{
     /** This assures us integrity references into DB */
-    console.log('123')
 
-    return this.topicsService.create(createTopicDTO);
+    const response =this.topicsService.create(createTopicDTO);
+
+    const category = this.topicsService.findOne(createTopicDTO.category_id);
+    const user = this.topicsService.findOne(createTopicDTO.user_id);
+
+    if(!category && !user){
+      const errors ={Error:"User or Category not passed into"};
+      throw new HttpException({errors},401)
+
+    }
+    return response;
   }
 
   @UseGuards(JwtAuthGuard)

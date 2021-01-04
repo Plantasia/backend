@@ -6,9 +6,11 @@ import {TopicsController} from './topics.controller'
 import { CategoryModule } from '../category/module/category.module';
 import { CategoryService } from '../category/category.service';
 import { Category } from '../category/category.entity';
+import { UserService } from '../user/user.service';
+import { User } from '../user/user.entity';
 @Module({
-  imports:[TypeOrmModule.forFeature([Topic]), TypeOrmModule.forFeature([Category])],
-  providers:[TopicsService, CategoryService],
+  imports:[User, TypeOrmModule.forFeature([Topic]), TypeOrmModule.forFeature([User]), TypeOrmModule.forFeature([Category])],
+  providers:[TopicsService, CategoryService, UserService],
   controllers:[TopicsController],
   exports:[TypeOrmModule.forFeature([Topic])],
 })
