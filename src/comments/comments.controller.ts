@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Render, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Render, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { CommentService } from '../comments/comments.service';
 import { CreateCommentDTO } from '../comments/create-comment.dto'
 import { Comment } from '../comments/comments.entity';
@@ -23,6 +23,7 @@ export class CommentController {
 
   @UseGuards(JwtAuthGuard)
   @Post()
+  @UsePipes(ValidationPipe)
   create( @Body() createCommentDTO:CreateCommentDTO):Promise<Comment>{
     return this.commentService.create(createCommentDTO);
   }

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Param, Delete, Put,UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Param, Delete, Put,UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { TopicsService } from './topics.service';
 import {Topic} from './topic.entity'
 import { CreateTopicDTO } from './create-topic.dto';
@@ -35,6 +35,7 @@ export class TopicsController {
   @ApiResponse({status:401, description:'Category and User must be specified! Please, check this'})
   @ApiResponse({status:201, description:'Topic sucessfully created'})
   @ApiResponse({status:403, description: 'Operation not permitted'})
+  @UsePipes(ValidationPipe)
   @Post()
   create(@Body() createTopicDTO:CreateTopicDTO  ): Promise<Topic>{
     /** This assures us integrity references into DB */
