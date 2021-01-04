@@ -35,8 +35,8 @@ export class TopicsService {
     topic.name = createTopicDTO.name
     topic.textBody = createTopicDTO.textBody;
     topic.imageStorage = createTopicDTO.imageStorage;
-    //topic.user = createTopicDTO.user_id;
-    //topic.category = createTopicDTO.category_id;
+    const user_id = createTopicDTO.user_id;
+    const category_id = createTopicDTO.category_id;
 
     topic.user= await this.UserRepository.findOne(user_id);
 
@@ -54,7 +54,7 @@ export class TopicsService {
 
     /**now, we're  saving into DB */
     return  this.topicRepository.save(t);
-    
+
 
 
   }

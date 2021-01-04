@@ -5,6 +5,7 @@ import { CreateTopicDTO } from './create-topic.dto';
 import {JwtAuthGuard} from '../auth/jwt-auth.guard'
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { use } from 'passport';
+import { HttpException } from '@nestjs/common/exceptions/http.exception';
 
 
 
