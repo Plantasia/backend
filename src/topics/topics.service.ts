@@ -4,6 +4,9 @@ import { Repository } from 'typeorm';
 import { CreateTopicDTO } from './create-topic.dto';
 import { Topic } from './topic.entity'
 import {CategoryService } from '../category/category.service'
+import { UserService } from '../user/user.service';
+import { User } from '../user/user.entity';
+import { Category } from '../category/category.entity';
 
 @Injectable()
 export class TopicsService {
@@ -11,10 +14,20 @@ export class TopicsService {
   constructor(
 
     @InjectRepository(Topic)
-    private topicRepository: Repository<Topic>,
-    private categoryService: CategoryService
+    private readonly topicRepository: Repository<Topic>,
 
-  ){}
+    @InjectRepository(User)
+    private readonly UserRepository: Repository<User>,
+
+    @InjectRepository(Category)
+    private readonly categoryRepository: Repository<Category>
+
+
+  ){
+    this.categoryRepository =categoryRepository;
+    this.UserRepository= UserRepository;
+    this.topicRepository= topicRepository;
+  }
 
   async create( createTopicDTO: CreateTopicDTO): Promise<Topic>{
     const topic = new Topic;
@@ -25,29 +38,23 @@ export class TopicsService {
     const category_id = createTopicDTO.category_id;
     const user_id =createTopicDTO.user_id;
 
-    /**
-     * #########################//
-     *
-     * ERROR: Type '{ code: status.NOT_FOUND; details: string; }' is missing the following properties from type 'ServiceError': name, message.
-     *
-     * ##########################
-     * Possible solutions:
-     *
-     * https://stackoverflow.com/questions/55790897/type-is-missing-the-following-properties
-     *
-     * https://github.com/grpc/grpc-node/issues/858
-     *
-     *
+    topic.user= await this.UserRepository.findOne(user_id);
 
-     //*Resolve this:
-    /*topic.category =  await this.categoryService.findOne(category_id);
-     topic.user =  await this.categoryService.findOne(user_id); */
+    /*if(topic.user===undefined || topic.user){
+      return topic = null;
+    }*/
+    topic.category = await this.categoryRepository.findOne(category_id);
+
+      /*if(topic.category===undefined || topic.category){
+        return topic= null;
+      }*/
 
     /** this creates an entity instance */
     const t = await this.topicRepository.create(topic);
 
     /**now, we're  saving into DB */
-    return this.topicRepository.save(t);
+    return  this.topicRepository.save(t);
+    
 
 
   }
@@ -75,3 +82,18 @@ export class TopicsService {
   }
 
 }
+
+
+   /**
+     * #########################//
+     *
+     * ERROR: Type '{ code: status.NOT_FOUND; details: string; }' is missing the following properties from type 'ServiceError': name, message.
+     *
+     * ##########################
+     * Possible solutions:
+     *
+     * https://stackoverflow.com/questions/55790897/type-is-missing-the-following-properties
+     *
+     * https://github.com/grpc/grpc-node/issues/858
+     *
+     */
