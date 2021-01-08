@@ -1,22 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateUserDTO  } from './create-user.dto';
-import  {User}  from './user.entity';
+import { CreateUserDTO } from './create-user.dto';
+import { User } from './user.entity';
 import { Topic } from '../topics/topic.entity';
-import {TopicsService} from '../topics/topics.service';
+import { TopicsService } from '../topics/topics.service';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
-    private topicService: TopicsService
+    private topicService: TopicsService,
   ) {}
 
   async findOne(id: string): Promise<User> {
     return this.userRepository.findOne({
-      where :{
+      where: {
         id,
       },
     });
@@ -24,21 +24,21 @@ export class UserService {
 
   async findByEmail(email: string): Promise<User> {
     return this.userRepository.findOne({
-      where :{
+      where: {
         email,
       },
     });
   }
 
-  async findById(id:string): Promise<User>{
+  async findById(id: string): Promise<User> {
     return this.userRepository.findOne({
-      where:{
+      where: {
         id,
-      }
+      },
     });
   }
 
-  async findAll():Promise<User[]>{
+  async findAll(): Promise<User[]> {
     return this.userRepository.find();
   }
 
@@ -48,7 +48,7 @@ export class UserService {
 
   async create(createUserDTO: CreateUserDTO): Promise<User> {
     const user = new User();
-    const topic = new Topic;
+    const topic = new Topic();
     user.name = createUserDTO.name;
     user.userDescription = createUserDTO.userDescription;
     user.role = createUserDTO.role;
@@ -66,18 +66,13 @@ export class UserService {
     //const topic_id = createUserDTO.topic_id;
     //user.topic = await this.topicService.findOne(topic_id);
 
-    const com = await this.userRepository.create(user)
-    console.log('User created!')
+    const com = await this.userRepository.create(user);
+    console.log('User created!');
     return this.userRepository.save(com);
-
-
   }
 
-  async update(id: string, data: CreateUserDTO ):
-  Promise<User> {
-
-      await this.userRepository.update(id, data);
-      return this.userRepository.findOne(id);
+  async update(id: string, data: CreateUserDTO): Promise<User> {
+    await this.userRepository.update(id, data);
+    return this.userRepository.findOne(id);
   }
-
 }
