@@ -8,13 +8,14 @@ import { TopicModule } from './topics/topic.module';
 import { UserModule } from './user/user.module';
 @Module({
   imports: [
-
-
-
-    TypeOrmModule.forRoot({
-    }), CategoryModule, CommentsModule, UserModule, AuthModule, TopicModule],
-
+    TypeOrmModule.forRoot({}),
+    CategoryModule,
+    CommentsModule,
+    UserModule,
+    AuthModule,
+    TopicModule,
+  ],
 })
 export class AppModule {
-  constructor() { };
+  constructor() {}
 }
