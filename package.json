@@ -19,7 +19,7 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "typeorm": "ts-node-dev ./node_modules/typeorm/cli.js --config src/config/orm.js"
+    "typeorm": "ts-node-dev ./node_modules/typeorm/cli.js --config src/config/cli-typeorm.js"
   },
   "dependencies": {
     "@nestjs/common": "^7.0.0",
