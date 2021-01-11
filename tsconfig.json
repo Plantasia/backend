@@ -12,6 +12,7 @@
     "paths": {
       "@entities/*": ["./src/entities/*"],
       "@controllers/*": ["./src/controllers/*"],
+      "@auth/*": ["./src/auth/*"]
     }
   }
 }
