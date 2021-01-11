@@ -15,7 +15,7 @@ import {
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDTO } from './create-user.dto';
-import { User } from './user.entity';
+import { User } from '@entities/user.entity';
 import { uuid } from 'uuidv4';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { ValidationPipe } from '@nestjs/common/pipes/validation.pipe';

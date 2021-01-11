@@ -2,11 +2,11 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserService } from './user.service';
 import { UserController } from './user.controller';
-import { User } from './user.entity';
-import { TopicsService } from '../topics/topics.service';
-import { Topic } from '../topics/topic.entity';
-import { CategoryService } from '../category/category.service';
-import { Category } from '../category/category.entity';
+import { User } from '@entities/user.entity';
+import { TopicsService } from '../modules/forum/topics/topics.service';
+import { Topic } from '@entities/topic.entity';
+import { CategoryService } from '../modules/forum/category/category.service';
+import { Category } from '../entities/category.entity';
 
 //import {} falta o user service
 

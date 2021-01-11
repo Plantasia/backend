@@ -30,7 +30,7 @@ export class createUser1605879828481 implements MigrationInterface {
             isNullable: true,
           },
           {
-            name: 'avatr',
+            name: 'avatar',
             type: 'text',
             isNullable: false,
           },

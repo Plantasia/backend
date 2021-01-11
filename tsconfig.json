@@ -7,9 +7,11 @@
     "outDir": "./build",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "sourceMap": true
-  },
-  "paths": {
-    "@/*": ["./*"]
+    "sourceMap": true,
+    "baseUrl": ".",
+    "paths": {
+      "@entities/*": ["./src/entities/*"],
+      "@controllers/*": ["./src/controllers/*"],
+    }
   }
 }
