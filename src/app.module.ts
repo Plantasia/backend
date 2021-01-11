@@ -1,19 +1,10 @@
 import { AuthModule } from './auth/auth.module';
 import { Module } from '@nestjs/common';
-import { CategoryModule } from './modules/forum/category/category.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { CommentsModule } from './modules/forum/comments/comments.module';
-import { TopicModule } from './modules/forum/topics/topic.module';
-import { UserModule } from './user/user.module';
+import { UserModule } from './modules/profile/user/user.module';
+import { ForumModule } from './modules/forum/forum.module';
 @Module({
-  imports: [
-    TypeOrmModule.forRoot({}),
-    CategoryModule,
-    CommentsModule,
-    UserModule,
-    AuthModule,
-    TopicModule,
-  ],
+  imports: [TypeOrmModule.forRoot({}), UserModule, AuthModule, ForumModule],
 })
 export class AppModule {
   constructor() {}

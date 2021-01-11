@@ -3,8 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserDTO } from './create-user.dto';
 import { User } from '@entities/user.entity';
-import { Topic } from '../entities/topic.entity';
-import { TopicsService } from '../modules/forum/topics/topics.service';
+import { Topic } from '../../../entities/topic.entity';
+import { TopicsService } from '../../forum/topics/topics.service';
 
 @Injectable()
 export class UserService {
