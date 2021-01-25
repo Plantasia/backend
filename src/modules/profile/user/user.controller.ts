@@ -44,6 +44,7 @@ export class UserController {
   remove(@Param('id') id: string): Promise<void> {
     return this.userService.remove(id);
   }
+  
   @UseGuards(JwtAuthGuard)
   @Put(':id')
   update(

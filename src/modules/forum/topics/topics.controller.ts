@@ -21,7 +21,6 @@ import { HttpException } from '@nestjs/common/exceptions/http.exception';
 export class TopicsController {
   constructor(private readonly topicsService: TopicsService) {}
 
-  @UseGuards(JwtAuthGuard)
   @Get()
   findAll(): Promise<Topic[]> {
     return this.topicsService.findAll();
@@ -62,7 +61,6 @@ export class TopicsController {
     return response;
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get(':id')
   findOne(@Param('id') id: string): Promise<Topic> {
     return this.topicsService.findOne(id);

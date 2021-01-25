@@ -10,7 +10,6 @@ import { Topic } from '@entities/topic.entity';
 import { Category } from '@entities/category.entity';
 
 import { UserController } from './user.controller';
-
 //import {} falta o user service
 
 @Module({

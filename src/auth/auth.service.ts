@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable,UnauthorizedException } from '@nestjs/common';
 import { UserService } from '../modules/profile/user/user.service';
 import { JwtService } from '@nestjs/jwt';
 
@@ -14,8 +14,11 @@ export class AuthService {
     if (user && user.password === userPassword) {
       const { id, name, email } = user;
       return { id: id, name, email };
+    }else {
+      throw new UnauthorizedException({
+        error: 'Incorrect username or password'
+      });
     }
-    return null;
   }
 
   async login(user: any) {

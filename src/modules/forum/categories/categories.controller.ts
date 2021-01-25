@@ -28,7 +28,6 @@ export class CategoryController {
     return this.categoryService.create(createCategoryDTO);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get()
   findAll(): Promise<Category[]> {
     return this.categoryService.findAll();
