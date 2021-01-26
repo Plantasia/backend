@@ -12,6 +12,8 @@ import {
   UseGuards,
   HttpStatus,
   UsePipes,
+  Request,
+  UnauthorizedException
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDTO } from './create-user.dto';
@@ -41,8 +43,15 @@ export class UserController {
   }
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  remove(@Param('id') id: string): Promise<void> {
-    return this.userService.remove(id);
+  remove(@Request() req, @Param('id') id: string): Promise<void> {
+    const userIdSession = req.session.userId ;
+     console.log(userIdSession)
+    if(userIdSession ===id){
+      return this.userService.remove(id);
+    }
+    else{
+      throw new UnauthorizedException({error:"Unauthorized user!"});
+    }
   }
   
   @UseGuards(JwtAuthGuard)
