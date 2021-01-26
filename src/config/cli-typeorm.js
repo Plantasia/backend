@@ -14,10 +14,10 @@ module.exports = {
   synchronize: true,
   port: 3306,
   logging: true,
-  entities: [path.resolve(__dirname, 'src', 'db', 'models', '*')],
-  migrations: [path.resolve(__dirname, '..', 'db', 'migrations', '*')],
+  entities: [path.resolve(__dirname, '..', 'entities', '*')],
+  migrations: [path.resolve(__dirname, '..', 'database', 'migrations', '*')],
   cli: {
-    entitiesDir: path.resolve(__dirname, 'src', 'db', 'models'),
-    migrationsDir: path.resolve(__dirname, 'src', 'db', 'migrations'),
+    entitiesDir: path.resolve(__dirname, '..', 'entities'),
+    migrationsDir: path.resolve(__dirname, '..', 'database', 'migrations'),
   },
 };
