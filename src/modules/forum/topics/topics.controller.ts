@@ -61,6 +61,16 @@ export class TopicsController {
     return response;
   }
 
+  @Get('date')
+  async getTopicsByDate(){
+    return this.topicsService.findWithOrderBy();
+  }
+/* Função para trazer os topicos sem respostas. Comentado porque ainda não tem o campo Response no banco
+  @Get('responseo')
+  async getTopicsWithNoResponse(){
+    return this.topicsService.findNoResponse();
+  }*/
+
   @Get(':id')
   findOne(@Param('id') id: string): Promise<Topic> {
     return this.topicsService.findOne(id);

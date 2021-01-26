@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  ParseIntPipe,
   Post,
   Put,
   Render,
@@ -32,7 +33,6 @@ export class CategoryController {
   findAll(): Promise<Category[]> {
     return this.categoryService.findAll();
   }
-
   @UseGuards(JwtAuthGuard)
   @Get(':id')
   findOne(@Param('id') id: string): Promise<Category> {
@@ -48,6 +48,8 @@ export class CategoryController {
   remove(@Param('id') id: string): Promise<void> {
     return this.categoryService.remove(id);
   }
+  
+  
 
   @UseGuards(JwtAuthGuard)
   @Put(':id')
