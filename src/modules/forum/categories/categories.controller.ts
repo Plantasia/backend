@@ -42,10 +42,6 @@ export class CategoryController {
 
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  @ApiResponse({
-    status: 400,
-    description: 'Error: Id is incorrect or category not exists',
-  })
   remove(@Param('id') id: string): Promise<void> {
     return this.categoryService.remove(id);
   }

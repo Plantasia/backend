@@ -45,7 +45,7 @@ export class createUser1605879828481 implements MigrationInterface {
             isNullable: false,
           },
           {
-            name: 'isActive',
+            name: 'deleted',
             type: 'boolean',
             isNullable: false,
           },
