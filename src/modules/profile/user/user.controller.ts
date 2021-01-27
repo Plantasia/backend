@@ -12,6 +12,9 @@ import {
   UseGuards,
   HttpStatus,
   UsePipes,
+  Request,
+  UnauthorizedException,
+  NotFoundException
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDTO } from './create-user.dto';
@@ -31,26 +34,84 @@ export class UserController {
 
   @Post()
   @UsePipes(ValidationPipe)
-  create(@Body() createUserDTO: CreateUserDTO): Promise<User> {
+ async create(@Body() createUserDTO: CreateUserDTO): Promise<User> {
     return this.userService.create(createUserDTO);
   }
+
+
   @UseGuards(JwtAuthGuard)
   @Get(':id')
-  findOne(@Param('id') id: string): Promise<User> {
+ async findOne(@Param('id') id: string): Promise<User> {
+
+   const foundUser = await this.userService.findById(id);
+
+   if(!foundUser){
+
+     throw new NotFoundException(`Error: user with ID: ${id} not exists`)
+   }
+
     return this.userService.findOne(id);
   }
+
+
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  remove(@Param('id') id: string): Promise<void> {
-    return this.userService.remove(id);
+ async remove(@Request() req, @Param('id') id: string): Promise<void> {
+      /**
+       * NOTE: Remember to ask user send password to
+       * do this action (sooner)
+       */
+      console.log(req.user.email)
+      console.log(req.user.id)
+      
+      /**
+       * 
+       * To authentication we 'll receive data for request
+       * and confirm identity for the user who requests deleting
+       *  
+       */
+      const userRequestedToDelete =  await this.userService.findById(id);
+      
+      console.log(userRequestedToDelete)
+
+      if((userRequestedToDelete.id === req.user.id) &&(userRequestedToDelete.email ===  req.user.email) ){
+        return  this.userService.remove(id)
+      }
+      else{
+        
+        throw new UnauthorizedException({error:"You are not permitted to remove this user!"})
+        
+      }
+       
+   
   }
+
   
   @UseGuards(JwtAuthGuard)
   @Put(':id')
-  update(
+  
+  async update(
     @Param('id') id: string,
-    @Body() createUserDTO: CreateUserDTO,
-  ): Promise<User> {
-    return this.userService.update(id, createUserDTO);
+    @Body() data: CreateUserDTO,
+    @Request() req ): Promise<User> {
+
+      /**
+       * NOTE: Remember to ask user send password to
+       * do this action (sooner)
+       */
+      console.log(req.user.email)
+      console.log(req.user.id)
+      
+      const userRequestedToUpdate =  await this.userService.findById(id);
+      
+      console.log(userRequestedToUpdate)
+
+
+      if((userRequestedToUpdate.id === req.user.id) &&(userRequestedToUpdate.email ===  req.user.email) ){
+        return  this.userService.update(id, data)
+      }
+      else{
+        throw new UnauthorizedException({error:"You are not permitted to update this user!"})
+      }
   }
 }
