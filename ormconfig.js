@@ -1,4 +1,5 @@
 const path = require('path');
+const AdminUser = require('nestjs-admin').AdminUserEntity
 
 module.exports = {
   type: 'mysql',
@@ -9,7 +10,7 @@ module.exports = {
   synchronize: true,
   port: 3306,
   logging: true,
-  entities: [path.resolve(__dirname, 'build', 'entities', '*')],
+  entities: [path.resolve(__dirname, 'build', 'entities', '*'), AdminUser],
   migrations: [path.resolve(__dirname, 'build', 'database', 'migrations', '*')],
   cli: {
     entitiesDir: path.resolve(__dirname, 'src', 'entities'),

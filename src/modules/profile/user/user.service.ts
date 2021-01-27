@@ -56,6 +56,7 @@ export class UserService {
     user.email = createUserDTO.email;
     user.password = createUserDTO.password;
     user.isActive = createUserDTO.isActive;
+    user.isAdmin = createUserDTO.isAdmin;
     user.quarantineNum = createUserDTO.quarentineNum;
 
     /**Topic has a user,

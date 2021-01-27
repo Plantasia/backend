@@ -19,6 +19,8 @@ export class CreateUserDTO {
 
   public readonly isActive: boolean;
 
+  public readonly isAdmin: boolean;
+
   public readonly quarentineNum: number;
 }
 

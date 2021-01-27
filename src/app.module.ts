@@ -3,8 +3,10 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './modules/profile/user/user.module';
 import { ForumModule } from './modules/forum/forum.module';
+import { DefaultAdminModule } from 'nestjs-admin'
+import { BackofficeModule } from './backoffice/backoffice.module';
 @Module({
-  imports: [TypeOrmModule.forRoot({}), UserModule, AuthModule, ForumModule],
+  imports: [TypeOrmModule.forRoot({}), UserModule, AuthModule, ForumModule, DefaultAdminModule, BackofficeModule ],
 })
 export class AppModule {
   constructor() {}
