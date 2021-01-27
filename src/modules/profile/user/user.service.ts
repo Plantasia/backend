@@ -22,6 +22,14 @@ export class UserService {
     });
   }
 
+  async checkIfAlreadyExists(email:string): Promise<User> {
+    return this.userRepository.findOne({
+      where: {
+        email
+      },
+    });
+  }
+
   async findByEmail(email: string): Promise<User> {
     return this.userRepository.findOne({
       where: {
@@ -47,8 +55,8 @@ export class UserService {
   }
 
   async create(createUserDTO: CreateUserDTO): Promise<User> {
+
     const user = new User();
-    const topic = new Topic();
     user.name = createUserDTO.name;
     user.userDescription = createUserDTO.userDescription;
     user.role = createUserDTO.role;
@@ -57,18 +65,11 @@ export class UserService {
     user.password = createUserDTO.password;
     user.isActive = createUserDTO.isActive;
     user.quarantineNum = createUserDTO.quarentineNum;
-
-    /**Topic has a user,
-     * but topic table
-     * doesn't need to has
-     * its knowledge
-     */
-    //const topic_id = createUserDTO.topic_id;
-    //user.topic = await this.topicService.findOne(topic_id);
-
+  
     const com = await this.userRepository.create(user);
     console.log('User created!');
     return this.userRepository.save(com);
+    
   }
 
   async update(id: string, data: CreateUserDTO): Promise<User> {

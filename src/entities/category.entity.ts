@@ -17,8 +17,11 @@ export class Category {
   @Column()
   name: string;
 
-  @Column()
+  @Column({ default: '---------' })
   author: string;
+
+  @Column({ default: '---------' })
+  authorSlug:string;
 
   @Column()
   description: string;

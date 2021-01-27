@@ -14,39 +14,50 @@ import { TopicsService } from './topics.service';
 import { Topic } from '@entities/topic.entity';
 import { CreateTopicDTO } from './create-topic.dto';
 import { JwtAuthGuard } from '@auth/jwt-auth.guard';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiCreatedResponse, ApiForbiddenResponse, ApiOkResponse, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { HttpException } from '@nestjs/common/exceptions/http.exception';
 
+@ApiTags("topics")
 @Controller('topics')
 export class TopicsController {
   constructor(private readonly topicsService: TopicsService) {}
 
+ 
+  @ApiOkResponse({description:"topic succesfully returned"})
+  @ApiForbiddenResponse({ description:"Forbidden" })
+
   @Get()
-  findAll(): Promise<Topic[]> {
+  async findAll(): Promise<Topic[]> {
     return this.topicsService.findAll();
   }
 
+
+
+
   @UseGuards(JwtAuthGuard)
+ 
+  @ApiOkResponse({description:"topic succesfully updated"})
+  @ApiForbiddenResponse({ description:"Forbidden" })
+
   @Put(':id')
-  update(
+  async update(
     @Param('id') id: string,
     @Body() createTopicDTO: CreateTopicDTO,
   ): Promise<Topic> {
     return this.topicsService.update(id, createTopicDTO);
   }
 
+
+
+
   @UseGuards(JwtAuthGuard)
-  @ApiOperation({ summary: 'Creating Topic' })
-  @ApiResponse({ status: 400, description: 'Bad request!' })
-  @ApiResponse({
-    status: 401,
-    description: 'Category and User must be specified! Please, check this',
-  })
-  @ApiResponse({ status: 201, description: 'Topic sucessfully created' })
-  @ApiResponse({ status: 403, description: 'Operation not permitted' })
   @UsePipes(ValidationPipe)
+ 
+  @ApiCreatedResponse({description:"topic succesfully created"})
+  @ApiForbiddenResponse({ description:"Forbidden" })
+
   @Post()
-  create(@Body() createTopicDTO: CreateTopicDTO): Promise<Topic> {
+  async create(@Body() createTopicDTO: CreateTopicDTO): Promise<Topic> {
     /** This assures us integrity references into DB */
 
     const response = this.topicsService.create(createTopicDTO);
@@ -61,14 +72,26 @@ export class TopicsController {
     return response;
   }
 
+
+
+  
+  @ApiOkResponse({description:"topic succesfully returned"})
+  @ApiForbiddenResponse({ description:"Forbidden" })
+
   @Get(':id')
-  findOne(@Param('id') id: string): Promise<Topic> {
+  async findOne(@Param('id') id: string): Promise<Topic> {
     return this.topicsService.findOne(id);
   }
 
+
+
   @UseGuards(JwtAuthGuard)
+
+  @ApiOkResponse({description:"topic succesfully deleted"})
+  @ApiForbiddenResponse({ description:"Forbidden" })
+
   @Delete(':id')
-  delete(@Param('id') id: string): Promise<void> {
+  async delete(@Param('id') id: string): Promise<void> {
     this.topicsService.findOne(id);
     return;
   }
