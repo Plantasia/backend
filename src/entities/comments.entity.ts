@@ -20,10 +20,10 @@ export class Comment {
   @Column()
   text: string;
 
-  @Column()
+  @Column({ default: '' })
   reaction: string;
 
-  @Column()
+  @Column({ default: false })
   disable: boolean;
 
   @Column({ default: 0 })

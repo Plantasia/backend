@@ -46,7 +46,7 @@ export class CommentController {
 
     const user_id = createCommentDTO.user_id;
     const topic_id =createCommentDTO.topic_id;
-
+   
     /**
      * NOTE: Checking both user and topic if they already exists
      * 
