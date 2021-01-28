@@ -18,7 +18,7 @@ export class CreateCategoryDTO {
 
 
   @IsEmpty()
-  public  author: string;
+  public  authorLogin: string;
 
   @IsNotEmpty()
   @ApiProperty({

@@ -12,7 +12,8 @@ import {
   UsePipes,
   ValidationPipe,
   HttpException,
-  HttpStatus
+  HttpStatus,
+  UnauthorizedException
 } from '@nestjs/common';
 import { CategoryService } from './categories.service';
 import { CreateCategoryDTO } from './create-category.dto';
@@ -34,18 +35,24 @@ export class CategoryController {
   @UsePipes(ValidationPipe)
   async create(@Body() createCategoryDTO: CreateCategoryDTO, @Request() req ): Promise<Category> {
     
+   const id = req.user.id
+   const email = req.user.email
    
-    createCategoryDTO.authorSlug = req.user.id;
-    createCategoryDTO.authorLogin =  req.user.email;
-  
+    const authorSlug =(await this.userService.findByEmail(req.user.email)).id
+    
+    console.log("authorSlug:",authorSlug)
+    createCategoryDTO.authorLogin =  email
+    createCategoryDTO.authorSlug =authorSlug
 
-     /**NOTE: This is to don't allow record categories with the same name */  
-     const nameRequested = createCategoryDTO.name 
-     const exists =  await  this.categoryService.findByName(nameRequested)
+       
+     const requestedName = createCategoryDTO.name 
+     const exists =  await  this.categoryService.findByName(requestedName)
 
      if(!exists){
      console.log(`result***: ${exists}`)
+     console.log(createCategoryDTO)
      return this.categoryService.create(createCategoryDTO);
+     
      }
      else{
        throw new HttpException(`There is a category with this name, please choose another`
@@ -90,10 +97,20 @@ export class CategoryController {
   @Put(':id')
   @ApiOkResponse({description:"The category has beenn successful updated"})
   @ApiForbiddenResponse({ description:"Forbidden" })
-  update(
+  async update(
     @Param('id') id: string,
-    @Body() createCategoryDTO: CreateCategoryDTO,
-  ): Promise<Category> {
+    @Body() createCategoryDTO: CreateCategoryDTO ,@Request() req:any): Promise<Category> {
+      const email =req.headers;
+
+    const authorLogin = await (await this.categoryService.findById(id)).authorLogin
+
+    console.log(email)
+    if(authorLogin!==email){
+      throw new UnauthorizedException({
+        error: 'Forbidden: you are not permitted'
+      });
+    }
+
     return this.categoryService.update(id, createCategoryDTO);
   }
 }
