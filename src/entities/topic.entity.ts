@@ -12,7 +12,7 @@ import { Category } from './category.entity';
 import { User } from './user.entity';
 import { Comment } from './comments.entity';
 
-@Entity('topic')
+@Entity('topics')
 export class Topic {
   @PrimaryGeneratedColumn('uuid')
   id: string;

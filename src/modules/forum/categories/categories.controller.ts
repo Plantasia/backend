@@ -32,13 +32,12 @@ export class CategoryController {
   @ApiCreatedResponse({description:"Category succesfully created"})
   @ApiForbiddenResponse({ description:"Forbidden" })
   @UsePipes(ValidationPipe)
-  async create(@Body() createCategoryDTO: CreateCategoryDTO, @Request() req): Promise<Category> {
+  async create(@Body() createCategoryDTO: CreateCategoryDTO, @Request() req ): Promise<Category> {
     
+   
     createCategoryDTO.authorSlug = req.user.id;
-    //const authorName =  ( await this.userService.findById(req.user.id)).name;
-    //createCategoryDTO.author =  authorName;
-
-    
+    createCategoryDTO.authorLogin =  req.user.email;
+  
 
      /**NOTE: This is to don't allow record categories with the same name */  
      const nameRequested = createCategoryDTO.name 

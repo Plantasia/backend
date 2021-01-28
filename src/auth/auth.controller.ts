@@ -13,7 +13,6 @@ export class AuthController {
   @ApiOkResponse({description:"user succesfully logged"})
   @ApiForbiddenResponse({ description:"Forbidden" })
   async login(@Request() req: CreateSessionDTO) {
-
     return this.authService.login(req.user);
     
   }

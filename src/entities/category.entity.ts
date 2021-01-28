@@ -17,16 +17,16 @@ export class Category {
   @Column()
   name: string;
 
-  @Column({ default: '---------' })
-  author: string;
+  @Column({ default: '' })
+  authorLogin: string;
 
-  @Column({ default: '---------' })
+  @Column({ default: '' })
   authorSlug:string;
 
   @Column()
   description: string;
 
-  @Column({ default: '---------' })
+  @Column({ default: '' })
   imageStorage: string;
 
   @Column({ default: true })
