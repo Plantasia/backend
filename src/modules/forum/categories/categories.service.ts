@@ -18,6 +18,11 @@ export class CategoryService {
     return this.categoryRepository.find();
   }
 
+  async find(argument: any): Promise<Category[]> {
+    return this.categoryRepository.find(argument);
+  }
+
+
   async findOne(id: string): Promise<Category> {
     return this.categoryRepository.findOne({
       where: {
@@ -26,7 +31,16 @@ export class CategoryService {
     });
   }
 
- 
+
+
+  async findByName(name: string): Promise<Category> {
+    return this.categoryRepository.findOne({
+      where: {
+        name,
+      },
+    });
+  }
+
   async remove(id: string): Promise<void> {
     const resp = await this.categoryRepository.delete(id);
 
