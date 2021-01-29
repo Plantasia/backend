@@ -19,9 +19,9 @@ export class CreateUserDTO {
 
   public readonly isActive: boolean;
 
-  public readonly isAdmin: boolean;
-
   public readonly quarentineNum: number;
+
+  public readonly isAdmin: boolean;
 }
 
 /** MUST TO CREATE A NEW USER

@@ -44,7 +44,7 @@ export class User {
   @UpdateDateColumn()
   updated_at: Date;
 
-  @Column('boolean', { nullable: true,  default: true })
+  @Column({ default: true })
   isAdmin: boolean
 
   @OneToMany(

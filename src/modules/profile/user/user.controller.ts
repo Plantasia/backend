@@ -6,11 +6,7 @@ import {
   Param,
   Post,
   Put,
-  Req,
-  Res,
-  Response,
   UseGuards,
-  HttpStatus,
   UsePipes,
 } from '@nestjs/common';
 import { UserService } from './user.service';
