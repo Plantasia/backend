@@ -5,6 +5,7 @@ import {
   Request,
   Get,
   Param,
+  ParseIntPipe,
   Post,
   Put,
   Render,
@@ -68,6 +69,7 @@ export class CategoryController {
     return this.categoryService.findAll();
   }
 
+
   @Get()
   @ApiOkResponse({description:"The categories has been succesfful returned"})
   @ApiForbiddenResponse({ description:"Forbidden" })
@@ -92,6 +94,8 @@ export class CategoryController {
   remove(@Param('id') id: string): Promise<void> {
     return this.categoryService.remove(id);
   }
+  
+  
 
   @UseGuards(JwtAuthGuard)
   @Put(':id')

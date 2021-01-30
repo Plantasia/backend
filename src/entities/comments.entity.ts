@@ -10,7 +10,7 @@ import {
   ManyToOne,
 } from 'typeorm';
 import { Topic } from './topic.entity';
-import { User } from '@entities/user.entity';
+import { User } from '../entities/user.entity';
 
 @Entity()
 export class Comment {

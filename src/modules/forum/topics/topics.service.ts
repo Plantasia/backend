@@ -59,6 +59,19 @@ export class TopicsService {
     });
   }
 
+  async findWithOrderBy(){
+    const qb = this.topicRepository.createQueryBuilder("Topic");
+     qb.orderBy("Topic.created_at", "DESC")
+      console.log(qb.getQuery());
+      return await qb.getMany();
+  }
+
+  async findNoResponse(){
+    const qb = this.topicRepository.createQueryBuilder("Topic");
+     qb.where("Topic.response = 0")
+      console.log(qb.getQuery());
+      return await qb.getMany();
+  }
 
   async findById(id: string): Promise<Topic> {
     return this.topicRepository.findOne({
@@ -79,6 +92,8 @@ export class TopicsService {
     await this.topicRepository.delete(id);
   }
 }
+
+
 
 /**
  * #########################//

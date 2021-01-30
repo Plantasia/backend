@@ -69,6 +69,8 @@ export class CreateUserDTO {
 
   @IsEmpty()
   public readonly quarentineNum: number;
+
+  public readonly isAdmin: boolean;
 }
 
 /** MUST TO CREATE A NEW USER

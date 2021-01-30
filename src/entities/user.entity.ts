@@ -44,6 +44,9 @@ export class User {
   @UpdateDateColumn()
   updated_at: Date;
 
+  @Column({ default: true })
+  isAdmin: boolean
+
   @OneToMany(
     () => Comment,
     comment => comment.user,

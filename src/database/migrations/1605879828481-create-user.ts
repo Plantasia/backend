@@ -54,6 +54,11 @@ export class createUser1605879828481 implements MigrationInterface {
             type: 'int',
             isNullable: false,
           },
+          {
+            name: 'isAdmin',
+            type: 'boolean',
+            isNullable: false,
+          },
         ],
       }),
     );
