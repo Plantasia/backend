@@ -4,10 +4,14 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Category } from '@entities/category.entity';
 import { CategoryService } from './categories.service';
 import { TopicModule } from '../topics/topics.module';
+import { UserService } from 'src/modules/profile/user/user.service';
+import { User } from '@entities/user.entity';
+import { UserModule } from 'src/modules/profile/user/user.module';
+import { TopicsService } from '../topics/topics.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Category]), TopicModule],
-  providers: [CategoryService],
+  imports: [TypeOrmModule.forFeature([Category]),  TopicModule, UserModule],
+  providers: [CategoryService, UserService, TopicsService],
   controllers: [CategoryController],
   exports: [],
 })

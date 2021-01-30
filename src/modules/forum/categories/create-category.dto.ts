@@ -1,17 +1,44 @@
 import { IsEmpty, IsNotEmpty } from 'class-validator';
-
+import {ApiProperty} from '@nestjs/swagger';
 export class CreateCategoryDTO {
+
+
   @IsNotEmpty()
+  @ApiProperty({
+    type: String,
+    description: 'Name of new category',
+    default: '',
+  })
   public readonly name: string;
 
-  @IsNotEmpty()
-  public readonly author: string;
-
-  @IsNotEmpty()
-  public readonly description: string;
-
-  public readonly imageStorage: string;
 
   @IsEmpty()
+  public  authorSlug: string;
+
+
+
+  @IsEmpty()
+  public  author: string;
+
+  @IsNotEmpty()
+  @ApiProperty({
+    type: String,
+    description: 'Name of your new category',
+    default: '',
+  })
+  public readonly description: string;
+
+
+  @ApiProperty({
+    type: String,
+    description: 'Name of your new category',
+    default: '',
+  })
+  public readonly imageStorage: string;
+
+
+
+  @IsEmpty()
+
   public readonly isActive: boolean;
 }

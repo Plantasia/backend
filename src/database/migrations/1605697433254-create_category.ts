@@ -23,6 +23,13 @@ export class createCategory1605697433254 implements MigrationInterface {
             type: 'text',
             isNullable: false,
           },
+
+          {
+            name: 'authorSlug',
+            type: 'text',
+            isNullable: false,
+          },
+
           {
             name: 'imageStorage',
             type: 'text',

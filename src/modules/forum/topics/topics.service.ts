@@ -37,15 +37,9 @@ export class TopicsService {
 
     topic.user = await this.UserRepository.findOne(user_id);
 
-    /*if(topic.user===undefined || topic.user){
-      return topic = null;
-    }*/
     topic.category = await this.CategoryRepository.findOne(category_id);
 
-    /*if(topic.category===undefined || topic.category){
-        return topic= null;
-      }*/
-
+   
     /** this creates an entity instance */
     const t = await this.topicRepository.create(topic);
 
@@ -78,6 +72,15 @@ export class TopicsService {
       console.log(qb.getQuery());
       return await qb.getMany();
   }
+
+  async findById(id: string): Promise<Topic> {
+    return this.topicRepository.findOne({
+      where: {
+        id: id,
+      },
+    });
+  }
+
 
   async update(id: string, data): Promise<Topic> {
     await this.topicRepository.update(id, data);
