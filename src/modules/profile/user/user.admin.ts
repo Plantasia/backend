@@ -3,5 +3,7 @@ import { User } from '../../../entities/user.entity'
 
 export class UserAdmin extends AdminEntity {
   entity = User
-  listDisplay = ['firstname', 'lastname']
+  listDisplay = ['id', 'firstname', 'lastname', 'email']
+  fields = ['firstName', 'lastName', 'createdDate', 'gender']
+  searchFields = ['firstName', 'lastName', 'createdDate', 'gender']
 }

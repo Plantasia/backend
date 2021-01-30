@@ -4,7 +4,6 @@ import { Repository } from 'typeorm'
 import { UserService } from '../modules/profile/user/user.service';
 
 export const adminCredentialValidator = {
-  inject: [getRepositoryToken(User)], // injects the User repository in the factory
   useFactory: (userService: UserService) => {
     // You can now return a function to validate the credentials
     return async function validateCredentials(email: string, password: string) {
@@ -18,4 +17,5 @@ export const adminCredentialValidator = {
       return null // The credentials do not identify an administor
     }
   },
+  inject: [getRepositoryToken(User)],
 }

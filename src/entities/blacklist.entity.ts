@@ -13,7 +13,6 @@ import {
   export class Blacklist {
     @PrimaryGeneratedColumn('uuid')
      id: string;
-     
     @Column()
     token: string;
   
