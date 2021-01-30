@@ -10,20 +10,16 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @UseGuards(LocalAuthGuard)
-<<<<<<< HEAD
+
   @Post('SingIn')
   async login(@Request() req: any,  host: ArgumentsHost) {
-=======
+
 
   @Post('SignIn')
   @ApiOkResponse({description:"user succesfully logged"})
   @ApiForbiddenResponse({ description:"Forbidden" })
   async login(@Request() req: CreateSessionDTO) {
-<<<<<<< HEAD
-=======
 
->>>>>>> fcf18d247512b8d1b2adf3c43c3485e202983b9e
->>>>>>> refactor/newArchiteture
     return this.authService.login(req.user);
     
   }
