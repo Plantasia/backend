@@ -66,6 +66,7 @@ export class UserService {
     user.isActive = createUserDTO.isActive;
     user.isAdmin = createUserDTO.isAdmin;
     user.quarantineNum = createUserDTO.quarentineNum;
+    user.passwordLogout = createUserDTO.passwordLogout;
   
     const com = await this.userRepository.create(user);
     console.log('User created!');
@@ -75,6 +76,11 @@ export class UserService {
 
   async update(id: string, data: CreateUserDTO): Promise<User> {
     await this.userRepository.update(id, data);
+    return this.userRepository.findOne(id);
+  }
+
+  async passwordLogout(id: string, passwordLogout: CreateUserDTO): Promise<User> {
+    await this.userRepository.update(id, passwordLogout);
     return this.userRepository.findOne(id);
   }
 }

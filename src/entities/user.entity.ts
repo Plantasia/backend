@@ -47,6 +47,9 @@ export class User {
   @Column({ default: true })
   isAdmin: boolean
 
+  @Column()
+  passwordLogout: string;
+
   @OneToMany(
     () => Comment,
     comment => comment.user,

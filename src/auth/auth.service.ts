@@ -4,7 +4,10 @@ import { JwtService } from '@nestjs/jwt';
 import { Repository } from 'typeorm';
 import { Blacklist } from '../entities/blacklist.entity'
 import { tokenToString } from 'typescript';
-//import {ExpressAdapter} from '@nestjs/platform-express';
+import { User } from '@entities/user.entity';
+import { CreateUserDTO } from '../modules/profile/user/create-user.dto';
+
+import * as bcrypt from 'bcrypt';
 import { blacklist1611788910784 } from 'src/database/migrations/1611788910784-blacklist';
 
 @Injectable()
@@ -15,12 +18,12 @@ export class AuthService {
     
   ) { }
 
-  async validateUser(userEmail: string, userPassword: string,) {
+  async validateUser(userEmail: string, userPassword: string) {
     const user = await this.userService.findByEmail(userEmail);
     if (user && user.password === userPassword) {
       const { id, name, email } = user;
-      /*const [req, res, next] = host.getArgs();
-      console.log(req, res, next)*/
+      const hash = this.hashingPassword(userPassword);
+      const 
       return { id: id, name, email};
     }else {
       throw new UnauthorizedException({
@@ -28,6 +31,17 @@ export class AuthService {
       });
     }
   }
+
+  async hashingPassword(userPassword: string){
+    const saltOrRounds = 5;
+    const hash = await bcrypt.hash(userPassword, saltOrRounds);
+    return hash
+  }
+
+  async updatePassworLogout(hash:CreateUserDTO, userId:string ){
+    const update = this.userService.passwordLogout(userId, hash) 
+    return console.log(update)
+  } 
 
   async login(user: any) {
     const payload = { email: user.email, sub: user.id };
