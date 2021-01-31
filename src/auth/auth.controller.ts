@@ -11,9 +11,9 @@ export class AuthController {
 
   @UseGuards(LocalAuthGuard)
 
-  @Post('SingIn')
-  async login(@Request() req: any,  host: ArgumentsHost) {
-
+  /*@Post('SingIn')
+  async login(@Request() req: any) {
+  }*/
 
   @Post('SignIn')
   @ApiOkResponse({description:"user succesfully logged"})

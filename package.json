@@ -36,7 +36,6 @@
     "global": "^4.4.0",
     "js-yaml": "^4.0.0",
     "mysql": "^2.14.1",
-    "nestjs-admin": "^0.4.1",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",

@@ -7,7 +7,8 @@ import {
     OneToMany,
     PrimaryGeneratedColumn,
   } from 'typeorm';
-  import { Topic } from './topic.entity';
+
+  import { Topic } from './topic.entity'
   
   @Entity('blacklist')
   export class Blacklist {
