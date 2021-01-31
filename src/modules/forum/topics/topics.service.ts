@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { Topic } from '@entities/topic.entity';
+import { Topic } from '../../../entities/topic.entity';
 import { User } from '@entities/user.entity';
 import { CreateTopicDTO } from './create-topic.dto';
 import { CategoryService } from '../categories/categories.service';
