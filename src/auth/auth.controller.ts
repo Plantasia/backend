@@ -11,21 +11,18 @@ export class AuthController {
 
   @UseGuards(LocalAuthGuard)
 
-  @Post('SingIn')
-  async login(@Request() req: any,  host: ArgumentsHost) {
-
 
   @Post('SignIn')
   @ApiOkResponse({description:"user succesfully logged"})
   @ApiForbiddenResponse({ description:"Forbidden" })
-  async login(@Request() req: CreateSessionDTO) {
+   login(@Request() req: CreateSessionDTO) {
 
     return this.authService.login(req.user);
     
   }
   
   @Get('LogOut')
-  async logout(@Request() req: any) {
+  logout(@Request() req: any) {
     return console.log(req.user);
   }
 
