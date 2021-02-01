@@ -2,7 +2,7 @@ import { Injectable,UnauthorizedException, ArgumentsHost} from '@nestjs/common';
 import { UserService } from '../modules/profile/user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { Repository } from 'typeorm';
-import { Blacklist } from '../entities/blacklist.entity'
+import { InjectRepository } from '@nestjs/typeorm';
 import { tokenToString } from 'typescript';
 import { User } from '@entities/user.entity';
 import { CreateUserDTO } from '../modules/profile/user/create-user.dto';
@@ -15,15 +15,19 @@ export class AuthService {
   constructor(
     private userService: UserService,
     private jwtService: JwtService,
+    @InjectRepository(User)
+    private UserRepository: Repository<User>
     
-  ) { }
+  ) {
+    this.UserRepository = UserRepository;
+   }
 
   async validateUser(userEmail: string, userPassword: string) {
     const user = await this.userService.findByEmail(userEmail);
     if (user && user.password === userPassword) {
       const { id, name, email } = user;
       const hash = this.hashingPassword(userPassword);
-     
+      const teste = this.updatePassworLogout((await hash).toString(),id)
       return { id: id, name, email};
     }else {
       throw new UnauthorizedException({
@@ -38,35 +42,36 @@ export class AuthService {
     return hash
   }
 
-  async updatePassworLogout(hash:CreateUserDTO, userId:string ){
-    const update = this.userService.passwordLogout(userId, hash) 
+  async updatePassworLogout(hash:string, userId:string ){
+    const user = new CreateUserDTO();
+    user.passwordLogout=hash
+    const update = this.userService.passwordLogout(userId,user);
     return console.log(update)
   } 
 
   async login(user: any) {
-    const payload = { email: user.email, sub: user.id };
+    const payload = { email: user.email, sub: user.id+user.passwordLogout };
     return {
       access_token: this.jwtService.sign(payload),
     };
   }
 
-
-  /*async findOne(token: string): Promise<Blacklist> {
-    return this.blackListRepository.findOne({
-      where: {
-        token,
-      },
-    });
+  async logout(userEmail:any) {
+    const clean = this.nullPasswordLogout(userEmail);
+    
+    return {
+      message: "logout successful"
+    }
   }
 
-  async logout(user: any){
-    const access_token = user.access_token;
-    const out = await this.findOne(access_token);
-      if (out.token != token){
 
-      }
-    
-  }*/
+  async nullPasswordLogout(userEmail:string){
+    const user = new CreateUserDTO();
+    user.passwordLogout="logout"
+    const update = this.userService.passwordLogoutByEmail(userEmail,user);
+    return console.log("foi " +update)
+  }
+
 
 
 }
