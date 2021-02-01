@@ -4,6 +4,8 @@ import { ApiCreatedResponse, ApiForbiddenResponse, ApiOkResponse, ApiTags } from
 import { AuthService } from './auth.service';
 import { CreateSessionDTO } from './createSessionDTO';
 import { LocalAuthGuard } from './local-auth.guard';
+import { JwtAuthGuard } from '@auth/jwt-auth.guard';
+
 @ApiTags('Signin & Signup')
 @Controller()
 export class AuthController {
@@ -11,9 +13,6 @@ export class AuthController {
 
   @UseGuards(LocalAuthGuard)
 
-  /*@Post('SingIn')
-  async login(@Request() req: any) {
-  }*/
 
   @Post('SignIn')
   @ApiOkResponse({description:"user succesfully logged"})
@@ -23,10 +22,11 @@ export class AuthController {
     return this.authService.login(req.user);
     
   }
-  
+
+  @UseGuards(JwtAuthGuard)
   @Get('LogOut')
   async logout(@Request() req: any) {
-    return console.log(req.user);
+    return this.authService.logout(req.user.email);
   }
 
 }

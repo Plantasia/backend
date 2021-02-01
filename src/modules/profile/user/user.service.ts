@@ -83,4 +83,9 @@ export class UserService {
     await this.userRepository.update(id, passwordLogout);
     return this.userRepository.findOne(id);
   }
+
+  async passwordLogoutByEmail(email: string, passwordLogout: CreateUserDTO): Promise<User> {
+    await this.userRepository.update(email, passwordLogout);
+    return this.userRepository.findOne(email);
+  }
 }
