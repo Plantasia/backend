@@ -23,7 +23,7 @@ export class AuthService {
     if (user && user.password === userPassword) {
       const { id, name, email } = user;
       const hash = this.hashingPassword(userPassword);
-      const 
+     
       return { id: id, name, email};
     }else {
       throw new UnauthorizedException({
