@@ -28,6 +28,7 @@ export class UserController {
     return this.userService.findAll();
   }
 
+  
   @Post()
   @UsePipes(ValidationPipe)
  async create(@Body() createUserDTO: CreateUserDTO): Promise<User> {
