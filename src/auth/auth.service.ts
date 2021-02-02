@@ -6,6 +6,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { tokenToString } from 'typescript';
 import { User } from '@entities/user.entity';
 import { CreateUserDTO } from '../modules/profile/user/create-user.dto';
+import { logoutConstant} from './logout'
 
 import * as bcrypt from 'bcrypt';
 import { blacklist1611788910784 } from 'src/database/migrations/1611788910784-blacklist';
@@ -56,20 +57,17 @@ export class AuthService {
     };
   }
 
-  async logout(userEmail:any) {
+  async logout(userEmail:string) {
     const clean = this.nullPasswordLogout(userEmail);
-    
-    return {
-      message: "logout successful"
-    }
+    return console.log(clean)
   }
 
 
   async nullPasswordLogout(userEmail:string){
     const user = new CreateUserDTO();
-    user.passwordLogout="logout"
-    const update = this.userService.passwordLogoutByEmail(userEmail,user);
-    return console.log("foi " +update)
+    user.passwordLogout=logoutConstant.constant
+    const update = await this.userService.passwordLogoutByEmail(userEmail,user);
+    return console.log(update)
   }
 
 
