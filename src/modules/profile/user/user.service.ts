@@ -85,7 +85,14 @@ export class UserService {
   }
 
   async passwordLogoutByEmail(email: string, passwordLogout: CreateUserDTO): Promise<User> {
-    await this.userRepository.update(email, passwordLogout);
-    return this.userRepository.findOne(email);
+    const userToUpdate = (await this.userRepository.findOne(
+      {
+        where:{
+          email:email
+        }
+      })).id
+    const resp =  await this.userRepository.update(userToUpdate, passwordLogout);
+    const user = await this.findByEmail(email);
+    return user
   }
 }
