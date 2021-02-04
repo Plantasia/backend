@@ -110,24 +110,27 @@ export class UserService {
         where:{
           tokenLogout:token
         }
-        }))//.tokenLogout###
-      //console.log("#######################\n")
-      //console.log(userToCheck)
+        }))
 
-    //onsole.log("Find by token",userToCheck)
-    return userToCheck;
+    if(!userToCheck){
+          throw new UnauthorizedException({error:"Unauthorized"})
+    }
+    return userToCheck
+  
+
   }
 
   async authorizationCheck(tokenRequest:string){
     const userToCheck = await this.findByToken(tokenRequest);
     console.log("Check",userToCheck)
-    if (userToCheck.tokenLogout === tokenRequest){
+    if ((userToCheck.tokenLogout === tokenRequest) || userToCheck){
       return {
-        Mesage: "Valid token ",
+        Message: "Valid token ",
       };
     }else {
+     
       throw new UnauthorizedException({
-        error: 'Invalid token'
+        error: 'Unauthorized'
       });
     }
 

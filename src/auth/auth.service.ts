@@ -1,4 +1,4 @@
-import { Injectable,UnauthorizedException, ArgumentsHost} from '@nestjs/common';
+import { Injectable,UnauthorizedException, ArgumentsHost, NotFoundException} from '@nestjs/common';
 import { UserService } from '../modules/profile/user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { Repository } from 'typeorm';
@@ -36,12 +36,32 @@ export class AuthService {
     }
   }
 
-  /*Function for hashing string, deprecated
-    async hashingPassword(userPassword: string){
-    const saltOrRounds = 5;
-    const hash = await bcrypt.hash(userPassword, saltOrRounds);
-    return hash
-  }*/
+  async checkToken(token:string){
+    
+    const userLogged = await this.UserRepository.findOne(
+      {
+        where:{
+        tokenLogout:token
+       }
+    })
+    if( userLogged){
+      return userLogged;
+    }
+    else {
+       throw new NotFoundException({error:`The token ${token} was not found!`})
+    }
+  }
+
+  /** 
+   *  NOTE: This is to hashing a password
+   *  NOW_USED!
+   * 
+   * Function for hashing string, deprecated
+   * async hashingPassword(userPassword: string){
+   * const saltOrRounds = 5;
+   * const hash = await bcrypt.hash(userPassword, saltOrRounds);
+   * return hash }
+   **/
 
   async updatePassworLogout(token:string, userId:string ){
     const user = new CreateUserDTO();
@@ -60,6 +80,7 @@ export class AuthService {
   }
 
   async logout(userEmail:string) {
+   
     const clean = this.nullPasswordLogout(userEmail);
     return console.log(clean)
   }
