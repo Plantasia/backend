@@ -23,6 +23,7 @@ import { ApiCreatedResponse, ApiForbiddenResponse, ApiOkResponse, ApiResponse, A
 import { JwtAuthGuard } from '../../../auth/jwt-auth.guard';
 import { UserService } from 'src/modules/profile/user/user.service';
 
+
 @ApiTags('categories')
 @Controller('categories')
 export class CategoryController {

@@ -17,14 +17,20 @@ import { CreateUserDTO } from './create-user.dto';
 import { User } from '@entities/user.entity';
 import { JwtAuthGuard } from '../../../auth/jwt-auth.guard';
 import { ValidationPipe } from '@nestjs/common/pipes/validation.pipe';
+import { AuthService } from '../../../auth/auth.service';
+
 
 @Controller('users')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService,
+    ) {}
 
   @UseGuards(JwtAuthGuard)
   @Get()
-  findAll(): Promise<User[]> {
+  findAll(@Request() req): Promise<User[]> {
+    console.log(req.headers.authorization)
+    const check = this.userService.authorizationCheck(req.headers.authorization)
+    console.log(check)
     return this.userService.findAll();
   }
 
@@ -36,7 +42,7 @@ export class UserController {
   }
 
 
-  @UseGuards(JwtAuthGuard)
+ 
   @Get(':id')
  async findOne(@Param('id') id: string): Promise<User> {
 
@@ -54,6 +60,7 @@ export class UserController {
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
  async remove(@Request() req, @Param('id') id: string): Promise<void> {
+  const check = this.userService.authorizationCheck(req.headers.authorization)
       /**
        * NOTE: Remember to ask user send password to
        * do this action (sooner)
@@ -91,7 +98,7 @@ export class UserController {
     @Param('id') id: string,
     @Body() data: CreateUserDTO,
     @Request() req ): Promise<User> {
-
+      const check = this.userService.authorizationCheck(req.headers.authorization)
       /**
        * NOTE: Remember to ask user send password to
        * do this action (sooner)

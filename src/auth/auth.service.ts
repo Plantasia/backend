@@ -27,8 +27,7 @@ export class AuthService {
     const user = await this.userService.findByEmail(userEmail);
     if (user && user.password === userPassword) {
       const { id, name, email } = user;
-      const hash = this.hashingPassword(userPassword);
-      const teste = this.updatePassworLogout((await hash).toString(),id)
+      //const hash = this.hashingPassword(userPassword);
       return { id: id, name, email};
     }else {
       throw new UnauthorizedException({
@@ -37,23 +36,26 @@ export class AuthService {
     }
   }
 
-  async hashingPassword(userPassword: string){
+  /*Function for hashing string, deprecated
+    async hashingPassword(userPassword: string){
     const saltOrRounds = 5;
     const hash = await bcrypt.hash(userPassword, saltOrRounds);
     return hash
-  }
+  }*/
 
-  async updatePassworLogout(hash:string, userId:string ){
+  async updatePassworLogout(token:string, userId:string ){
     const user = new CreateUserDTO();
-    user.passwordLogout=hash
+    user.tokenLogout=token
     const update = this.userService.passwordLogout(userId,user);
     return console.log(update)
   } 
 
   async login(user: any) {
-    const payload = { email: user.email, sub: user.id+user.passwordLogout };
+    const payload = { email: user.email, sub: user.id };
+    const token = this.jwtService.sign(payload)
+    const update = this.updatePassworLogout("Bearer "+token,user.id)
     return {
-      access_token: this.jwtService.sign(payload),
+      access_token: token,
     };
   }
 
@@ -65,7 +67,7 @@ export class AuthService {
 
   async nullPasswordLogout(userEmail:string){
     const user = new CreateUserDTO();
-    user.passwordLogout=logoutConstant.constant
+    user.tokenLogout=logoutConstant.constant
     const update = await this.userService.passwordLogoutByEmail(userEmail,user);
     return console.log(update)
   }

@@ -26,7 +26,8 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Get('LogOut')
   async logout(@Request() req: any) {
-    return this.authService.logout(req.headers.authorization);
+    //Colocar o metodo de validar o token
+    return this.authService.logout(req.user.email);
   }
 
 }

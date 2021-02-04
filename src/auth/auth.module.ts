@@ -9,6 +9,8 @@ import { PassportModule } from '@nestjs/passport';
 import { jwtConstants } from './constants';
 import { User } from '@entities/user.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { UserService } from 'src/modules/profile/user/user.service';
+
 
 
 
@@ -25,6 +27,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy, JwtStrategy],
+  providers: [AuthService, LocalStrategy, JwtStrategy ],
+  exports: [AuthService]
 })
 export class AuthModule {}

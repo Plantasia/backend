@@ -7,6 +7,9 @@ import { User } from '@entities/user.entity';
 import { Topic } from '@entities/topic.entity';
 import { Category } from '@entities/category.entity';
 import { UserController } from './user.controller';
+import { AuthService } from '../../../auth/auth.service';
+import {AuthModule} from '../../../auth/auth.module'
+
 
 
 //import {} falta o user service

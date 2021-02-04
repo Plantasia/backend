@@ -3,14 +3,10 @@ import { Module,  NestModule, MiddlewareConsumer, RequestMethod } from '@nestjs/
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './modules/profile/user/user.module';
 import { ForumModule } from './modules/forum/forum.module';
-import { LoggerMiddleware } from './modules/middleware/logger.middleware';
+import {AuthService} from './/auth/auth.service'
+import {  AppService } from './app.service';
+
 @Module({
-  imports: [TypeOrmModule.forRoot({}), UserModule, AuthModule, ForumModule],
+  imports: [TypeOrmModule.forRoot({}), UserModule, AuthModule, ForumModule, AppService],
 })
-export class AppModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(LoggerMiddleware)
-      .forRoutes({ path: 'users', method: RequestMethod.GET });
-  }
-}
+export class AppModule {}

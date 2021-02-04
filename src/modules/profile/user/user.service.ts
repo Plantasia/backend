@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserDTO } from './create-user.dto';
@@ -66,7 +66,7 @@ export class UserService {
     user.isActive = createUserDTO.isActive;
     user.isAdmin = createUserDTO.isAdmin;
     user.quarantineNum = createUserDTO.quarentineNum;
-    user.passwordLogout = createUserDTO.passwordLogout;
+    user.tokenLogout = createUserDTO.tokenLogout;
   
     const com = await this.userRepository.create(user);
     console.log('User created!');
@@ -95,4 +95,31 @@ export class UserService {
     const user = await this.findByEmail(email);
     return user
   }
+
+  async findByToken(token: string): Promise<string> {
+    const userToCheck= (await this.userRepository.findOne(
+      {
+        where:{
+          tokenLogout:token
+        }
+      })).tokenLogout
+    console.log("Find by token",userToCheck)
+    return userToCheck.toString()
+  }
+
+  async authorizationCheck(tokenRequest:string){
+    const userToCheck = await this.findByToken(tokenRequest);
+    console.log("Check",userToCheck)
+    if (userToCheck == tokenRequest){
+      return {
+        Mesage: "Valid token ",
+      };
+    }else {
+      throw new UnauthorizedException({
+        error: 'Invalid token'
+      });
+    }
+
+  }
+
 }
