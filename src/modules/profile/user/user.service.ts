@@ -22,6 +22,8 @@ export class UserService {
     });
   }
 
+  
+
   async checkIfAlreadyExists(email:string): Promise<User> {
     return this.userRepository.findOne({
       where: {
@@ -96,21 +98,30 @@ export class UserService {
     return user
   }
 
-  async findByToken(token: string): Promise<string> {
+  async findByToken(token: string): Promise<User> {
+    
+     console.log("&&&&&&&&&&&&&&&&&&&This is the token\n")
+     console.log(token)
+
+     
     const userToCheck= (await this.userRepository.findOne(
       {
+  
         where:{
           tokenLogout:token
         }
-      })).tokenLogout
-    console.log("Find by token",userToCheck)
-    return userToCheck.toString()
+        }))//.tokenLogout###
+      //console.log("#######################\n")
+      //console.log(userToCheck)
+
+    //onsole.log("Find by token",userToCheck)
+    return userToCheck;
   }
 
   async authorizationCheck(tokenRequest:string){
     const userToCheck = await this.findByToken(tokenRequest);
     console.log("Check",userToCheck)
-    if (userToCheck == tokenRequest){
+    if (userToCheck.tokenLogout === tokenRequest){
       return {
         Mesage: "Valid token ",
       };

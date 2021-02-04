@@ -27,10 +27,15 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard)
   @Get()
-  findAll(@Request() req): Promise<User[]> {
+  async findAll(@Request() req): Promise<User[]> {
     console.log(req.headers.authorization)
-    const check = this.userService.authorizationCheck(req.headers.authorization)
-    console.log(check)
+    console.log(req.user.email);
+    const thisUser = await this.userService.findByEmail(req.user.email);
+    console.log(`\n\n\n@@@@@@@@This user:::: \n`)
+    console.log(thisUser)
+
+    const check = await this.userService.authorizationCheck(req.headers.authorization)
+
     return this.userService.findAll();
   }
 
