@@ -36,7 +36,8 @@ export class CategoryController {
   @ApiForbiddenResponse({ description:"Forbidden" })
   @UsePipes(ValidationPipe)
   async create(@Body() createCategoryDTO: CreateCategoryDTO, @Request() req ): Promise<Category> {
-    
+  const thisUser = await this.userService.findByEmail(req.user.email);
+  const check = await this.userService.authorizationCheck(req.headers.authorization)
    const id = req.user.id
    const email = req.user.email
    
@@ -66,7 +67,7 @@ export class CategoryController {
   @Get()
   @ApiOkResponse({description:"The categories has been succesfful returned"})
   @ApiForbiddenResponse({ description:"Forbidden" })
-  findAll(): Promise<Category[]> {
+  async findAll(): Promise<Category[]> {
     return this.categoryService.findAll();
   }
 
@@ -84,7 +85,9 @@ export class CategoryController {
   @Get(':id')
   @ApiOkResponse({description:"The category has been successful deleted"})
   @ApiForbiddenResponse({ description:"Forbidden" })
-  findOne(@Param('id') id: string): Promise<Category> {
+  async findOne(@Param('id') id: string, @Request() req): Promise<Category> {
+    const thisUser = await this.userService.findByEmail(req.user.email);
+    const check = await this.userService.authorizationCheck(req.headers.authorization)
     return this.categoryService.findOne(id);
   }
 
@@ -92,7 +95,9 @@ export class CategoryController {
   @Delete(':id')
   @ApiOkResponse({description:"The category has been successful deleted"})
   @ApiForbiddenResponse({ description:"Forbidden" })
-  remove(@Param('id') id: string): Promise<void> {
+  async remove(@Param('id') id: string, @Request() req): Promise<void> {
+    const thisUser = await this.userService.findByEmail(req.user.email);
+    const check = await this.userService.authorizationCheck(req.headers.authorization)
     return this.categoryService.remove(id);
   }
   
@@ -106,7 +111,8 @@ export class CategoryController {
     @Param('id') id: string,
     @Body() createCategoryDTO: CreateCategoryDTO ,@Request() req:any): Promise<Category> {
       const email =req.headers;
-
+      const thisUser = await this.userService.findByEmail(req.user.email);
+      const check = await this.userService.authorizationCheck(req.headers.authorization)
     const authorLogin = await (await this.categoryService.findById(id)).authorLogin
 
     console.log(email)

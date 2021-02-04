@@ -29,17 +29,11 @@ export class UserController {
   @Get()
   async findAll(@Request() req): Promise<User[]> {
     //console.log(req.headers.authorization)
- 
     //console.log(req.user.email);
     const thisUser = await this.userService.findByEmail(req.user.email);
-    console.log(`\n\n\n@@@@@@@@This user:::: \n`)
-    console.log(thisUser)
-
-    
-    const check = await this.userService.authorizationCheck(req.headers.authorization)
-
-   
-
+    //console.log(`\n\n\n@@@@@@@@This user:::: \n`)
+    //console.log(thisUser)
+    const check = await this.userService.authorizationCheck(req.headers.authorization)   
     return this.userService.findAll();
   }
 
@@ -69,7 +63,8 @@ export class UserController {
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
  async remove(@Request() req, @Param('id') id: string): Promise<void> {
-  const check = this.userService.authorizationCheck(req.headers.authorization)
+    const thisUser = await this.userService.findByEmail(req.user.email);
+    const check = await this.userService.authorizationCheck(req.headers.authorization)
       /**
        * NOTE: Remember to ask user send password to
        * do this action (sooner)
@@ -107,7 +102,8 @@ export class UserController {
     @Param('id') id: string,
     @Body() data: CreateUserDTO,
     @Request() req ): Promise<User> {
-      const check = this.userService.authorizationCheck(req.headers.authorization)
+      const thisUser = await this.userService.findByEmail(req.user.email);
+      const check = await this.userService.authorizationCheck(req.headers.authorization)
       /**
        * NOTE: Remember to ask user send password to
        * do this action (sooner)

@@ -7,7 +7,7 @@ import {
   HttpStatus,
   Param,
   Post,
-  Render,
+  Request,
   UseGuards,
   UsePipes,
   ValidationPipe,
@@ -25,11 +25,11 @@ import { TopicsService } from '../topics/topics.service';
 export class CommentController {
   constructor(
               private readonly commentService: CommentService,
-              private readonly usersService: UserService,
+              private readonly userService: UserService,
               private readonly topicsService: TopicsService
               ) {}
 
-  @UseGuards(JwtAuthGuard)
+  
   @Get()
   @ApiCreatedResponse({description:"comment succesfully created"})
   @ApiForbiddenResponse({ description:"Forbidden" })
@@ -42,8 +42,9 @@ export class CommentController {
   @ApiCreatedResponse({description:"comment succesfully created"})
   @ApiForbiddenResponse({ description:"Forbidden" })
   @UsePipes(ValidationPipe)
-  async create(@Body() createCommentDTO: CreateCommentDTO): Promise<Comment> {
-
+  async create(@Body() createCommentDTO: CreateCommentDTO, @Request() req): Promise<Comment> {
+    const thisUser = await this.userService.findByEmail(req.user.email);
+    const check = await this.userService.authorizationCheck(req.headers.authorization)
     const user_id = createCommentDTO.user_id;
     const topic_id =createCommentDTO.topic_id;
    
@@ -51,7 +52,7 @@ export class CommentController {
      * NOTE: Checking both user and topic if they already exists
      * 
      */
-    const userAlreadyExists = await this.usersService.findById(user_id)
+    const userAlreadyExists = await this.userService.findById(user_id)
     const topicAlreadyExists = await this.topicsService.findById(topic_id)
 
     console.log(` User Exists?  ==>${userAlreadyExists}`)
@@ -76,7 +77,9 @@ export class CommentController {
   @Get(':id')
   @ApiOkResponse({description:"The comments has been succesfful returned"})
   @ApiForbiddenResponse({ description:"Forbidden" })
-  findOne(@Param('id') id: string): Promise<Comment> {
+  async findOne(@Param('id') id: string, @Request() req): Promise<Comment> {
+    const thisUser = await this.userService.findByEmail(req.user.email);
+    const check = await this.userService.authorizationCheck(req.headers.authorization)
     return this.commentService.findOne(id);
   }
 
@@ -84,7 +87,9 @@ export class CommentController {
   @Delete(':id')
   @ApiOkResponse({description:"The comment has been successful deleted"})
   @ApiForbiddenResponse({ description:"Forbidden" })
-  remove(@Param('id') id: string): Promise<void> {
+  async remove(@Param('id') id: string, @Request() req): Promise<void> {
+    const thisUser = await this.userService.findByEmail(req.user.email);
+    const check = await this.userService.authorizationCheck(req.headers.authorization)
     return this.commentService.remove(id);
   }
 }
