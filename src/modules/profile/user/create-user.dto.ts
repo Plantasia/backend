@@ -73,7 +73,7 @@ export class CreateUserDTO {
   public readonly isAdmin: boolean;
 
   @IsEmpty()
-  public passwordLogout: string;
+  public tokenLogout: string;
 }
 
 /** MUST TO CREATE A NEW USER
