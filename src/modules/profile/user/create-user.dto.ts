@@ -50,8 +50,6 @@ export class CreateUserDTO {
   })
   public readonly email: string;
 
-
-
   @IsNotEmpty()
   @ApiProperty({
     type: String,
@@ -60,12 +58,8 @@ export class CreateUserDTO {
   })
   public readonly password: string;
 
-
-
   @IsEmpty()
   public readonly isActive: boolean;
-
-
 
   @IsEmpty()
   public readonly quarentineNum: number;
