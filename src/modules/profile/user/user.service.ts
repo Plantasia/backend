@@ -100,8 +100,8 @@ export class UserService {
 
   async findByToken(token: string): Promise<User> {
     
-     console.log("&&&&&&&&&&&&&&&&&&&This is the token\n")
-     console.log(token)
+     //console.log("&&&&&&&&&&&&&&&&&&&This is the token\n")
+     //console.log(token)
 
      
     const userToCheck= (await this.userRepository.findOne(

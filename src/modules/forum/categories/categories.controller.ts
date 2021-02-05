@@ -37,8 +37,9 @@ export class CategoryController {
   @ApiCreatedResponse({description:"Category succesfully created"})
   @ApiForbiddenResponse({ description:"Forbidden" })
   @UsePipes(ValidationPipe)
-  async create(@Body() createCategoryDTO: CreateCategoryDTO, @Request() req ): Promise<Partial<Category>> {
-    
+  async create(@Body() createCategoryDTO: CreateCategoryDTO, @Request() req ): Promise<Category> {
+  const thisUser = await this.userService.findByEmail(req.user.email);
+  const check = await this.userService.authorizationCheck(req.headers.authorization)
    const id = req.user.id
    const email = req.user.email
    
@@ -99,7 +100,9 @@ export class CategoryController {
   @Get(':id')
   @ApiOkResponse({description:"The category has been successful deleted"})
   @ApiForbiddenResponse({ description:"Forbidden" })
-  findOne(@Param('id') id: string): Promise<Category> {
+  async findOne(@Param('id') id: string, @Request() req): Promise<Category> {
+    const thisUser = await this.userService.findByEmail(req.user.email);
+    const check = await this.userService.authorizationCheck(req.headers.authorization)
     return this.categoryService.findOne(id);
   }
 
@@ -107,7 +110,9 @@ export class CategoryController {
   @Delete(':id')
   @ApiOkResponse({description:"The category has been successful deleted"})
   @ApiForbiddenResponse({ description:"Forbidden" })
-  remove(@Param('id') id: string): Promise<void> {
+  async remove(@Param('id') id: string, @Request() req): Promise<void> {
+    const thisUser = await this.userService.findByEmail(req.user.email);
+    const check = await this.userService.authorizationCheck(req.headers.authorization)
     return this.categoryService.remove(id);
   }
   
@@ -129,6 +134,9 @@ export class CategoryController {
      *  really exists
      **/
     const categoryExists = await (await this.categoryService.findById(id))
+      const thisUser = await this.userService.findByEmail(req.user.email);
+      const check = await this.userService.authorizationCheck(req.headers.authorization)
+    const authorLogin = await (await this.categoryService.findById(id)).authorLogin
 
     console.log(email)
     if(!categoryExists){
