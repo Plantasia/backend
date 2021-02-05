@@ -64,7 +64,7 @@ export class CategoryController {
        id
      }
 
-     return resp;
+     return createdCategory;
 
 
      }
