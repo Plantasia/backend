@@ -1,4 +1,4 @@
-const { default: AdminUser } = require('nestjs-admin/dist/src/adminUser/adminUser.entity');
+
 const path = require('path');
 //const AdminUser = require('nestjs-admin').AdminUserEntity
 
