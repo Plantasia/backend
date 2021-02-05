@@ -6,6 +6,7 @@ import {
   Param,
   Delete,
   Put,
+  Request,
   UseGuards,
   UsePipes,
   ValidationPipe,
@@ -16,11 +17,15 @@ import { CreateTopicDTO } from './create-topic.dto';
 import { JwtAuthGuard } from '@auth/jwt-auth.guard';
 import { ApiCreatedResponse, ApiForbiddenResponse, ApiOkResponse, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { HttpException } from '@nestjs/common/exceptions/http.exception';
+import { UserService } from '../../profile/user/user.service';
 
 @ApiTags("topics")
 @Controller('topics')
 export class TopicsController {
-  constructor(private readonly topicsService: TopicsService) {}
+  constructor(
+    private readonly topicsService: TopicsService,
+    private readonly userService: UserService
+    ) {}
 
  
   @ApiOkResponse({description:"topic succesfully returned"})
@@ -43,7 +48,10 @@ export class TopicsController {
   async update(
     @Param('id') id: string,
     @Body() createTopicDTO: CreateTopicDTO,
+    @Request() req,
   ): Promise<Topic> {
+    const thisUser = await this.userService.findByEmail(req.user.email);
+    const check = await this.userService.authorizationCheck(req.headers.authorization)
     return this.topicsService.update(id, createTopicDTO);
   }
 
@@ -57,7 +65,9 @@ export class TopicsController {
   @ApiForbiddenResponse({ description:"Forbidden" })
 
   @Post()
-  async create(@Body() createTopicDTO: CreateTopicDTO): Promise<Topic> {
+  async create(@Body() createTopicDTO: CreateTopicDTO, @Request() req): Promise<Topic> {
+    const thisUser = await this.userService.findByEmail(req.user.email);
+    const check = await this.userService.authorizationCheck(req.headers.authorization)
     /** This assures us integrity references into DB */
 
     const response = this.topicsService.create(createTopicDTO);
@@ -102,7 +112,9 @@ export class TopicsController {
   @ApiForbiddenResponse({ description:"Forbidden" })
 
   @Delete(':id')
-  async delete(@Param('id') id: string): Promise<void> {
+  async delete(@Param('id') id: string, @Request() req): Promise<void> {
+    const thisUser = await this.userService.findByEmail(req.user.email);
+    const check = await this.userService.authorizationCheck(req.headers.authorization)
     this.topicsService.findOne(id);
     return;
   }
