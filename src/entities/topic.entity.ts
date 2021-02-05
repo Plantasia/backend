@@ -55,5 +55,5 @@ export class Topic {
     comments => comments.topic,
   )
   comments: Comment[];
-  topic: Category;
+
 }

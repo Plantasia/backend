@@ -10,32 +10,60 @@ import {
   UsePipes,
   Request,
   UnauthorizedException,
-  NotFoundException
+  NotFoundException,
+  HttpException,
+  HttpStatus
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDTO } from './create-user.dto';
 import { User } from '@entities/user.entity';
 import { JwtAuthGuard } from '../../../auth/jwt-auth.guard';
 import { ValidationPipe } from '@nestjs/common/pipes/validation.pipe';
+import { AuthService } from '../../../auth/auth.service';
+
 
 @Controller('users')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService,
+    ) {}
 
   @UseGuards(JwtAuthGuard)
   @Get()
-  findAll(): Promise<User[]> {
+  async findAll(@Request() req): Promise<User[]> {
+    //console.log(req.headers.authorization)
+ 
+    //console.log(req.user.email);
+    const thisUser = await this.userService.findByEmail(req.user.email);
+    console.log(`\n\n\n@@@@@@@@This user:::: \n`)
+    console.log(thisUser)
+
+    
+    const check = await this.userService.authorizationCheck(req.headers.authorization)
+
+   
+
     return this.userService.findAll();
   }
 
+  
   @Post()
   @UsePipes(ValidationPipe)
- async create(@Body() createUserDTO: CreateUserDTO): Promise<User> {
+  async create(@Body() createUserDTO: CreateUserDTO, @Request() req: any): Promise<User> {
+    const {email} =req.body
+    //*console.log(email)
+    const userExists =await this.userService.findByEmail(email);
+    //*console.log(userExists)
+
+    if(userExists){
+      throw new HttpException(`This email is already registered! Please choose other email`,
+       HttpStatus.FORBIDDEN);
+    }
+
     return this.userService.create(createUserDTO);
   }
 
 
-  @UseGuards(JwtAuthGuard)
+ 
   @Get(':id')
  async findOne(@Param('id') id: string): Promise<User> {
 
@@ -53,6 +81,7 @@ export class UserController {
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
  async remove(@Request() req, @Param('id') id: string): Promise<void> {
+  const check = this.userService.authorizationCheck(req.headers.authorization)
       /**
        * NOTE: Remember to ask user send password to
        * do this action (sooner)
@@ -90,7 +119,7 @@ export class UserController {
     @Param('id') id: string,
     @Body() data: CreateUserDTO,
     @Request() req ): Promise<User> {
-
+      const check = this.userService.authorizationCheck(req.headers.authorization)
       /**
        * NOTE: Remember to ask user send password to
        * do this action (sooner)

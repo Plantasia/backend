@@ -71,6 +71,9 @@ export class CreateUserDTO {
   public readonly quarentineNum: number;
 
   public readonly isAdmin: boolean;
+
+  @IsEmpty()
+  public tokenLogout: string;
 }
 
 /** MUST TO CREATE A NEW USER

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserDTO } from './create-user.dto';
@@ -21,6 +21,8 @@ export class UserService {
       },
     });
   }
+
+  
 
   async checkIfAlreadyExists(email:string): Promise<User> {
     return this.userRepository.findOne({
@@ -66,6 +68,7 @@ export class UserService {
     user.isActive = createUserDTO.isActive;
     user.isAdmin = createUserDTO.isAdmin;
     user.quarantineNum = createUserDTO.quarentineNum;
+    user.tokenLogout = createUserDTO.tokenLogout;
   
     const com = await this.userRepository.create(user);
     console.log('User created!');
@@ -77,4 +80,60 @@ export class UserService {
     await this.userRepository.update(id, data);
     return this.userRepository.findOne(id);
   }
+
+  async passwordLogout(id: string, passwordLogout: CreateUserDTO): Promise<User> {
+    await this.userRepository.update(id, passwordLogout);
+    return this.userRepository.findOne(id);
+  }
+
+  async passwordLogoutByEmail(email: string, passwordLogout: CreateUserDTO): Promise<User> {
+    const userToUpdate = (await this.userRepository.findOne(
+      {
+        where:{
+          email:email
+        }
+      })).id
+    const resp =  await this.userRepository.update(userToUpdate, passwordLogout);
+    const user = await this.findByEmail(email);
+    return user
+  }
+
+  async findByToken(token: string): Promise<User> {
+    
+     console.log("&&&&&&&&&&&&&&&&&&&This is the token\n")
+     console.log(token)
+
+     
+    const userToCheck= (await this.userRepository.findOne(
+      {
+  
+        where:{
+          tokenLogout:token
+        }
+        }))
+
+    if(!userToCheck){
+          throw new UnauthorizedException({error:"Unauthorized"})
+    }
+    return userToCheck
+  
+
+  }
+
+  async authorizationCheck(tokenRequest:string){
+    const userToCheck = await this.findByToken(tokenRequest);
+    console.log("Check",userToCheck)
+    if ((userToCheck.tokenLogout === tokenRequest) || userToCheck){
+      return {
+        Message: "Valid token ",
+      };
+    }else {
+     
+      throw new UnauthorizedException({
+        error: 'Unauthorized'
+      });
+    }
+
+  }
+
 }

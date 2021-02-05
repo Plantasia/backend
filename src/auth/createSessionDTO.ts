@@ -33,4 +33,6 @@ export class CreateSessionDTO{
     default: '',
   })
   public user: any;
+
+  public headers:{authorization};
 }
