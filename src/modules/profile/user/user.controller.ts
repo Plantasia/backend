@@ -10,7 +10,9 @@ import {
   UsePipes,
   Request,
   UnauthorizedException,
-  NotFoundException
+  NotFoundException,
+  HttpException,
+  HttpStatus
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDTO } from './create-user.dto';
@@ -46,7 +48,17 @@ export class UserController {
   
   @Post()
   @UsePipes(ValidationPipe)
- async create(@Body() createUserDTO: CreateUserDTO): Promise<User> {
+  async create(@Body() createUserDTO: CreateUserDTO, @Request() req: any): Promise<User> {
+    const {email} =req.body
+    //*console.log(email)
+    const userExists =await this.userService.findByEmail(email);
+    //*console.log(userExists)
+
+    if(userExists){
+      throw new HttpException(`This email is already registered! Please choose other email`,
+       HttpStatus.FORBIDDEN);
+    }
+
     return this.userService.create(createUserDTO);
   }
 

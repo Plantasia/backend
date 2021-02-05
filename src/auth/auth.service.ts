@@ -23,6 +23,8 @@ export class AuthService {
     this.UserRepository = UserRepository;
    }
 
+
+   
   async validateUser(userEmail: string, userPassword: string) {
     const user = await this.userService.findByEmail(userEmail);
     if (user && user.password === userPassword) {
@@ -36,6 +38,16 @@ export class AuthService {
     }
   }
 
+
+
+  /*** 
+   *  NOTE:  checkToken(token:string) ==> 
+   *   
+   *   Only to be used in logout context
+   *  to don't permit new using of a token
+   *  which was already deactivated by logoff
+   * 
+   ***/
   async checkToken(token:string){
     
     const userLogged = await this.UserRepository.findOne(
@@ -54,7 +66,7 @@ export class AuthService {
 
   /** 
    *  NOTE: This is to hashing a password
-   *  NOW_USED!
+   *  NOW_NOT_USED!
    * 
    * Function for hashing string, deprecated
    * async hashingPassword(userPassword: string){
@@ -63,6 +75,14 @@ export class AuthService {
    * return hash }
    **/
 
+
+
+
+   /**
+    *
+    * NOTE:
+    *  
+    **/
   async updatePassworLogout(token:string, userId:string ){
     const user = new CreateUserDTO();
     user.tokenLogout=token
@@ -79,6 +99,13 @@ export class AuthService {
     };
   }
 
+
+  /**
+   * 
+   * NOTE: This method is 
+   * to clean token from DB 
+   * 
+   **/
   async logout(userEmail:string) {
    
     const clean = this.nullPasswordLogout(userEmail);
@@ -92,7 +119,5 @@ export class AuthService {
     const update = await this.userService.passwordLogoutByEmail(userEmail,user);
     return console.log(update)
   }
-
-
 
 }
