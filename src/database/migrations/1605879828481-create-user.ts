@@ -20,7 +20,7 @@ export class createUser1605879828481 implements MigrationInterface {
             isNullable: false,
           },
           {
-            name: 'userDescription',
+            name: 'bio',
             type: 'text',
             isNullable: false,
           },
@@ -29,21 +29,31 @@ export class createUser1605879828481 implements MigrationInterface {
             type: 'text',
             isNullable: true,
           },
-          {
-            name: 'avatar',
-            type: 'text',
-            isNullable: false,
-          },
+
           {
             name: 'email',
             type: 'text',
             isNullable: false,
           },
+
+          {
+            name: 'avatar',
+            type: 'text',
+            isNullable: false,
+          },
+         
           {
             name: 'password',
             type: 'text',
             isNullable: false,
           },
+
+          {
+            name: 'isActive',
+            type: 'boolean',
+            isNullable: false,
+          },
+          
           {
             name: 'deleted',
             type: 'boolean',
@@ -55,10 +65,18 @@ export class createUser1605879828481 implements MigrationInterface {
             isNullable: false,
           },
           {
+            name: 'changedEmail',
+            type: 'boolean',
+            isNullable: false,
+          }
+          ,
+          {
             name: 'isAdmin',
             type: 'boolean',
             isNullable: false,
           },
+
+       
         ],
       }),
     );
