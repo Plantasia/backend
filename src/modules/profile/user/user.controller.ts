@@ -183,15 +183,15 @@ export class UserController {
         
         userRequestedToUpdate.name = createUserDTO.name;
         userRequestedToUpdate.bio = createUserDTO.bio;
-        userRequestedToUpdate. = createUserDTO
+     
      
         console.log(userRequestedToUpdate)
         console.log("***** entrei aqui")
-        if(userToUpdate.email!==req.user.email){
+        if(userRequestedToUpdate.email!==req.user.email){
           
         }
 
-        const {name,email,bio,id}= userToUpdate
+        const {name,email,bio,id}= userRequestedToUpdate
 
         return {
           name,email,bio,id
