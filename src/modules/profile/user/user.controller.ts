@@ -20,8 +20,9 @@ import { JwtAuthGuard } from '../../../auth/jwt-auth.guard';
 import { ValidationPipe } from '@nestjs/common/pipes/validation.pipe';
 import { AuthService } from '../../../auth/auth.service';
 import { create } from 'domain';
+import { ApiTags } from '@nestjs/swagger';
 
-
+@ApiTags('users')
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService,

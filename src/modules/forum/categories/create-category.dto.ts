@@ -39,6 +39,5 @@ export class CreateCategoryDTO {
 
 
   @IsEmpty()
-
   public readonly isActive: boolean;
 }

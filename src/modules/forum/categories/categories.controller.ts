@@ -20,18 +20,24 @@ import {
 import { CategoryService } from './categories.service';
 import { CreateCategoryDTO } from './create-category.dto';
 import { Category } from '../../../entities/category.entity';
-import { ApiCreatedResponse, ApiForbiddenResponse, ApiOkResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiCreatedResponse, ApiForbiddenResponse, ApiHeader, ApiOkResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../../auth/jwt-auth.guard';
 import { UserService } from 'src/modules/profile/user/user.service';
 import { identity } from 'rxjs';
 
 
 @ApiTags('categories')
+
+
 @Controller('categories')
 export class CategoryController {
   constructor( private readonly categoryService: CategoryService,
                private readonly userService: UserService ) {}
   
+  @ApiHeader({
+    name: 'Bearer Token',
+    description: 'JWT Token',
+  })
   @UseGuards(JwtAuthGuard)
   @Post()
   @ApiCreatedResponse({description:"Category succesfully created"})
@@ -58,11 +64,13 @@ export class CategoryController {
      console.log(createCategoryDTO)
      const newCategory = await this.categoryService.create(createCategoryDTO);
 
-     const{id,name,imageStorage,description,authorSlug}= newCategory
-     
-      return {id,name,imageStorage,description,authorSlug}
+     const{id,name,imageStorage}= newCategory
       
-     }
+      return {
+        id,name,imageStorage
+      }
+    }
+
      else{
        throw new HttpException(`There is a category with this name, please choose another`
        , HttpStatus.FORBIDDEN);
@@ -100,9 +108,9 @@ export class CategoryController {
     const thisUser = await this.userService.findByEmail(req.user.email);
     const check = await this.userService.authorizationCheck(req.headers.authorization)
     const  selectedCategory = await this.categoryService.findOne(categoryId);
-    const {id,name,imageStorage,description,authorSlug} = selectedCategory
-   
-    return {id,name,imageStorage,description,authorSlug}
+    const {id,name,imageStorage,description,authorSlug, authorLogin} = selectedCategory
+
+    return {id,name,imageStorage,description}
 
   }
 
@@ -120,7 +128,6 @@ export class CategoryController {
       const categoryToDelete = await this.categoryService.findOne(id)
 
       categoryToDelete.deleted = true
-
     }
 
     else{
@@ -139,12 +146,12 @@ export class CategoryController {
     @Body() createCategoryDTO: CreateCategoryDTO ,@Request() req:any): Promise<Category> {
       const email =req.headers;
     
-    
     /** 
      *  Verifying if the category
      *  requested to update
      *  really exists
      **/
+
     const categoryExists = await (await this.categoryService.findById(id))
       const thisUser = await this.userService.findByEmail(req.user.email);
       const check = await this.userService.authorizationCheck(req.headers.authorization)
@@ -161,6 +168,7 @@ export class CategoryController {
      * 
      *  That is, if he is the author
      **/
+
     const authorSlug = (await this.categoryService.findById(id)).authorSlug;
     /* authorSlug is the id of author (related to users table) */
 
