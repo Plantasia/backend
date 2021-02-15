@@ -18,7 +18,7 @@ export class User {
   name: string;
 
   @Column({ default: '' })
-  userDescription: string;
+  bio: string;
 
   @Column({ default: 'usuario' })
   role: string;
@@ -33,10 +33,13 @@ export class User {
   password: string;
 
   @Column({ default: 0 })
-  isActive: boolean;
+  deleted: boolean;
 
   @Column({ default: 0 })
-  quarantineNum: number;
+  quarentineNum: number;
+
+  @Column({default:0})
+  changedEmail:boolean;
 
   @CreateDateColumn()
   created_at: Date;

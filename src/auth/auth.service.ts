@@ -33,7 +33,7 @@ export class AuthService {
       return { id: id, name, email};
     }else {
       throw new UnauthorizedException({
-        error: 'Incorrect username or password'
+        error: 'Incorrect username or password or this users does not exists!'
       });
     }
   }

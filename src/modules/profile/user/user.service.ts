@@ -56,28 +56,39 @@ export class UserService {
     await this.userRepository.delete(id);
   }
 
-  async create(createUserDTO: CreateUserDTO): Promise<User> {
+  async create(createUserDTO: CreateUserDTO): Promise<Partial<User>> {
 
     const user = new User();
     user.name = createUserDTO.name;
-    user.userDescription = createUserDTO.userDescription;
+    user.bio = createUserDTO.bio;
     user.role = createUserDTO.role;
     user.avatar = createUserDTO.avatar;
     user.email = createUserDTO.email;
     user.password = createUserDTO.password;
-    user.isActive = createUserDTO.isActive;
     user.isAdmin = createUserDTO.isAdmin;
-    user.quarantineNum = createUserDTO.quarentineNum;
+    user.quarentineNum = createUserDTO.quarentineNum;
     user.tokenLogout = createUserDTO.tokenLogout;
   
-    const com = await this.userRepository.create(user);
+    const newUser = await this.userRepository.create(user);
     console.log('User created!');
-    return this.userRepository.save(com);
+    this.userRepository.save(newUser);
+
+    
+    console.log('* * * * * * * * Response returned * * * * * * * *\n ')
+    
+    const {name,password,email,bio}= newUser
+
+    return {
+      name, password,email, bio
+    }
+  
     
   }
 
   async update(id: string, data: CreateUserDTO): Promise<User> {
+    
     await this.userRepository.update(id, data);
+
     return this.userRepository.findOne(id);
   }
 
@@ -86,22 +97,23 @@ export class UserService {
     return this.userRepository.findOne(id);
   }
 
-  async passwordLogoutByEmail(email: string, passwordLogout: CreateUserDTO): Promise<User> {
+  async passwordLogoutByEmail(userEmail: string, passwordLogout: CreateUserDTO): Promise<Partial<User>> {
     const userToUpdate = (await this.userRepository.findOne(
       {
         where:{
-          email:email
+          email:userEmail
         }
       })).id
     const resp =  await this.userRepository.update(userToUpdate, passwordLogout);
-    const user = await this.findByEmail(email);
+    const user = await this.findByEmail(userEmail);
+
     return user
   }
 
   async findByToken(token: string): Promise<User> {
     
-     //console.log("&&&&&&&&&&&&&&&&&&&This is the token\n")
-     //console.log(token)
+     console.log("\nFindByToken :***** This is the token  ******\n")
+     console.log(token)
 
      
     const userToCheck= (await this.userRepository.findOne(
@@ -130,7 +142,7 @@ export class UserService {
     }else {
      
       throw new UnauthorizedException({
-        error: 'Unauthorized'
+        error: 'Unauthorized, your credentials is invalid'
       });
     }
 

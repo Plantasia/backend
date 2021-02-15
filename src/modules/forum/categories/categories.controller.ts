@@ -37,7 +37,7 @@ export class CategoryController {
   @ApiCreatedResponse({description:"Category succesfully created"})
   @ApiForbiddenResponse({ description:"Forbidden" })
   @UsePipes(ValidationPipe)
-  async create(@Body() createCategoryDTO: CreateCategoryDTO, @Request() req ): Promise<Category> {
+  async create(@Body() createCategoryDTO: CreateCategoryDTO, @Request() req ): Promise<Partial<Category>> {
   const thisUser = await this.userService.findByEmail(req.user.email);
   const check = await this.userService.authorizationCheck(req.headers.authorization)
    const id = req.user.id
@@ -56,17 +56,12 @@ export class CategoryController {
      if(!exists){
      console.log(`result***: ${exists}`)
      console.log(createCategoryDTO)
-     const createdCategory = await  this.categoryService.create(createCategoryDTO);
-     const {name,authorSlug,id} =createdCategory;
-     const resp={
-       name, 
-       email,
-       id
-     }
+     const newCategory = await this.categoryService.create(createCategoryDTO);
 
-     return createdCategory;
-
-
+     const{id,name,imageStorage,description,authorSlug}= newCategory
+     
+      return {id,name,imageStorage,description,authorSlug}
+      
      }
      else{
        throw new HttpException(`There is a category with this name, please choose another`
@@ -100,21 +95,38 @@ export class CategoryController {
   @Get(':id')
   @ApiOkResponse({description:"The category has been successful deleted"})
   @ApiForbiddenResponse({ description:"Forbidden" })
-  async findOne(@Param('id') id: string, @Request() req): Promise<Category> {
+  async findOne(@Param('id') categoryId: string, @Request() req): Promise<Partial<Category>> {
+    
     const thisUser = await this.userService.findByEmail(req.user.email);
     const check = await this.userService.authorizationCheck(req.headers.authorization)
-    return this.categoryService.findOne(id);
+    const  selectedCategory = await this.categoryService.findOne(categoryId);
+    const {id,name,imageStorage,description,authorSlug} = selectedCategory
+   
+    return {id,name,imageStorage,description,authorSlug}
+
   }
 
-  @UseGuards(JwtAuthGuard)
+  /*@UseGuards(JwtAuthGuard)
   @Delete(':id')
   @ApiOkResponse({description:"The category has been successful deleted"})
   @ApiForbiddenResponse({ description:"Forbidden" })
   async remove(@Param('id') id: string, @Request() req): Promise<void> {
+
+    //NOTE: Verifying if this user is authorized 
     const thisUser = await this.userService.findByEmail(req.user.email);
     const check = await this.userService.authorizationCheck(req.headers.authorization)
-    return this.categoryService.remove(id);
-  }
+    
+    if(thisUser && check){
+      const categoryToDelete = await this.categoryService.findOne(id)
+
+      categoryToDelete.deleted = true
+
+    }
+
+    else{
+      throw new UnauthorizedException("You are not authorized to delete this category!")
+    }
+  } */
   
   
 

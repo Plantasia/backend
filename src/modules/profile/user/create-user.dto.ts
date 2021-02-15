@@ -12,15 +12,12 @@ export class CreateUserDTO {
   public readonly name: string;
 
 
-
-
-  @IsNotEmpty()
   @ApiProperty({
     type: String,
-    description: 'user Description',
+    description: 'user bio',
     default: '',
   })
-  public readonly userDescription: string;
+  public readonly bio: string;
 
 
 
@@ -29,9 +26,6 @@ export class CreateUserDTO {
   public readonly role: string;
 
 
-
-
-  @IsNotEmpty()
   @ApiProperty({
     type: String,
     description: 'Avatar URL',
@@ -69,13 +63,3 @@ export class CreateUserDTO {
   @IsEmpty()
   public tokenLogout: string;
 }
-
-/** MUST TO CREATE A NEW USER
-
-  * {
-	 "name":"string",
-	 "email":"marcos_v.23@hotmail.com",
-	 "role": "string",
-   "password":"string"
-
-} */

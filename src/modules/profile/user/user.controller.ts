@@ -11,8 +11,7 @@ import {
   Request,
   UnauthorizedException,
   NotFoundException,
-  HttpException,
-  HttpStatus
+  ForbiddenException
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDTO } from './create-user.dto';
@@ -20,6 +19,7 @@ import { User } from '@entities/user.entity';
 import { JwtAuthGuard } from '../../../auth/jwt-auth.guard';
 import { ValidationPipe } from '@nestjs/common/pipes/validation.pipe';
 import { AuthService } from '../../../auth/auth.service';
+import { create } from 'domain';
 
 
 @Controller('users')
@@ -29,46 +29,92 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard)
   @Get()
-  async findAll(@Request() req): Promise<User[]> {
-    //console.log(req.headers.authorization)
-    //console.log(req.user.email);
+  async findAll(@Request() req): Promise<Partial<User[]>> {
+    console.log(req.headers.authorization)
+    console.log(req.user.email);
+
+
     const thisUser = await this.userService.findByEmail(req.user.email);
-    //console.log(`\n\n\n@@@@@@@@This user:::: \n`)
-    //console.log(thisUser)
+
+    console.log(`\n\n\n:::::::This user (logged)::::::: \n`)
+    console.log(thisUser)
+
+
     const check = await this.userService.authorizationCheck(req.headers.authorization)   
-    return this.userService.findAll();
+    const users = await this.userService.findAll();
+
+    let usersToReturn =[]
+    
+    for(let i=0; i< users.length;i++){
+      
+      /**
+       * For tests
+       console.log("users.length")
+       console.log(users.length)
+
+       console.log("users[i]")
+       console.log(users[0])
+       * 
+       **/
+     
+      const user = new User()
+
+      user.id = users[i].id
+      user.name = users[i].name
+      user.email =users[i].email
+      user.bio =users[i].bio
+    
+
+      usersToReturn.push(user)
+        
+    }   
+
+    return usersToReturn;
   }
 
   
   @Post()
   @UsePipes(ValidationPipe)
-  async create(@Body() createUserDTO: CreateUserDTO, @Request() req: any): Promise<User> {
-    const {email} =req.body
-    //*console.log(email)
-    const userExists =await this.userService.findByEmail(email);
-    //*console.log(userExists)
+ async create(@Body() createUserDTO: CreateUserDTO): Promise<Partial<User>> {
 
-    if(userExists){
-      throw new HttpException(`This email is already registered! Please choose other email`,
-       HttpStatus.FORBIDDEN);
+    const userAlreadyExists = await this.userService.checkIfAlreadyExists(createUserDTO.email)
+    console.log("****User already exists?****\n")
+    console.log(userAlreadyExists)
+    if(userAlreadyExists === undefined || !userAlreadyExists){
+
+      const createdUser =  await this.userService.create(createUserDTO);
+
+      const {name,email,bio, id}= createdUser
+
+      return {
+        name,email,bio, id
+      }
+
     }
 
-    return this.userService.create(createUserDTO);
+    else{
+      throw new ForbiddenException({error:`The email : ${createUserDTO.email}    is already used!`})
+    }
   }
 
 
  
   @Get(':id')
- async findOne(@Param('id') id: string): Promise<User> {
+ async findOne(@Param('id') idUser: string): Promise<Partial<User>> {
 
-   const foundUser = await this.userService.findById(id);
+   const foundUser = await this.userService.findById(idUser);
 
    if(!foundUser){
 
-     throw new NotFoundException(`Error: user with ID: ${id} not exists`)
+     throw new NotFoundException(`Error: user with ID: ${idUser} not exists`)
    }
 
-    return this.userService.findOne(id);
+    const selectedUser = await this.userService.findOne(idUser);
+    const {name,email,bio,id}= selectedUser;
+
+    return {
+      name,email,bio,id
+    }
   }
 
 
@@ -76,18 +122,17 @@ export class UserController {
   @Delete(':id')
  async remove(@Request() req, @Param('id') id: string): Promise<void> {
     const thisUser = await this.userService.findByEmail(req.user.email);
+    console.log("thisUser\n\n")
+    console.log(thisUser)
     const check = await this.userService.authorizationCheck(req.headers.authorization)
-      /**
-       * NOTE: Remember to ask user send password to
-       * do this action (sooner)
-       */
+     
       console.log(req.user.email)
       console.log(req.user.id)
       
       /**
        * 
-       * To authentication we 'll receive data for request
-       * and confirm identity for the user who requests deleting
+       * For authentication we 'll receive data for request
+       * and confirm user's identity for allow deleting
        *  
        */
       const userRequestedToDelete =  await this.userService.findById(id);
@@ -95,7 +140,11 @@ export class UserController {
       console.log(userRequestedToDelete)
 
       if((userRequestedToDelete.id === req.user.id) &&(userRequestedToDelete.email ===  req.user.email) ){
-        return  this.userService.remove(id)
+        
+        /**Soft delete applied */
+        userRequestedToDelete.deleted=true;
+        return 
+
       }
       else{
         
@@ -111,25 +160,47 @@ export class UserController {
   @Put(':id')
   
   async update(
-    @Param('id') id: string,
-    @Body() data: CreateUserDTO,
-    @Request() req ): Promise<User> {
+    @Param('id') idUser: string,
+    @Body() createUserDTO: CreateUserDTO,
+    @Request() req ): Promise<Partial<User>> {
       const thisUser = await this.userService.findByEmail(req.user.email);
       const check = await this.userService.authorizationCheck(req.headers.authorization)
-      /**
-       * NOTE: Remember to ask user send password to
-       * do this action (sooner)
-       */
+      
+      console.log("\n\n\n****This User\n\n")
+      console.log(thisUser)
+
+      console.log("\n\n\n\*****req.user.email*****\n")
       console.log(req.user.email)
+      console.log("\n\n\n\*****req.user.id*****\n")
       console.log(req.user.id)
       
-      const userRequestedToUpdate =  await this.userService.findById(id);
       
-      console.log(userRequestedToUpdate)
-
+      const userRequestedToUpdate =  await this.userService.findById(idUser);
+      
+     
+      if(!userRequestedToUpdate || userRequestedToUpdate ===undefined){
+        throw new NotFoundException({error:"This user does not exists"})
+      }
 
       if((userRequestedToUpdate.id === req.user.id) &&(userRequestedToUpdate.email ===  req.user.email) ){
-        return  this.userService.update(id, data)
+        
+        /**NOTE: Only these values below 'll be updated */
+        userRequestedToUpdate.name = createUserDTO.name;
+        userRequestedToUpdate.bio = createUserDTO.bio;
+        userRequestedToUpdate.password = createUserDTO.password
+     
+        console.log(userRequestedToUpdate)
+       
+ 
+      
+          const {name,email,bio,id}= userRequestedToUpdate
+      
+
+          return {
+            name,email,bio,id
+          
+        }
+
       }
       else{
         throw new UnauthorizedException({error:"You are not permitted to update this user!"})
