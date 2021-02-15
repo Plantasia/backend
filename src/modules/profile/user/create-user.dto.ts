@@ -12,7 +12,6 @@ export class CreateUserDTO {
   public readonly name: string;
 
 
-  @IsNotEmpty()
   @ApiProperty({
     type: String,
     description: 'user bio',
@@ -27,9 +26,6 @@ export class CreateUserDTO {
   public readonly role: string;
 
 
-
-
-  @IsNotEmpty()
   @ApiProperty({
     type: String,
     description: 'Avatar URL',

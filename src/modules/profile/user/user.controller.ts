@@ -140,7 +140,11 @@ export class UserController {
       console.log(userRequestedToDelete)
 
       if((userRequestedToDelete.id === req.user.id) &&(userRequestedToDelete.email ===  req.user.email) ){
-        return  this.userService.remove(id)
+        
+        /**Soft delete applied */
+        userRequestedToDelete.deleted=true;
+        return 
+
       }
       else{
         
@@ -173,28 +177,28 @@ export class UserController {
       
       const userRequestedToUpdate =  await this.userService.findById(idUser);
       
-      //***** */
+     
       if(!userRequestedToUpdate || userRequestedToUpdate ===undefined){
         throw new NotFoundException({error:"This user does not exists"})
       }
 
       if((userRequestedToUpdate.id === req.user.id) &&(userRequestedToUpdate.email ===  req.user.email) ){
         
-        
+        /**NOTE: Only these values below 'll be updated */
         userRequestedToUpdate.name = createUserDTO.name;
         userRequestedToUpdate.bio = createUserDTO.bio;
-     
+        userRequestedToUpdate.password = createUserDTO.password
      
         console.log(userRequestedToUpdate)
-        console.log("***** entrei aqui")
-        if(userRequestedToUpdate.email!==req.user.email){
+       
+ 
+      
+          const {name,email,bio,id}= userRequestedToUpdate
+      
+
+          return {
+            name,email,bio,id
           
-        }
-
-        const {name,email,bio,id}= userRequestedToUpdate
-
-        return {
-          name,email,bio,id
         }
 
       }

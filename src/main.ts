@@ -1,12 +1,15 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder} from '@nestjs/swagger'
+import cors from 'cors'
 
 
 async function bootstrap() {
   const PORT = process.env.PORT || 3333;
   const HOST = process.env.HOST || '0.0.0.0';
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {cors:true});
+  try{
+
 
   const swaggerConfig = new DocumentBuilder()
     .setTitle('Plantasia Docs')
@@ -20,5 +23,8 @@ async function bootstrap() {
 
   await app.listen(PORT, HOST);
   console.log(`Application is running on: ${await app.getUrl()}`);
+  } catch(err){
+    console.log(err)
+  }
 }
 bootstrap();
