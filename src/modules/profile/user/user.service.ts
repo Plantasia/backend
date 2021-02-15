@@ -74,7 +74,6 @@ export class UserService {
     this.userRepository.save(newUser);
 
     
-    console.log('* * * * * * * * Response returned * * * * * * * *\n ')
     
     const {name,password,email,bio}= newUser
 
