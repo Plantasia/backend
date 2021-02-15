@@ -74,6 +74,7 @@ export class AuthService {
     const payload = { email: user.email, sub: user.id };
     const token = this.jwtService.sign(payload)
     const update = this.updatePassworLogout("Bearer "+token,user.id)
+    console.log("Logado!")
     return {
       access_token: token,
     };
