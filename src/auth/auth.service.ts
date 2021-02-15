@@ -9,7 +9,6 @@ import { CreateUserDTO } from '../modules/profile/user/create-user.dto';
 import { logoutConstant} from './logout'
 
 import * as bcrypt from 'bcrypt';
-import { blacklist1611788910784 } from 'src/database/migrations/1611788910784-blacklist';
 
 @Injectable()
 export class AuthService {
@@ -91,6 +90,7 @@ export class AuthService {
     const payload = { email: user.email, sub: user.id };
     const token = this.jwtService.sign(payload)
     const update = this.updatePassworLogout("Bearer "+token,user.id)
+    console.log("Logado!")
     return {
       access_token: token,
     };
