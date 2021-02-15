@@ -9,7 +9,6 @@ import { CreateUserDTO } from '../modules/profile/user/create-user.dto';
 import { logoutConstant} from './logout'
 
 import * as bcrypt from 'bcrypt';
-import { blacklist1611788910784 } from 'src/database/migrations/1611788910784-blacklist';
 
 @Injectable()
 export class AuthService {
