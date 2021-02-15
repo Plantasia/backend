@@ -82,22 +82,25 @@ export class CategoryController {
   @ApiOkResponse({description:"The categories has been succesfful returned"})
   @ApiForbiddenResponse({ description:"Forbidden" })
   async findAll(): Promise<Partial<Category[]>> {
-    const allCategories = await  this.categoryService.findAll();
-
-    const [id,name]= allCategories
+    const categories = await  this.categoryService.findAll();
   
-    return allCategories;
-  }
+    const allCategories =[]
+    for(let i=0; i< categories.length;i++){
+  
+     
+      const category = new Category()
 
-
-  @Get()
-  @ApiOkResponse({description:"The categories has been succesfful returned"})
-  @ApiForbiddenResponse({ description:"Forbidden" })
-  async findByName(@Body() createCategoryDTO: CreateCategoryDTO): Promise<Category>{
-    const requestedName= createCategoryDTO.name
+      category.id = categories[i].id
+      category.name = categories[i].name
+      category.imageStorage = categories[i].imageStorage
+      category.authorLogin =categories[i].authorLogin
+      category.authorSlug =categories[i].authorSlug
     
-    return this.categoryService.findByName(requestedName)
+
+      allCategories.push(category)
   }
+  return allCategories
+}
 
   @UseGuards(JwtAuthGuard)
   @Get(':id')

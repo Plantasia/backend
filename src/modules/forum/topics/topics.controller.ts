@@ -15,7 +15,7 @@ import { TopicsService } from './topics.service';
 import { Topic } from '../../../entities/topic.entity';
 import { CreateTopicDTO } from './create-topic.dto';
 import { JwtAuthGuard } from '@auth/jwt-auth.guard';
-import { ApiCreatedResponse, ApiForbiddenResponse, ApiOkResponse, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiCreatedResponse, ApiForbiddenResponse, ApiHeader, ApiOkResponse, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { HttpException } from '@nestjs/common/exceptions/http.exception';
 import { UserService } from '../../profile/user/user.service';
 
@@ -30,20 +30,19 @@ export class TopicsController {
  
   @ApiOkResponse({description:"topic succesfully returned"})
   @ApiForbiddenResponse({ description:"Forbidden" })
-
   @Get()
   async findAll(): Promise<Topic[]> {
     return this.topicsService.findAll();
   }
 
-
-
-
-  @UseGuards(JwtAuthGuard)
  
+  @UseGuards(JwtAuthGuard)
   @ApiOkResponse({description:"topic succesfully updated"})
   @ApiForbiddenResponse({ description:"Forbidden" })
-
+  @ApiHeader({
+    name: 'JWT',
+    description: 'JWT token must to be passed to do this request',
+  })
   @Put(':id')
   async update(
     @Param('id') id: string,
@@ -56,19 +55,20 @@ export class TopicsController {
   }
 
 
-
-
+  
   @UseGuards(JwtAuthGuard)
   @UsePipes(ValidationPipe)
- 
+  @ApiHeader({
+    name: 'JWT',
+    description: 'JWT token must to be passed to do this request',
+  })
   @ApiCreatedResponse({description:"topic succesfully created"})
   @ApiForbiddenResponse({ description:"Forbidden" })
-
   @Post()
   async create(@Body() createTopicDTO: CreateTopicDTO, @Request() req): Promise<Topic> {
+    
     const thisUser = await this.userService.findByEmail(req.user.email);
     const check = await this.userService.authorizationCheck(req.headers.authorization)
-    /** This assures us integrity references into DB */
 
     const response = this.topicsService.create(createTopicDTO);
 
@@ -87,18 +87,17 @@ export class TopicsController {
   async getTopicsByDate(){
     return this.topicsService.findWithOrderBy();
   }
-/* Função para trazer os topicos sem respostas. Comentado porque ainda não tem o campo Response no banco
-  @Get('responseo')
+
+  /*Função para trazer os topicos sem respostas. 
+   * Não usado ainda não tem o campo Response no banco */
+  @Get('response')
   async getTopicsWithNoResponse(){
     return this.topicsService.findNoResponse();
-  }*/
-
-
+  }
 
   
   @ApiOkResponse({description:"topic succesfully returned"})
   @ApiForbiddenResponse({ description:"Forbidden" })
-
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<Topic> {
     return this.topicsService.findOne(id);
@@ -107,10 +106,12 @@ export class TopicsController {
 
 
   @UseGuards(JwtAuthGuard)
-
   @ApiOkResponse({description:"topic succesfully deleted"})
   @ApiForbiddenResponse({ description:"Forbidden" })
-
+  @ApiHeader({
+    name: 'JWT',
+    description: 'JWT token must to be passed to do this request',
+  })
   @Delete(':id')
   async delete(@Param('id') id: string, @Request() req): Promise<void> {
     const thisUser = await this.userService.findByEmail(req.user.email);

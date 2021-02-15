@@ -20,7 +20,7 @@ import { JwtAuthGuard } from '../../../auth/jwt-auth.guard';
 import { ValidationPipe } from '@nestjs/common/pipes/validation.pipe';
 import { AuthService } from '../../../auth/auth.service';
 import { create } from 'domain';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiForbiddenResponse, ApiHeader, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('users')
 @Controller('users')
@@ -28,7 +28,15 @@ export class UserController {
   constructor(private readonly userService: UserService,
     ) {}
 
-  @UseGuards(JwtAuthGuard)
+
+ 
+
+  @ApiOkResponse({description:"The users has been succesfull returned"})
+  @ApiForbiddenResponse({ description:"Forbidden" })
+  @ApiHeader({
+    name: 'JWT',
+    description: 'JWT token must to be passed to do this request',
+  })
   @Get()
   async findAll(@Request() req): Promise<Partial<User[]>> {
     console.log(req.headers.authorization)
@@ -74,8 +82,15 @@ export class UserController {
   }
 
   
-  @Post()
+  @UseGuards(JwtAuthGuard)
   @UsePipes(ValidationPipe)
+  @ApiOkResponse({description:"The user has been succesfull created"})
+  @ApiForbiddenResponse({ description:"Forbidden" })
+  @ApiHeader({
+    name: 'JWT',
+    description: 'JWT token must to be passed to do this request',
+  })
+  @Post()
  async create(@Body() createUserDTO: CreateUserDTO): Promise<Partial<User>> {
 
     const userAlreadyExists = await this.userService.checkIfAlreadyExists(createUserDTO.email)
@@ -99,8 +114,14 @@ export class UserController {
   }
 
 
- 
-  @Get(':id')
+ @UseGuards(JwtAuthGuard)
+ @ApiOkResponse({description:"The user has been succesfull returned"})
+ @ApiForbiddenResponse({ description:"Forbidden" })
+ @ApiHeader({
+   name: 'JWT',
+   description: 'JWT token must to be passed to do this request',
+ })
+ @Get(':id')
  async findOne(@Param('id') idUser: string): Promise<Partial<User>> {
 
    const foundUser = await this.userService.findById(idUser);
@@ -120,6 +141,12 @@ export class UserController {
 
 
   @UseGuards(JwtAuthGuard)
+  @ApiOkResponse({description:"The user has been succesfull deleted"})
+  @ApiForbiddenResponse({ description:"Forbidden" })
+  @ApiHeader({
+    name: 'JWT',
+    description: 'JWT token must to be passed to do this request',
+  })
   @Delete(':id')
  async remove(@Request() req, @Param('id') id: string): Promise<void> {
     const thisUser = await this.userService.findByEmail(req.user.email);
@@ -158,6 +185,12 @@ export class UserController {
 
   
   @UseGuards(JwtAuthGuard)
+  @ApiOkResponse({description:"The user has been succesfull deleted"})
+  @ApiForbiddenResponse({ description:"Forbidden" })
+  @ApiHeader({
+    name: 'JWT',
+    description: 'JWT token must to be passed to do this request',
+  })
   @Put(':id')
   
   async update(
