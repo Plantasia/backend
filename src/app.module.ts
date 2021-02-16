@@ -6,6 +6,13 @@ import { ForumModule } from './modules/forum/forum.module';
 import {AuthService} from './/auth/auth.service'
 import {  AppService } from './app.service';
 import { AdminModule } from '@admin-bro/nestjs';
+import { Database, Resource } from "@admin-bro/typeorm";
+import AdminBro from 'admin-bro'
+//import { UsersModule } from './users/users.module';
+//AdminBro.registerAdapter({ Database, Resource })
+
+
+
 
 
 @Module({
