@@ -7,6 +7,7 @@ import {AuthService} from './/auth/auth.service'
 import {  AppService } from './app.service';
 import { AdminModule } from '@admin-bro/nestjs';
 
+
 @Module({
   imports: [TypeOrmModule.forRoot({}), UserModule, AuthModule, ForumModule, AppService,AdminModule.createAdmin({
     adminBroOptions: {
