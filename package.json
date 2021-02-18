@@ -22,9 +22,6 @@
     "typeorm": "ts-node-dev ./node_modules/typeorm/cli.js --config src/config/cli-typeorm.js"
   },
   "dependencies": {
-    "@admin-bro/express": "^3.1.0",
-    "@admin-bro/nestjs": "^1.0.0",
-    "@admin-bro/typeorm": "^1.4.0",
     "@nestjs/common": "^7.0.0",
     "@nestjs/config": "^0.5.0",
     "@nestjs/core": "^7.0.0",
@@ -35,9 +32,6 @@
     "@nestjs/swagger": "^4.7.12",
     "@nestjs/typeorm": "^7.1.5",
     "@types/react": "^17.0.2",
-    "admin-bro": "^3.4.0",
-    "admin-bro-expressjs": "^2.1.1",
-    "admin-bro-typeorm": "^0.1.6-alpha.9",
     "bcrypt": "^5.0.0",
     "class-transformer": "^0.3.1",
     "class-validator": "^0.12.2",
