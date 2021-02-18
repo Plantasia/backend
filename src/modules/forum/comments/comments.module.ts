@@ -11,7 +11,6 @@ import { Category } from '../../../entities/category.entity';
 import { CategoryModule } from '../categories/categories.module';
 import { CategoryService } from '../categories/categories.service';
 
-//import {} falta o user service
 
 @Module({
   imports: [TypeOrmModule.forFeature([Comment, Topic, User, Category])],
