@@ -4,8 +4,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CreateCategoryDTO } from './create-category.dto';
 import { Category } from '../../../entities/category.entity';
 import { uuid } from 'uuidv4';
-import { Repository } from 'typeorm';
+import { getConnection, getRepository, Repository, SelectQueryBuilder } from 'typeorm';
 import { ApiBadGatewayResponse } from '@nestjs/swagger';
+import { User } from '@entities/user.entity';
 
 @Injectable()
 export class CategoryService {
@@ -14,8 +15,15 @@ export class CategoryService {
     private categoryRepository: Repository<Category>,
   ) {}
 
-  async findAll(): Promise<Category[]> {
-    return this.categoryRepository.find();
+  async findAll():  Promise<Category[]>{
+
+    
+    const paginatedRawCategories = await getRepository(Category)
+    .createQueryBuilder("category")
+    .take(10)
+    .getMany()
+     
+    return paginatedRawCategories
   }
 
   async find(argument: any): Promise<Category[]> {
