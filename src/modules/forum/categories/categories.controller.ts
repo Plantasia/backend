@@ -24,6 +24,8 @@ import { ApiCreatedResponse, ApiForbiddenResponse, ApiHeader, ApiOkResponse, Api
 import { JwtAuthGuard } from '../../../auth/jwt-auth.guard';
 import { UserService } from 'src/modules/profile/user/user.service';
 import { identity } from 'rxjs';
+import { SelectQueryBuilder } from 'typeorm';
+import { Topic } from '@entities/topic.entity';
 
 
 @ApiTags('categories')
@@ -81,12 +83,10 @@ export class CategoryController {
   @Get()
   @ApiOkResponse({description:"The categories has been succesfful returned"})
   @ApiForbiddenResponse({ description:"Forbidden" })
-  async findAll(): Promise<Partial<Category[]>> {
-    const allCategories = await  this.categoryService.findAll();
-
-    const [id,name]= allCategories
+  async findAll(): Promise<Category[]> {
+    const paginatedCategories = await  this.categoryService.findAll();
   
-    return allCategories;
+    return paginatedCategories;
   }
 
 
