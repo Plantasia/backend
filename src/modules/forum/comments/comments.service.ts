@@ -31,8 +31,11 @@ export class CommentService {
     });
   }
 
-  async findAll(): Promise<Comment[]> {
-    return this.commentsRepository.find();
+  async findAll(page: number = 1): Promise<Comment[]> {
+    return this.commentsRepository.find({
+      take:10 ,
+      skip: 10 * (page-1)
+    });
   }
 
   async remove(id: string): Promise<void> {

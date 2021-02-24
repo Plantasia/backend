@@ -14,8 +14,11 @@ export class CategoryService {
     private categoryRepository: Repository<Category>,
   ) {}
 
-  async findAll(): Promise<Category[]> {
-    return this.categoryRepository.find();
+  async findAll(page: number = 1): Promise<Category[]> {
+    return this.categoryRepository.find({
+      take:10 ,
+      skip: 10 * (page-1)
+    });
   }
 
   async find(argument: any): Promise<Category[]> {

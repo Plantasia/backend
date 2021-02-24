@@ -50,8 +50,8 @@ export class UserService {
 
   async findAll(page: number = 1): Promise<User[]> {//preparamos  o metodo para receber o parametro passado pela url na controller
     return this.userRepository.find({
-      take:3 ,//usamos a função do typeorm take que funciona como o limit
-      skip: 3 * (page-1)// o skip pulara para a proxima pagina, ou seja os resultados que estão fora do limit, vão para a proxima pagina
+      take:10 ,//usamos a função do typeorm take que funciona como o limit
+      skip: 10 * (page-1)// o skip pulara para a proxima pagina, ou seja os resultados que estão fora do limit, vão para a proxima pagina
     });
   }
 

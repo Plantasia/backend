@@ -11,6 +11,7 @@ import {
   UseGuards,
   UsePipes,
   ValidationPipe,
+  Query
 } from '@nestjs/common';
 import { CommentService } from './comments.service';
 import { CreateCommentDTO } from './create-comment.dto';
@@ -33,8 +34,8 @@ export class CommentController {
   @Get()
   @ApiCreatedResponse({description:"comment succesfully created"})
   @ApiForbiddenResponse({ description:"Forbidden" })
-  findAll(): Promise<Comment[]> {
-    return this.commentService.findAll();
+  findAll(@Query('page') page:number): Promise<Comment[]> {
+    return this.commentService.findAll(page);
   }
 
   @UseGuards(JwtAuthGuard)

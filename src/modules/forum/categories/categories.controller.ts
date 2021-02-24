@@ -15,7 +15,8 @@ import {
   HttpException,
   HttpStatus,
   UnauthorizedException,
-  NotFoundException
+  NotFoundException,
+  Query
 } from '@nestjs/common';
 import { CategoryService } from './categories.service';
 import { CreateCategoryDTO } from './create-category.dto';
@@ -81,8 +82,8 @@ export class CategoryController {
   @Get()
   @ApiOkResponse({description:"The categories has been succesfful returned"})
   @ApiForbiddenResponse({ description:"Forbidden" })
-  async findAll(): Promise<Partial<Category[]>> {
-    const allCategories = await  this.categoryService.findAll();
+  async findAll( @Query('page') page:number): Promise<Partial<Category[]>> {
+    const allCategories = await  this.categoryService.findAll(page);
 
     const [id,name]= allCategories
   

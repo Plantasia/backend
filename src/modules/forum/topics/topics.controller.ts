@@ -10,6 +10,7 @@ import {
   UseGuards,
   UsePipes,
   ValidationPipe,
+  Query,
 } from '@nestjs/common';
 import { TopicsService } from './topics.service';
 import { Topic } from '../../../entities/topic.entity';
@@ -32,8 +33,8 @@ export class TopicsController {
   @ApiForbiddenResponse({ description:"Forbidden" })
 
   @Get()
-  async findAll(): Promise<Topic[]> {
-    return this.topicsService.findAll();
+  async findAll(@Query('page') page:number): Promise<Topic[]> {
+    return this.topicsService.findAll(page);
   }
 
 

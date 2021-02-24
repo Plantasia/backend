@@ -47,8 +47,11 @@ export class TopicsService {
     return this.topicRepository.save(t);
   }
 
-  async findAll(): Promise<Topic[]> {
-    return this.topicRepository.find();
+  async findAll(page: number = 1): Promise<Topic[]> {
+    return this.topicRepository.find({
+      take:10 ,
+      skip: 10 * (page-1)
+    });
   }
 
   async findOne(id: string): Promise<Topic> {
