@@ -11,7 +11,9 @@ import {
   Request,
   UnauthorizedException,
   NotFoundException,
-  ForbiddenException
+  ForbiddenException,
+  ParseIntPipe,
+  Query,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDTO } from './create-user.dto';
@@ -30,7 +32,9 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard)
   @Get()
-  async findAll(@Request() req): Promise<Partial<User[]>> {
+  async findAll(@Request() req,
+  @Query('page') page:number//usamos o @query para passar o numero da pagina via parametro na url
+  ): Promise<Partial<User[]>> {
     console.log(req.headers.authorization)
     console.log(req.user.email);
 
@@ -42,7 +46,7 @@ export class UserController {
 
 
     const check = await this.userService.authorizationCheck(req.headers.authorization)   
-    const users = await this.userService.findAll();
+    const users = await this.userService.findAll(page);//passamos a variavel page como parametro do metodo FindAll
 
     let usersToReturn =[]
     
@@ -69,7 +73,6 @@ export class UserController {
       usersToReturn.push(user)
         
     }   
-
     return usersToReturn;
   }
 

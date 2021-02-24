@@ -2,11 +2,6 @@
 # yarn lockfile v1
 
 
-"@admin-bro/express@^3.1.0":
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/@admin-bro/express/-/express-3.1.0.tgz#0b8eec245ffbe1111da50b11d8dc0585252244b0"
-  integrity sha512-tPEopzGkmdIJuhg/oTokZ5iB1mXCwq1uaieIFIX1cETwuw+HDY+DoH5iS7KtIdxQYdNgf0ppjX+6eSeSYAZc0w==
-
 "@aduh95/viz.js@^3.1.0":
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/@aduh95/viz.js/-/viz.js-3.3.0.tgz#55aa417aeb0df3eb57db3d688447f94668b6605d"
@@ -1428,18 +1423,6 @@ acorn@^8.0.4:
   version "8.0.5"
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-8.0.5.tgz#a3bfb872a74a6a7f661bc81b9849d9cac12601b7"
   integrity sha512-v+DieK/HJkJOpFBETDJioequtc3PfxsWMaxIdIwujtF7FEV/MAyDQLlm6/zPvr7Mix07mLh6ccVwIsloceodlg==
-
-admin-bro-expressjs@^2.1.1:
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/admin-bro-expressjs/-/admin-bro-expressjs-2.1.1.tgz#2b6c68eee2e522c57cc293c5e367fa477d907afb"
-  integrity sha512-xTGmyqT+HvSIy4DLLET9JSvEMt1KrbDIbcZ0H6VgO+l6i8vbcmR1T+k1efx9TXfMZCIMOhUwIS2u4ja4iQMH1Q==
-
-admin-bro-typeorm@^0.1.6-alpha.9:
-  version "0.1.6-alpha.9"
-  resolved "https://registry.yarnpkg.com/admin-bro-typeorm/-/admin-bro-typeorm-0.1.6-alpha.9.tgz#c0a147b67b338d7d62d099231db74cc0500687e5"
-  integrity sha512-27zQYlEB++mZS4lwqlqzDrjx0VGDslhcWm78EtmR7u9ZetZgHB1s8DQpDa0qan9rHRnPJzHYXKxAqFe+V6wfZQ==
-  dependencies:
-    reflect-metadata "^0.1.13"
 
 ajv-keywords@^3.4.1, ajv-keywords@^3.5.2:
   version "3.5.2"
