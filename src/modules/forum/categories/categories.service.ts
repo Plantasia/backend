@@ -20,7 +20,7 @@ export class CategoryService {
     
     const paginatedRawCategories = await getRepository(Category)
     .createQueryBuilder("category")
-    .take(10)
+    .limit(10)
     .getMany()
      
     return paginatedRawCategories
