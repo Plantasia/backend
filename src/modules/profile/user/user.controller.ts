@@ -48,10 +48,11 @@ export class UserController {
 
     const check = await this.userService.authorizationCheck(req.headers.authorization)   
     const paginatedUserInfo = await this.userService.findAll(page);//passamos a variavel page como parametro do metodo FindAll
-    const {  results, 
-             current_page,
-             total_pages, 
-             total_registers} = paginatedUserInfo
+    const {  results,
+             currentPage,
+             prevPage,
+             nextPage,
+             totalRegisters} = paginatedUserInfo
 
 
     let usersToReturn =[]
@@ -73,7 +74,11 @@ export class UserController {
     /**Formatting to send an array with 'data' */
     const data = usersToReturn   
     return {
-      data,current_page,total_pages,total_registers
+      data,
+      currentPage,
+      prevPage,
+      nextPage,
+      totalRegisters
     }
   }
 

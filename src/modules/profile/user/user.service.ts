@@ -53,16 +53,18 @@ export class UserService {
     
     
     const take =3
+    const skip =3 * (page-1)
     const [result, total] = await this.userRepository.findAndCount({
       take:take ,//usamos a função do typeorm take que funciona como o limit
-      skip: 3 * (page-1)// o skip pulara para a proxima pagina, ou seja os resultados que estão fora do limit, vão para a proxima pagina
+      skip:skip // o skip pulara para a proxima pagina, ou seja os resultados que estão fora do limit, vão para a proxima pagina
     });    
 
     return{
       results:result,
-      current_page:page,      
-      total_pages: (total%take)+take,
-      total_registers: total
+      currentPage:page,      
+      prevPage:  page > 1? (page-1): null,
+      nextPage:  total > (skip + take) ? page+1 : null,
+      totalRegisters: total
     }
   }
 
