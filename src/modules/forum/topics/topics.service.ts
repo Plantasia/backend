@@ -8,6 +8,7 @@ import { CreateTopicDTO } from './create-topic.dto';
 import { CategoryService } from '../categories/categories.service';
 import { UserService } from '../../profile/user/user.service';
 import { Category } from '../../../entities/category.entity';
+import { PaginatedTopicsResultDTO } from './paginated-topics.dto';
 
 @Injectable()
 export class TopicsService {
@@ -47,12 +48,28 @@ export class TopicsService {
     return this.topicRepository.save(t);
   }
 
-  async findAll(page: number = 1): Promise<Topic[]> {
-    return this.topicRepository.find({
-      take:10 ,
-      skip: 10 * (page-1)
+  async findAll(page: number = 1): Promise<PaginatedTopicsResultDTO> {
+    const skip =10 * (page-1)
+    const take =10
+    const [result, total]= await this.topicRepository.findAndCount({
+      take:take ,
+      skip: skip
     });
+
+   
+   return{ 
+    results:result,
+    currentPage:page,      
+    totalRegisters: total,
+    prevPage: page > 1? (page-1): null,
+    nextPage: total > (skip + take) ? page+1 : null,
+
+
+    }
+  
   }
+ 
+
 
   async findOne(id: string): Promise<Topic> {
     return this.topicRepository.findOne({

@@ -21,7 +21,7 @@ import { HttpException } from '@nestjs/common/exceptions/http.exception';
 import { UserService } from '../../profile/user/user.service';
 
 @ApiTags("topics")
-@Controller('topics')
+@Controller('forum/topics')
 export class TopicsController {
   constructor(
     private readonly topicsService: TopicsService,
@@ -33,8 +33,26 @@ export class TopicsController {
   @ApiForbiddenResponse({ description:"Forbidden" })
 
   @Get()
-  async findAll(@Query('page') page:number): Promise<Topic[]> {
-    return this.topicsService.findAll(page);
+  async findAll(@Query('page') page:number) {
+    const{  currentPage,
+            results,
+            nextPage,
+            prevPage,
+            totalRegisters }= await this.topicsService.findAll(page);
+
+      /*for(let i =0; i< results.length; i++){
+         const topic = new Topic
+         
+      }*/
+      const data = results
+      return {
+        data, 
+        currentPage,
+        nextPage,
+        prevPage,
+        totalRegisters
+      }
+
   }
 
 

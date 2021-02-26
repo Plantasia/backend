@@ -6,19 +6,39 @@ import { Category } from '../../../entities/category.entity';
 import { uuid } from 'uuidv4';
 import { Repository } from 'typeorm';
 import { ApiBadGatewayResponse } from '@nestjs/swagger';
+import { PaginatedCategoriesResultDTO } from './paginated-categories.dto';
 
 @Injectable()
 export class CategoryService {
   constructor(
     @InjectRepository(Category)
     private categoryRepository: Repository<Category>,
+    
   ) {}
 
-  async findAll(page: number = 1): Promise<Category[]> {
-    return this.categoryRepository.find({
-      take:10 ,
-      skip: 10 * (page-1)
+  async findAll(page): Promise<PaginatedCategoriesResultDTO> {
+   
+    if(!page){
+      page=1
+    }
+    const take =10
+    const skip =10 * (page-1)
+
+    const [result, total] = await this.categoryRepository.findAndCount({
+      take:skip ,
+      skip: skip
+
     });
+
+    
+
+    return{
+      results:result,
+      currentPage:page,      
+      prevPage:  page > 1? (page-1): null,
+      nextPage:  total > (skip + take) ? page+1 : null,
+      totalRegisters: total
+    }
   }
 
   async find(argument: any): Promise<Category[]> {

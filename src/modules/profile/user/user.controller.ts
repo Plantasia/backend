@@ -56,6 +56,7 @@ export class UserController {
 
     let usersToReturn =[]
     
+    /**This is to abstracting data */
     for(let i=0; i< results.length;i++){
   
       const user = new User()

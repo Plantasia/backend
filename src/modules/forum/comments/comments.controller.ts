@@ -22,7 +22,7 @@ import { ApiCreatedResponse, ApiForbiddenResponse, ApiOkResponse, ApiTags } from
 import { UserService } from 'src/modules/profile/user/user.service';
 import { TopicsService } from '../topics/topics.service';
 @ApiTags('comments')
-@Controller('comments')
+@Controller('forum/comments')
 export class CommentController {
   constructor(
               private readonly commentService: CommentService,
