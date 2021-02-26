@@ -5,6 +5,7 @@ import { CreateUserDTO } from './create-user.dto';
 import { User } from '@entities/user.entity';
 import { Topic } from '@entities/topic.entity';
 import { TopicsService } from '../../forum/topics/topics.service';
+import {PaginatedUsersResultDTO} from '../paginated-users.dto'
 
 @Injectable()
 export class UserService {
@@ -48,11 +49,21 @@ export class UserService {
     });
   }
 
-  async findAll(page: number = 1): Promise<User[]> {//preparamos  o metodo para receber o parametro passado pela url na controller
-    return this.userRepository.find({
-      take:10 ,//usamos a função do typeorm take que funciona como o limit
-      skip: 10 * (page-1)// o skip pulara para a proxima pagina, ou seja os resultados que estão fora do limit, vão para a proxima pagina
-    });
+  async findAll(page: number = 1): Promise<PaginatedUsersResultDTO> {//preparamos  o metodo para receber o parametro passado pela url na controller
+    
+    
+    const take =3
+    const [result, total] = await this.userRepository.findAndCount({
+      take:take ,//usamos a função do typeorm take que funciona como o limit
+      skip: 3 * (page-1)// o skip pulara para a proxima pagina, ou seja os resultados que estão fora do limit, vão para a proxima pagina
+    });    
+
+    return{
+      results:result,
+      current_page:page,      
+      total_pages: (total%take)+take,
+      total_registers: total
+    }
   }
 
   async remove(id: string): Promise<void> {

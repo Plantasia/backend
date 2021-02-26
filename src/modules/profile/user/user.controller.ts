@@ -23,6 +23,7 @@ import { ValidationPipe } from '@nestjs/common/pipes/validation.pipe';
 import { AuthService } from '../../../auth/auth.service';
 import { create } from 'domain';
 import { ApiTags } from '@nestjs/swagger';
+import { PaginatedUsersResultDTO } from '../paginated-users.dto';
 
 @ApiTags('users')
 @Controller('users')
@@ -34,7 +35,7 @@ export class UserController {
   @Get()
   async findAll(@Request() req,
   @Query('page') page:number//usamos o @query para passar o numero da pagina via parametro na url
-  ): Promise<Partial<User[]>> {
+  ): Promise<PaginatedUsersResultDTO> {
     console.log(req.headers.authorization)
     console.log(req.user.email);
 
@@ -46,34 +47,29 @@ export class UserController {
 
 
     const check = await this.userService.authorizationCheck(req.headers.authorization)   
-    const users = await this.userService.findAll(page);//passamos a variavel page como parametro do metodo FindAll
+    const paginatedUserInfo = await this.userService.findAll(page);//passamos a variavel page como parametro do metodo FindAll
+    const {  results, 
+             current_page,
+             total_pages, 
+             total_registers} = paginatedUserInfo
+
 
     let usersToReturn =[]
     
-    for(let i=0; i< users.length;i++){
-      
-      /**
-       * For tests
-       console.log("users.length")
-       console.log(users.length)
-
-       console.log("users[i]")
-       console.log(users[0])
-       * 
-       **/
-     
+    for(let i=0; i< results.length;i++){
+  
       const user = new User()
 
-      user.id = users[i].id
-      user.name = users[i].name
-      user.email =users[i].email
-      user.bio =users[i].bio
-    
+      user.id = results[i].id
+      user.name = results[i].name
+      user.email =results[i].email
+      user.bio =results[i].bio
 
       usersToReturn.push(user)
         
     }   
-    return usersToReturn;
+    return {results,current_page, total_pages, 
+      total_registers};
   }
 
   
