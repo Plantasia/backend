@@ -34,8 +34,8 @@ export class UserController {
   @UseGuards(JwtAuthGuard)
   @Get()
   async findAll(@Request() req,
-  @Query('page') page:number//usamos o @query para passar o numero da pagina via parametro na url
-  ): Promise<PaginatedUsersResultDTO> {
+  @Query('page') page:number
+  ){
     console.log(req.headers.authorization)
     console.log(req.user.email);
 
@@ -64,12 +64,16 @@ export class UserController {
       user.name = results[i].name
       user.email =results[i].email
       user.bio =results[i].bio
+      user.avatar =results[i].avatar
 
       usersToReturn.push(user)
         
-    }   
-    return {results,current_page, total_pages, 
-      total_registers};
+    }
+    /**Formatting to send an array with 'data' */
+    const data = usersToReturn   
+    return {
+      data,current_page,total_pages,total_registers
+    }
   }
 
   
