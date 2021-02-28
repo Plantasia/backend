@@ -28,7 +28,7 @@ export class Category {
   @Column()
   description: string;
 
-  @Column()
+  @Column({default:0})
   qtdeTopics: number;
   
 
