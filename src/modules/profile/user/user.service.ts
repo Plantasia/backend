@@ -49,11 +49,16 @@ export class UserService {
     });
   }
 
-  async findAll(page: number = 1): Promise<PaginatedUsersResultDTO> {//preparamos  o metodo para receber o parametro passado pela url na controller
+  async findAll(page): Promise<PaginatedUsersResultDTO> {//preparamos  o metodo para receber o parametro passado pela url na controller
     
     
     const take =3
     const skip =3 * (page-1)
+    if(!page){
+      page=1
+    }
+    else page = parseInt(page)
+
     const [result, total] = await this.userRepository.findAndCount({
       take:take ,//usamos a função do typeorm take que funciona como o limit
       skip:skip // o skip pulara para a proxima pagina, ou seja os resultados que estão fora do limit, vão para a proxima pagina
@@ -64,6 +69,7 @@ export class UserService {
       currentPage:page,      
       prevPage:  page > 1? (page-1): null,
       nextPage:  total > (skip + take) ? page+1 : null,
+      perPage:take,
       totalRegisters: total
     }
   }

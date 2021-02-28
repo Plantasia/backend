@@ -86,7 +86,7 @@ export class CategoryController {
     const allCategories =[]
     const paginatedCategories = await  this.categoryService.findAll(page);
 
-    const{results,currentPage,nextPage,prevPage,totalRegisters} = paginatedCategories
+    const{results,currentPage,nextPage,prevPage,perPage,totalRegisters} = paginatedCategories
 
     for(let i=0; i<results.length;i++){
       const category = new Category()
@@ -101,7 +101,7 @@ export class CategoryController {
     
     const data = allCategories
     return {
-      data,currentPage,nextPage,prevPage,totalRegisters
+      data,currentPage,nextPage,prevPage,perPage,totalRegisters
     };
   }
 

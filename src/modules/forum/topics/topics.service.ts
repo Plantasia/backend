@@ -48,9 +48,14 @@ export class TopicsService {
     return this.topicRepository.save(t);
   }
 
-  async findAll(page: number = 1): Promise<PaginatedTopicsResultDTO> {
+  async findAll(page): Promise<PaginatedTopicsResultDTO> {
     const skip =10 * (page-1)
     const take =10
+    if(!page){
+      page=1
+    }
+    else page = parseInt(page)
+
     const [result, total]= await this.topicRepository.findAndCount({
       take:take ,
       skip: skip

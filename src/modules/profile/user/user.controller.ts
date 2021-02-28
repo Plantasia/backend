@@ -52,6 +52,7 @@ export class UserController {
              currentPage,
              prevPage,
              nextPage,
+             perPage,
              totalRegisters} = paginatedUserInfo
 
 
@@ -78,6 +79,7 @@ export class UserController {
       currentPage,
       prevPage,
       nextPage,
+      perPage,
       totalRegisters
     }
   }

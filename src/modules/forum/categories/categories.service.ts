@@ -17,10 +17,13 @@ export class CategoryService {
   ) {}
 
   async findAll(page): Promise<PaginatedCategoriesResultDTO> {
-   
+   console.log("PAGE:\n")
+    console.log(page)
     if(!page){
       page=1
     }
+    else page = parseInt(page)
+    
     const take =10
     const skip =10 * (page-1)
 
@@ -30,13 +33,13 @@ export class CategoryService {
 
     });
 
-    
 
     return{
       results:result,
       currentPage:page,      
       prevPage:  page > 1? (page-1): null,
       nextPage:  total > (skip + take) ? page+1 : null,
+      perPage: take,
       totalRegisters: total
     }
   }

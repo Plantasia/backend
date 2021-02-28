@@ -5,6 +5,7 @@ export class PaginatedUsersResultDTO{
   public currentPage: number;
   public prevPage: number;
   public nextPage:number;
+  public perPage:number;
   public totalRegisters: number;
 
 }
