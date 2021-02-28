@@ -1,13 +1,11 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-
 import { CreateCategoryDTO } from './create-category.dto';
 import { Category } from '../../../entities/category.entity';
-import { uuid } from 'uuidv4';
 import { getRepository, Repository } from 'typeorm';
-import { ApiBadGatewayResponse } from '@nestjs/swagger';
 import { PaginatedCategoriesResultDTO } from './paginated-categories.dto';
 import { Topic } from '@entities/topic.entity';
+import { Comment } from '@entities/comments.entity';
 
 @Injectable()
 export class CategoryService {
@@ -57,15 +55,41 @@ export class CategoryService {
       .where("topic.categoryId = :id", { id: category.id })
       .getMany();
 
-      //const commentsFromthisCategory = await ge
+    
+      let commentsFromthisCategory =[]
+      for (let i=0; i<=topicsThatBelongsThisCategory.length; i++){
+
+         const topicId = topicsThatBelongsThisCategory[i].id
+         const comment = await getRepository(Comment)
+        .createQueryBuilder("comment")
+        .orderBy("comment.created_at","DESC")
+        .where("comment.topicId = :id")
+        .getMany();
 
 
-      const lastTopic =  topicsThatBelongsThisCategory[0];
 
+        const lastComment = await getRepository(Comment)
+        .createQueryBuilder("comment")
+        .select("comment.created_at")
+        .orderBy("comment.created_at","ASC")
+        .where("comment.topicId =:topicId",{topicId:1 })
+        .getOne();
+
+
+        
+        console.log("lastComment =>")
+        console.log(lastComment)
+
+        const lastTopic =  topicsThatBelongsThisCategory[0];
+        category.totalComments = comment.length
+        category.qtdeTopics =  topicsThatBelongsThisCategory.length
+        category.lastTopic = lastTopic
+
+      } 
+    
+    
      
-      category.qtdeTopics =  topicsThatBelongsThisCategory.length
-      category.lastTopic = lastTopic
-
+      
      
       allCategories.push(category)
     }
