@@ -8,7 +8,7 @@ import { CreateTopicDTO } from './create-topic.dto';
 import { CategoryService } from '../categories/categories.service';
 import { UserService } from '../../profile/user/user.service';
 import { Category } from '../../../entities/category.entity';
-import { PaginatedTopicsResultDTO } from './paginated-topics.dto';
+import { PaginatedTopicsDTO } from './paginated-topics.dto';
 
 @Injectable()
 export class TopicsService {
@@ -48,7 +48,7 @@ export class TopicsService {
     return this.topicRepository.save(t);
   }
 
-  async findAll(page): Promise<PaginatedTopicsResultDTO> {
+  async findAll(page): Promise<PaginatedTopicsDTO> {
     const skip =10 * (page-1)
     const take =10
     if(!page){
@@ -119,17 +119,3 @@ export class TopicsService {
 }
 
 
-
-/**
- * #########################//
- *
- * ERROR: Type '{ code: status.NOT_FOUND; details: string; }' is missing the following properties from type 'ServiceError': name, message.
- *
- * ##########################
- * Possible solutions:
- *
- * https://stackoverflow.com/questions/55790897/type-is-missing-the-following-properties
- *
- * https://github.com/grpc/grpc-node/issues/858
- *
- */

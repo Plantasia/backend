@@ -1,6 +1,10 @@
 import { IsEmpty, IsNotEmpty } from 'class-validator';
 import {ApiProperty} from '@nestjs/swagger';
+import { Topic } from '@entities/topic.entity';
 export class CreateCategoryDTO {
+
+  @IsEmpty()
+  public id:string
 
 
   @IsNotEmpty()
@@ -9,12 +13,11 @@ export class CreateCategoryDTO {
     description: 'Name of new category',
     default: '',
   })
-  public readonly name: string;
+  public  name: string;
 
 
   @IsEmpty()
   public  authorSlug: string;
-
 
 
   @IsEmpty()
@@ -26,7 +29,7 @@ export class CreateCategoryDTO {
     description: 'Name of your new category',
     default: '',
   })
-  public readonly description: string;
+  public  description: string;
 
 
   @ApiProperty({
@@ -34,10 +37,19 @@ export class CreateCategoryDTO {
     description: 'Name of your new category',
     default: '',
   })
-  public readonly imageStorage: string;
+  public  imageStorage: string;
 
 
 
   @IsEmpty()
-  public readonly isActive: boolean;
+  public  isActive: boolean;
+
+  @IsEmpty()
+  public  topics: Topic[];
+
+  @IsEmpty()
+  public  lastTopic: Topic
+
+  @IsEmpty()
+  public qtdeTopics: number;
 }

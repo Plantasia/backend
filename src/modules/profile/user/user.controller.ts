@@ -23,7 +23,7 @@ import { ValidationPipe } from '@nestjs/common/pipes/validation.pipe';
 import { AuthService } from '../../../auth/auth.service';
 import { create } from 'domain';
 import { ApiTags } from '@nestjs/swagger';
-import { PaginatedUsersResultDTO } from '../paginated-users.dto';
+
 
 @ApiTags('users')
 @Controller('users')
@@ -47,35 +47,18 @@ export class UserController {
 
 
     const check = await this.userService.authorizationCheck(req.headers.authorization)   
-    const paginatedUserInfo = await this.userService.findAll(page);//passamos a variavel page como parametro do metodo FindAll
-    const {  results,
+    const paginatedUsers = await this.userService.findAll(page);//passamos a variavel page como parametro do metodo FindAll
+    const {  users,
              currentPage,
              prevPage,
              nextPage,
              perPage,
-             totalRegisters} = paginatedUserInfo
+             totalRegisters} = paginatedUsers
 
 
-    let usersToReturn =[]
-    
-    /**This is to abstracting data */
-    for(let i=0; i< results.length;i++){
-  
-      const user = new User()
-
-      user.id = results[i].id
-      user.name = results[i].name
-      user.email =results[i].email
-      user.bio =results[i].bio
-      user.avatar =results[i].avatar
-
-      usersToReturn.push(user)
-        
-    }
-    /**Formatting to send an array with 'data' */
-    const data = usersToReturn   
+ 
     return {
-      data,
+      users,
       currentPage,
       prevPage,
       nextPage,

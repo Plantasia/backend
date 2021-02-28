@@ -8,9 +8,10 @@ import { UserService } from 'src/modules/profile/user/user.service';
 import { User } from '@entities/user.entity';
 import { UserModule } from 'src/modules/profile/user/user.module';
 import { TopicsService } from '../topics/topics.service';
+import { Topic } from '@entities/topic.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Category]),  TopicModule, UserModule],
+  imports: [TypeOrmModule.forFeature([Category, Topic]),  TopicModule, UserModule],
   providers: [CategoryService, UserService, TopicsService],
   controllers: [CategoryController],
   exports: [],

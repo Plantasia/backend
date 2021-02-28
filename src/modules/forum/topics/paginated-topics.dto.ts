@@ -1,6 +1,6 @@
 import { Topic } from "@entities/topic.entity";
 
-export class PaginatedTopicsResultDTO{
+export class PaginatedTopicsDTO{
     public results: Partial<Topic>[];
     public currentPage: number;
     public prevPage: number;

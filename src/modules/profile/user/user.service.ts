@@ -5,7 +5,7 @@ import { CreateUserDTO } from './create-user.dto';
 import { User } from '@entities/user.entity';
 import { Topic } from '@entities/topic.entity';
 import { TopicsService } from '../../forum/topics/topics.service';
-import {PaginatedUsersResultDTO} from '../paginated-users.dto'
+import {PaginatedUsersDTO} from '../paginated-users.dto'
 
 @Injectable()
 export class UserService {
@@ -49,23 +49,42 @@ export class UserService {
     });
   }
 
-  async findAll(page): Promise<PaginatedUsersResultDTO> {//preparamos  o metodo para receber o parametro passado pela url na controller
+  async findAll(page): Promise<PaginatedUsersDTO> {//preparamos  o metodo para receber o parametro passado pela url na controller
     
     
     const take =3
-    const skip =3 * (page-1)
+    /* used to limit registers*/
+
+    const skip =3 * (page-1) 
+    /* used to skip the already 
+     *  catched up registers */
+
     if(!page){
       page=1
     }
     else page = parseInt(page)
 
     const [result, total] = await this.userRepository.findAndCount({
-      take:take ,//usamos a função do typeorm take que funciona como o limit
-      skip:skip // o skip pulara para a proxima pagina, ou seja os resultados que estão fora do limit, vão para a proxima pagina
+      take:take ,
+      skip:skip 
     });    
 
+    const allUsers =[]
+    for(let i=0; i< result.length;i++){
+  
+      const user = new User()
+
+      user.id = result[i].id
+      user.name = result[i].name
+      user.email =result[i].email
+      user.bio =result[i].bio
+      user.avatar =result[i].avatar
+
+      allUsers.push(user)  
+    }
+
     return{
-      results:result,
+      users:allUsers,
       currentPage:page,      
       prevPage:  page > 1? (page-1): null,
       nextPage:  total > (skip + take) ? page+1 : null,

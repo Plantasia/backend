@@ -38,21 +38,58 @@ export class CommentController {
     return this.commentService.findAll(page);
   }
 
+
+  //CREATING A COMMENT
   @UseGuards(JwtAuthGuard)
   @Post()
   @ApiCreatedResponse({description:"comment succesfully created"})
   @ApiForbiddenResponse({ description:"Forbidden" })
   @UsePipes(ValidationPipe)
-  async create(@Body() createCommentDTO: CreateCommentDTO, @Request() req): Promise<Comment> {
+  async createComment(@Body() createCommentDTO: CreateCommentDTO, @Request() req): Promise<Comment> {
     const thisUser = await this.userService.findByEmail(req.user.email);
     const check = await this.userService.authorizationCheck(req.headers.authorization)
     const user_id = createCommentDTO.user_id;
     const topic_id =createCommentDTO.topic_id;
    
-    /**
-     * NOTE: Checking both user and topic if they already exists
-     * 
-     */
+
+  
+    //NOTE: Checking both user and topic if they already exists
+    const userAlreadyExists = await this.userService.findById(user_id)
+    const topicAlreadyExists = await this.topicsService.findById(topic_id)
+
+    console.log(` User Exists?  ==>${userAlreadyExists}`)
+
+    console.log(` User Exists?  ==>${topicAlreadyExists}`)
+
+    if(!userAlreadyExists || !topicAlreadyExists){
+      throw new HttpException({
+        status: HttpStatus.FORBIDDEN,
+        error: 'User or Topic does not exists, please check data!',
+      }, HttpStatus.FORBIDDEN);
+    }
+
+    else{
+      return this.commentService.create(createCommentDTO);
+    }
+
+  }
+
+
+  //CREATING A REPLY
+  @UseGuards(JwtAuthGuard)
+  @Post('reply')
+  @ApiCreatedResponse({description:"comment succesfully created"})
+  @ApiForbiddenResponse({ description:"Forbidden" })
+  @UsePipes(ValidationPipe)
+  async createReply(@Body() createCommentDTO: CreateCommentDTO, @Request() req): Promise<Comment> {
+    const thisUser = await this.userService.findByEmail(req.user.email);
+    const check = await this.userService.authorizationCheck(req.headers.authorization)
+    const user_id = createCommentDTO.user_id;
+    const topic_id =createCommentDTO.topic_id;
+   
+
+  
+    //NOTE: Checking both user and topic if they already exists
     const userAlreadyExists = await this.userService.findById(user_id)
     const topicAlreadyExists = await this.topicsService.findById(topic_id)
 
@@ -73,6 +110,7 @@ export class CommentController {
     
     
   }
+
 
   @UseGuards(JwtAuthGuard)
   @Get(':id')

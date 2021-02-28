@@ -4,21 +4,26 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CreateCategoryDTO } from './create-category.dto';
 import { Category } from '../../../entities/category.entity';
 import { uuid } from 'uuidv4';
-import { Repository } from 'typeorm';
+import { getRepository, Repository } from 'typeorm';
 import { ApiBadGatewayResponse } from '@nestjs/swagger';
 import { PaginatedCategoriesResultDTO } from './paginated-categories.dto';
+import { Topic } from '@entities/topic.entity';
 
 @Injectable()
 export class CategoryService {
   constructor(
     @InjectRepository(Category)
     private categoryRepository: Repository<Category>,
+
+    @InjectRepository(Topic)
+    private topicRepository: Repository<Topic>
     
   ) {}
 
   async findAll(page): Promise<PaginatedCategoriesResultDTO> {
    console.log("PAGE:\n")
     console.log(page)
+    
     if(!page){
       page=1
     }
@@ -34,8 +39,40 @@ export class CategoryService {
     });
 
 
+
+    const allCategories =[]
+
+    /**Formatting each category register for API */
+    for(let i=0; i<result.length;i++){
+      const category = new CreateCategoryDTO()
+
+      category.name= result[i].name
+      category.id= result[i].id
+      category.description= result[i].description
+      category.authorSlug= result[i].authorSlug
+
+      const topicsThatBelongsThisCategory = await getRepository(Topic)
+      .createQueryBuilder("topic")
+      .orderBy("topic.updated_at","DESC")
+      .where("topic.categoryId = :id", { id: category.id })
+      .getMany();
+
+      //const commentsFromthisCategory = await ge
+
+
+      const lastTopic =  topicsThatBelongsThisCategory[0];
+
+     
+      category.qtdeTopics =  topicsThatBelongsThisCategory.length
+      category.lastTopic = lastTopic
+
+     
+      allCategories.push(category)
+    }
+
+  
     return{
-      results:result,
+      categories:allCategories,
       currentPage:page,      
       prevPage:  page > 1? (page-1): null,
       nextPage:  total > (skip + take) ? page+1 : null,

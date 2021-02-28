@@ -6,13 +6,15 @@ import {
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
+  OneToOne,
+  JoinColumn,
 } from 'typeorm';
 import { Topic } from './topic.entity';
 
 @Entity('categories')
 export class Category {
   @PrimaryGeneratedColumn('uuid')
-  id: number;
+  id: string;
 
   @Column()
   name: string;
@@ -25,6 +27,10 @@ export class Category {
 
   @Column()
   description: string;
+
+  @Column()
+  qtdeTopics: number;
+  
 
   @Column({ default: '' })
   imageStorage: string;

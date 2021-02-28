@@ -83,26 +83,9 @@ export class CategoryController {
   @ApiOkResponse({description:"The categories has been succesfful returned"})
   @ApiForbiddenResponse({ description:"Forbidden" })
   async findAll( @Query('page') page:number){
-    const allCategories =[]
-    const paginatedCategories = await  this.categoryService.findAll(page);
-
-    const{results,currentPage,nextPage,prevPage,perPage,totalRegisters} = paginatedCategories
-
-    for(let i=0; i<results.length;i++){
-      const category = new Category()
-
-      category.name= results[i].name
-      category.id= results[i].id
-      category.description= results[i].description
-      category.authorSlug= results[i].authorSlug
-      
-      allCategories.push(category)
-    }
     
-    const data = allCategories
-    return {
-      data,currentPage,nextPage,prevPage,perPage,totalRegisters
-    };
+     return  this.categoryService.findAll(page);
+  
   }
 
 

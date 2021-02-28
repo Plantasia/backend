@@ -23,7 +23,7 @@ import { UserService } from 'src/modules/profile/user/user.service';
     PassportModule,
     JwtModule.register({
       secret: jwtConstants.secret,
-      signOptions: { expiresIn: '3200000000s' },
+      signOptions: { expiresIn: '7200s' },
     }),
   ],
   controllers: [AuthController],
