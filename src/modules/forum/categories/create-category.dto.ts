@@ -58,5 +58,5 @@ export class CreateCategoryDTO {
   public totalComments: number;
 
   @IsEmpty()
-  public lastComment: Date
+  public lastComment: Comment
 }

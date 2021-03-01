@@ -43,14 +43,12 @@ export class CommentService {
   }
 
   async create(data: CreateCommentDTO): Promise<Comment> {
-    /**
-     * Instantiating dependencies
-     */
+    
     const comment = new Comment();
     const topic = new Topic();
     const user = new User();
 
-    /**Abstracting specified data to store into db */
+  
     comment.text = data.text;
     comment.reaction = data.reaction;
     comment.disable = data.disable;
@@ -59,18 +57,23 @@ export class CommentService {
     const topic_id = data.topic_id;
     const user_id = data.user_id;
 
-    /**To associating this comment to its "topic" and "user" */
     this.topicService.findOne(topic_id);
     this.userService.findOne(user_id);
 
-    //comment.user = await this.userService.findOne(user_id);
-    //comment.topic = await this.topicService.findOne(topic_id);
+    comment.user = await this.userService.findOne(user_id);
+    comment.topic = await this.topicService.findOne(topic_id);
 
-    const com = await this.commentsRepository.create(comment);
-    this.commentsRepository.save(com);
-    return this.commentsRepository.findOne({
-      where: {},
-    });
+    console.log("User")
+    console.log(user)
+
+    console.log("Topic")
+    console.log(topic)
+
+    const newComment = await this.commentsRepository.create(comment);
+    this.commentsRepository.save(newComment);
+
+    return newComment
+     
   }
 
   async update(id: string, data: CreateCommentDTO): Promise<Comment> {
