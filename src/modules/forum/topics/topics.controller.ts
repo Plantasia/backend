@@ -40,10 +40,7 @@ export class TopicsController {
             prevPage,
             totalRegisters }= await this.topicsService.findAll(page);
 
-      /*for(let i =0; i< results.length; i++){
-         const topic = new Topic
-         
-      }*/
+  
       const data = results
       return {
         data, 
@@ -106,7 +103,8 @@ export class TopicsController {
   async getTopicsByDate(){
     return this.topicsService.findWithOrderBy();
   }
-/* Função para trazer os topicos sem respostas. Comentado porque ainda não tem o campo Response no banco
+
+  /* Função para trazer os topicos sem respostas. Comentado porque ainda não tem o campo Response no banco
   @Get('responseo')
   async getTopicsWithNoResponse(){
     return this.topicsService.findNoResponse();
