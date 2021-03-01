@@ -28,10 +28,6 @@ export class Category {
   @Column()
   description: string;
 
-  @Column({default:0})
-  qtdeTopics: number;
-  
-
   @Column({ default: '' })
   imageStorage: string;
 

@@ -99,7 +99,7 @@ export class CategoryService {
         const lastTopic =  topicsThatBelongsThisCategory[0];
         
         category.lastComment = lastComment
-        category.totalComments = comments.length
+        category.qtdeComments = comments.length
         category.qtdeTopics =  topicsThatBelongsThisCategory.length
         category.lastTopic = lastTopic
        
