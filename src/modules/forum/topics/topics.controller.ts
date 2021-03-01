@@ -112,7 +112,10 @@ export class TopicsController {
     return this.topicsService.findNoResponse();
   }*/
 
-
+  @Get(':idCategory')
+  async getTopicsByCategory( @Param('idCategory') categoryId: string){
+    return this.topicsService.findByCategory(categoryId);
+  }
 
   
   @ApiOkResponse({description:"topic succesfully returned"})

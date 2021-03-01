@@ -91,9 +91,16 @@ export class TopicsService {
       return await qb.getMany();
   }
 
-  async findNoResponse(){
+  async findNoResponse(id: string){
     const qb = this.topicRepository.createQueryBuilder("Topic");
      qb.where("Topic.response = 0")
+      console.log(qb.getQuery());
+      return await qb.getMany();
+  }
+
+  async findByCategory(idCategory){
+    const qb = this.topicRepository.createQueryBuilder("Topic");
+     qb.where("Topic.category ="+idCategory)
       console.log(qb.getQuery());
       return await qb.getMany();
   }
