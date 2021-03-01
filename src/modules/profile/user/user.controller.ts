@@ -11,7 +11,9 @@ import {
   Request,
   UnauthorizedException,
   NotFoundException,
-  ForbiddenException
+  ForbiddenException,
+  ParseIntPipe,
+  Query,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDTO } from './create-user.dto';
@@ -21,6 +23,7 @@ import { ValidationPipe } from '@nestjs/common/pipes/validation.pipe';
 import { AuthService } from '../../../auth/auth.service';
 import { create } from 'domain';
 import { ApiForbiddenResponse, ApiHeader, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+
 
 @ApiTags('users')
 @Controller('users')
@@ -38,7 +41,9 @@ export class UserController {
     description: 'JWT token must to be passed to do this request',
   })
   @Get()
-  async findAll(@Request() req): Promise<Partial<User[]>> {
+  async findAll(@Request() req,
+  @Query('page') page:number
+  ){
     console.log(req.headers.authorization)
     console.log(req.user.email);
 
@@ -50,35 +55,24 @@ export class UserController {
 
 
     const check = await this.userService.authorizationCheck(req.headers.authorization)   
-    const users = await this.userService.findAll();
+    const paginatedUsers = await this.userService.findAll(page);//passamos a variavel page como parametro do metodo FindAll
+    const {  users,
+             currentPage,
+             prevPage,
+             nextPage,
+             perPage,
+             totalRegisters} = paginatedUsers
 
-    let usersToReturn =[]
-    
-    for(let i=0; i< users.length;i++){
-      
-      /**
-       * For tests
-       console.log("users.length")
-       console.log(users.length)
 
-       console.log("users[i]")
-       console.log(users[0])
-       * 
-       **/
-     
-      const user = new User()
-
-      user.id = users[i].id
-      user.name = users[i].name
-      user.email =users[i].email
-      user.bio =users[i].bio
-    
-
-      usersToReturn.push(user)
-        
-    }   
-
-    return usersToReturn;
+ 
+    return {
+      users,
+      currentPage,
+      prevPage,
+      nextPage,
+      perPage,
+      totalRegisters
+    }
   }
 
   

@@ -15,7 +15,8 @@ import {
   HttpException,
   HttpStatus,
   UnauthorizedException,
-  NotFoundException
+  NotFoundException,
+  Query
 } from '@nestjs/common';
 import { CategoryService } from './categories.service';
 import { CreateCategoryDTO } from './create-category.dto';
@@ -31,7 +32,7 @@ import { Topic } from '@entities/topic.entity';
 @ApiTags('categories')
 
 
-@Controller('categories')
+@Controller('forum/categories')
 export class CategoryController {
   constructor( private readonly categoryService: CategoryService,
                private readonly userService: UserService ) {}
@@ -83,10 +84,10 @@ export class CategoryController {
   @Get()
   @ApiOkResponse({description:"The categories has been succesfful returned"})
   @ApiForbiddenResponse({ description:"Forbidden" })
-  async findAll(): Promise<Category[]> {
-    const paginatedCategories = await  this.categoryService.findAll();
+  async findAll( @Query('page') page:number){
+    
+     return  this.categoryService.findAll(page);
   
-    return paginatedCategories;
   }
 
 

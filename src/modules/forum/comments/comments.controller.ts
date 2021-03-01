@@ -11,6 +11,7 @@ import {
   UseGuards,
   UsePipes,
   ValidationPipe,
+  Query
 } from '@nestjs/common';
 import { CommentService } from './comments.service';
 import { CreateCommentDTO } from './create-comment.dto';
@@ -21,7 +22,7 @@ import { ApiCreatedResponse, ApiForbiddenResponse, ApiHeader, ApiOkResponse, Api
 import { UserService } from 'src/modules/profile/user/user.service';
 import { TopicsService } from '../topics/topics.service';
 @ApiTags('comments')
-@Controller('comments')
+@Controller('forum/comments')
 export class CommentController {
   constructor(
               private readonly commentService: CommentService,
@@ -33,26 +34,26 @@ export class CommentController {
   @Get()
   @ApiCreatedResponse({description:"comment succesfully created"})
   @ApiForbiddenResponse({ description:"Forbidden" })
-  findAll(): Promise<Comment[]> {
-    return this.commentService.findAll();
+  findAll(@Query('page') page:number): Promise<Comment[]> {
+    return this.commentService.findAll(page);
   }
 
+
+  //CREATING A COMMENT
   @UseGuards(JwtAuthGuard)
   @UsePipes(ValidationPipe)
   @ApiCreatedResponse({description:"comment succesfully created"})
   @ApiForbiddenResponse({ description:"Forbidden" })
-  @ApiHeader({
-    name: 'JWT',
-    description: 'JWT token must to be passed to do this request',
-  })
-  @Post()
-  async create(@Body() createCommentDTO: CreateCommentDTO, @Request() req): Promise<Comment> {
+  @UsePipes(ValidationPipe)
+  async createComment(@Body() createCommentDTO: CreateCommentDTO, @Request() req): Promise<Comment> {
     const thisUser = await this.userService.findByEmail(req.user.email);
     const check = await this.userService.authorizationCheck(req.headers.authorization)
     const user_id = createCommentDTO.user_id;
     const topic_id =createCommentDTO.topic_id;
    
-     /*Checking both user and topic if they already exists*/
+
+  
+    //NOTE: Checking both user and topic if they already exists
     const userAlreadyExists = await this.userService.findById(user_id)
     const topicAlreadyExists = await this.topicsService.findById(topic_id)
 
@@ -70,9 +71,9 @@ export class CommentController {
     else{
       return this.commentService.create(createCommentDTO);
     }
-    
-    
+
   }
+
 
   @UseGuards(JwtAuthGuard)
   @ApiOkResponse({description:"The comments has been succesfful returned"})

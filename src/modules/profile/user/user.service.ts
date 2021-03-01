@@ -5,6 +5,7 @@ import { CreateUserDTO } from './create-user.dto';
 import { User } from '@entities/user.entity';
 import { Topic } from '@entities/topic.entity';
 import { TopicsService } from '../../forum/topics/topics.service';
+import {PaginatedUsersDTO} from '../paginated-users.dto'
 
 @Injectable()
 export class UserService {
@@ -48,8 +49,48 @@ export class UserService {
     });
   }
 
-  async findAll(): Promise<User[]> {
-    return this.userRepository.find();
+  async findAll(page): Promise<PaginatedUsersDTO> {//preparamos  o metodo para receber o parametro passado pela url na controller
+    
+    
+    const take =3
+    /* used to limit registers*/
+
+    const skip =3 * (page-1) 
+    /* used to skip the already 
+     *  catched up registers */
+
+    if(!page){
+      page=1
+    }
+    else page = parseInt(page)
+
+    const [result, total] = await this.userRepository.findAndCount({
+      take:take ,
+      skip:skip 
+    });    
+
+    const allUsers =[]
+    for(let i=0; i< result.length;i++){
+  
+      const user = new User()
+
+      user.id = result[i].id
+      user.name = result[i].name
+      user.email =result[i].email
+      user.bio =result[i].bio
+      user.avatar =result[i].avatar
+
+      allUsers.push(user)  
+    }
+
+    return{
+      users:allUsers,
+      currentPage:page,      
+      prevPage:  page > 1? (page-1): null,
+      nextPage:  total > (skip + take) ? page+1 : null,
+      perPage:take,
+      totalRegisters: total
+    }
   }
 
   async remove(id: string): Promise<void> {

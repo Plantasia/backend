@@ -8,6 +8,7 @@ import { CreateTopicDTO } from './create-topic.dto';
 import { CategoryService } from '../categories/categories.service';
 import { UserService } from '../../profile/user/user.service';
 import { Category } from '../../../entities/category.entity';
+import { PaginatedTopicsDTO } from './paginated-topics.dto';
 
 @Injectable()
 export class TopicsService {
@@ -47,9 +48,33 @@ export class TopicsService {
     return this.topicRepository.save(t);
   }
 
-  async findAll(): Promise<Topic[]> {
-    return this.topicRepository.find();
+  async findAll(page): Promise<PaginatedTopicsDTO> {
+    const skip =10 * (page-1)
+    const take =10
+    if(!page){
+      page=1
+    }
+    else page = parseInt(page)
+
+    const [result, total]= await this.topicRepository.findAndCount({
+      take:take ,
+      skip: skip
+    });
+
+   
+   return{ 
+    results:result,
+    currentPage:page,      
+    totalRegisters: total,
+    prevPage: page > 1? (page-1): null,
+    nextPage: total > (skip + take) ? page+1 : null,
+
+
+    }
+  
   }
+ 
+
 
   async findOne(id: string): Promise<Topic> {
     return this.topicRepository.findOne({
@@ -94,17 +119,3 @@ export class TopicsService {
 }
 
 
-
-/**
- * #########################//
- *
- * ERROR: Type '{ code: status.NOT_FOUND; details: string; }' is missing the following properties from type 'ServiceError': name, message.
- *
- * ##########################
- * Possible solutions:
- *
- * https://stackoverflow.com/questions/55790897/type-is-missing-the-following-properties
- *
- * https://github.com/grpc/grpc-node/issues/858
- *
- */

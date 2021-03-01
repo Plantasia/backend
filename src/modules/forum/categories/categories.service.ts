@@ -1,29 +1,126 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-
 import { CreateCategoryDTO } from './create-category.dto';
 import { Category } from '../../../entities/category.entity';
-import { uuid } from 'uuidv4';
-import { getConnection, getRepository, Repository, SelectQueryBuilder } from 'typeorm';
-import { ApiBadGatewayResponse } from '@nestjs/swagger';
-import { User } from '@entities/user.entity';
+import { getRepository, Repository } from 'typeorm';
+import { PaginatedCategoriesResultDTO } from './paginated-categories.dto';
+import { Topic } from '@entities/topic.entity';
+import { Comment } from '@entities/comments.entity';
 
 @Injectable()
 export class CategoryService {
   constructor(
     @InjectRepository(Category)
     private categoryRepository: Repository<Category>,
+
+    @InjectRepository(Topic)
+    private topicRepository: Repository<Topic>
+    
   ) {}
 
-  async findAll():  Promise<Category[]>{
-
+  async findAll(page): Promise<PaginatedCategoriesResultDTO> {
+   console.log("PAGE:\n")
+    console.log(page)
     
-    const paginatedRawCategories = await getRepository(Category)
-    .createQueryBuilder("category")
-    .limit(10)
-    .getMany()
+    if(!page){
+      page=1
+    }
+    else page = parseInt(page)
+    
+    const take =10
+    const skip =10 * (page-1)
+
+    const [result, total] = await this.categoryRepository.findAndCount({
+      take:skip ,
+      skip: skip
+
+    });
+
+    const categories = result
+
+
+    const allCategories =[]
+    var x=0;
+    /**Formatting each category register for API */
+    for(let i=0; i<categories.length;i++){
+      const category = new CreateCategoryDTO()
      
-    return paginatedRawCategories
+      category.name= categories[i].name
+      category.id= categories[i].id
+      category.description= categories[i].description
+      category.authorSlug= categories[i].authorSlug
+
+
+      /**NOTE: Each category
+       * 'll have many topics
+       *  and we need  to know
+       *  info about them
+       */
+      const topicsThatBelongsThisCategory = await getRepository(Topic)
+      .createQueryBuilder("topic")
+      .orderBy("topic.updated_at","DESC")
+      .where("categoryId = :id", { id: category.id })
+      .getMany();
+
+
+      // Sweeping away each topic
+     for( let t =0; t< topicsThatBelongsThisCategory.length; t++){
+      
+      
+      if(topicsThatBelongsThisCategory[t]!== undefined){
+
+        var topicId = topicsThatBelongsThisCategory[t].id
+         console.log("Topic")
+         console.log(topicsThatBelongsThisCategory[t])
+
+       
+         /**This instance of Topic has any comments? */
+         const comments = await getRepository(Comment)
+        .createQueryBuilder("comment")
+        .orderBy("comment.created_at","DESC")
+        .where("topicId = :id",{id:topicId})
+        .getMany();
+
+        
+
+        /** Which is the last comments for this topic? */
+        const lastComment = await getRepository(Comment)
+        .createQueryBuilder("comment")
+        .select("comment.created_at")
+        .orderBy("created_at","ASC")
+        .where("comment.topicId =:topicId",{topicId })
+        .getOne();
+
+
+
+         /** The first value ( [0] ) 'll be the last,
+          *  due to SQL order by DESC
+          **/
+        const lastTopic =  topicsThatBelongsThisCategory[0];
+        
+        category.lastComment = lastComment
+        category.qtdeComments = comments.length
+        category.qtdeTopics =  topicsThatBelongsThisCategory.length
+        category.lastTopic = lastTopic
+       
+      }
+
+    }  
+   
+    allCategories.push(category)
+      
+  }
+  
+
+  
+    return{
+      categories:allCategories,
+      currentPage:page,      
+      prevPage:  page > 1? (page-1): null,
+      nextPage:  total > (skip + take) ? page+1 : null,
+      perPage: take,
+      totalRegisters: total
+    }
   }
 
   async find(argument: any): Promise<Category[]> {

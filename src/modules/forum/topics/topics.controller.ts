@@ -10,6 +10,7 @@ import {
   UseGuards,
   UsePipes,
   ValidationPipe,
+  Query,
 } from '@nestjs/common';
 import { TopicsService } from './topics.service';
 import { Topic } from '../../../entities/topic.entity';
@@ -20,7 +21,7 @@ import { HttpException } from '@nestjs/common/exceptions/http.exception';
 import { UserService } from '../../profile/user/user.service';
 
 @ApiTags("topics")
-@Controller('topics')
+@Controller('forum/topics')
 export class TopicsController {
   constructor(
     private readonly topicsService: TopicsService,
@@ -31,8 +32,23 @@ export class TopicsController {
   @ApiOkResponse({description:"topic succesfully returned"})
   @ApiForbiddenResponse({ description:"Forbidden" })
   @Get()
-  async findAll(): Promise<Topic[]> {
-    return this.topicsService.findAll();
+  async findAll(@Query('page') page:number) {
+    const{  currentPage,
+            results,
+            nextPage,
+            prevPage,
+            totalRegisters }= await this.topicsService.findAll(page);
+
+  
+      const data = results
+      return {
+        data, 
+        currentPage,
+        nextPage,
+        prevPage,
+        totalRegisters
+      }
+
   }
 
  
