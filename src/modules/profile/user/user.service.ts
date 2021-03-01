@@ -72,7 +72,7 @@ export class UserService {
     const allUsers =[]
     for(let i=0; i< result.length;i++){
   
-      const user = new User()
+      const user = new CreateUserDTO()
 
       user.id = result[i].id
       user.name = result[i].name

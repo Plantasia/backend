@@ -11,6 +11,7 @@ import { Comment } from './comments.entity';
 
 @Entity('users')
 export class User {
+
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -20,7 +21,7 @@ export class User {
   @Column({ default: '' })
   bio: string;
 
-  @Column({ default: 'usuario' })
+  @Column({ default: 'user' })
   role: string;
 
   @Column({ default: '' })
@@ -47,7 +48,7 @@ export class User {
   @UpdateDateColumn()
   updated_at: Date;
 
-  @Column({ default: true })
+  @Column({ default: false })
   isAdmin: boolean
 
   @Column({ default: "logout"})
