@@ -40,7 +40,7 @@ export class CommentController {
 
 
   //CREATING A COMMENT
-  @UseGuards(JwtAuthGuard)
+  //@UseGuards(JwtAuthGuard)
   @Post()
   @ApiCreatedResponse({description:"comment succesfully created"})
   @ApiForbiddenResponse({ description:"Forbidden" })

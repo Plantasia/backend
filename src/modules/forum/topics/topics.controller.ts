@@ -112,8 +112,8 @@ export class TopicsController {
     return this.topicsService.findNoResponse();
   }*/
 
-  @Get(':idCategory')
-  async getTopicsByCategory( @Param('idCategory') categoryId: string){
+  @Get('categoryId')
+  async getTopicsByCategory( @Query('categoryId') categoryId: string){
     return this.topicsService.findByCategory(categoryId);
   }
 
