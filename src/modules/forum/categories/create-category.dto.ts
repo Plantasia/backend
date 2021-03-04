@@ -55,8 +55,8 @@ export class CreateCategoryDTO {
   public qtdeTopics: number;
 
   @IsEmpty()
-  public totalComments: number;
+  public qtdeComments: number;
 
   @IsEmpty()
-  public lastComment: Date
+  public lastComment: Comment
 }

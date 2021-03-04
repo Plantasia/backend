@@ -22,15 +22,11 @@ export class Category {
   @Column({ default: '' })
   authorLogin: string;
 
-  @Column()
+  @Column({default: ' '})
   authorSlug:string;
 
   @Column()
   description: string;
-
-  @Column({default:0})
-  qtdeTopics: number;
-  
 
   @Column({ default: '' })
   imageStorage: string;

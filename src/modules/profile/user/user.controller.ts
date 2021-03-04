@@ -22,7 +22,7 @@ import { JwtAuthGuard } from '../../../auth/jwt-auth.guard';
 import { ValidationPipe } from '@nestjs/common/pipes/validation.pipe';
 import { AuthService } from '../../../auth/auth.service';
 import { create } from 'domain';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiForbiddenResponse, ApiHeader, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 
 
 @ApiTags('users')
@@ -31,15 +31,22 @@ export class UserController {
   constructor(private readonly userService: UserService,
     ) {}
 
+
+ 
   @UseGuards(JwtAuthGuard)
+  @ApiOkResponse({description:"The users has been succesfull returned"})
+  @ApiForbiddenResponse({ description:"Forbidden" })
+  @ApiHeader({
+    name: 'JWT',
+    description: 'JWT token must to be passed to do this request',
+  })
   @Get()
-  async findAll(@Request() req,
+  async findAllIfLogged(@Request() req,
   @Query('page') page:number
   ){
+
     console.log(req.headers.authorization)
-    console.log(req.user.email);
-
-
+  
     const thisUser = await this.userService.findByEmail(req.user.email);
 
     console.log(`\n\n\n:::::::This user (logged)::::::: \n`)
@@ -47,6 +54,8 @@ export class UserController {
 
 
     const check = await this.userService.authorizationCheck(req.headers.authorization)   
+   
+
     const paginatedUsers = await this.userService.findAll(page);//passamos a variavel page como parametro do metodo FindAll
     const {  users,
              currentPage,
@@ -67,9 +76,54 @@ export class UserController {
     }
   }
 
+  @Get()
+  async findAll(@Request() req,
+  @Query('page') page:number
+  ){
+
+    console.log(req.headers.authorization)
   
-  @Post()
+    console.log("I've passed 'till here")
+    const thisUser = await this.userService.findByEmail(req.user.email);
+
+    console.log(`\n\n\n:::::::This user (logged)::::::: \n`)
+    console.log(thisUser)
+
+
+    const check = await this.userService.authorizationCheck(req.headers.authorization)   
+   
+
+    const paginatedUsers = await this.userService.findAll(page);//passamos a variavel page como parametro do metodo FindAll
+    const {  users,
+             currentPage,
+             prevPage,
+             nextPage,
+             perPage,
+             totalRegisters} = paginatedUsers
+
+
+ 
+    return {
+      users,
+      currentPage,
+      prevPage,
+      nextPage,
+      perPage,
+      totalRegisters
+    }
+  }
+
+
+  
+  
   @UsePipes(ValidationPipe)
+  @ApiOkResponse({description:"The user has been succesfull created"})
+  @ApiForbiddenResponse({ description:"Forbidden" })
+  @ApiHeader({
+    name: 'JWT',
+    description: 'JWT token must to be passed to do this request',
+  })
+  @Post()
  async create(@Body() createUserDTO: CreateUserDTO): Promise<Partial<User>> {
 
     const userAlreadyExists = await this.userService.checkIfAlreadyExists(createUserDTO.email)
@@ -93,8 +147,14 @@ export class UserController {
   }
 
 
- 
-  @Get(':id')
+ @UseGuards(JwtAuthGuard)
+ @ApiOkResponse({description:"The user has been succesfull returned"})
+ @ApiForbiddenResponse({ description:"Forbidden" })
+ @ApiHeader({
+   name: 'JWT',
+   description: 'JWT token must to be passed to do this request',
+ })
+ @Get(':id')
  async findOne(@Param('id') idUser: string): Promise<Partial<User>> {
 
    const foundUser = await this.userService.findById(idUser);
@@ -114,6 +174,12 @@ export class UserController {
 
 
   @UseGuards(JwtAuthGuard)
+  @ApiOkResponse({description:"The user has been succesfull deleted"})
+  @ApiForbiddenResponse({ description:"Forbidden" })
+  @ApiHeader({
+    name: 'JWT',
+    description: 'JWT token must to be passed to do this request',
+  })
   @Delete(':id')
  async remove(@Request() req, @Param('id') id: string): Promise<void> {
     const thisUser = await this.userService.findByEmail(req.user.email);
@@ -152,6 +218,12 @@ export class UserController {
 
   
   @UseGuards(JwtAuthGuard)
+  @ApiOkResponse({description:"The user has been succesfull deleted"})
+  @ApiForbiddenResponse({ description:"Forbidden" })
+  @ApiHeader({
+    name: 'JWT',
+    description: 'JWT token must to be passed to do this request',
+  })
   @Put(':id')
   
   async update(

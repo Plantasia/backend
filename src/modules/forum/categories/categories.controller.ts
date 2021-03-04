@@ -25,6 +25,8 @@ import { ApiCreatedResponse, ApiForbiddenResponse, ApiHeader, ApiOkResponse, Api
 import { JwtAuthGuard } from '../../../auth/jwt-auth.guard';
 import { UserService } from 'src/modules/profile/user/user.service';
 import { identity } from 'rxjs';
+import { SelectQueryBuilder } from 'typeorm';
+import { Topic } from '@entities/topic.entity';
 
 
 @ApiTags('categories')
@@ -89,14 +91,7 @@ export class CategoryController {
   }
 
 
-  @Get()
-  @ApiOkResponse({description:"The categories has been succesfful returned"})
-  @ApiForbiddenResponse({ description:"Forbidden" })
-  async findByName(@Body() createCategoryDTO: CreateCategoryDTO): Promise<Category>{
-    const requestedName= createCategoryDTO.name
-    
-    return this.categoryService.findByName(requestedName)
-  }
+
 
   @UseGuards(JwtAuthGuard)
   @Get(':id')

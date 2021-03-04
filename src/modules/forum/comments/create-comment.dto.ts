@@ -20,6 +20,7 @@ export class CreateCommentDTO {
     description: 'Reaction',
     default: '',
   })
+  @IsEmpty()
   public readonly reaction: string;
 
 
