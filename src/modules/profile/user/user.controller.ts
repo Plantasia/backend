@@ -33,7 +33,7 @@ export class UserController {
 
 
  
-
+  @UseGuards(JwtAuthGuard)
   @ApiOkResponse({description:"The users has been succesfull returned"})
   @ApiForbiddenResponse({ description:"Forbidden" })
   @ApiHeader({
@@ -41,13 +41,12 @@ export class UserController {
     description: 'JWT token must to be passed to do this request',
   })
   @Get()
-  async findAll(@Request() req,
+  async findAllIfLogged(@Request() req,
   @Query('page') page:number
   ){
+
     console.log(req.headers.authorization)
-    console.log(req.user.email);
-
-
+  
     const thisUser = await this.userService.findByEmail(req.user.email);
 
     console.log(`\n\n\n:::::::This user (logged)::::::: \n`)
@@ -55,6 +54,8 @@ export class UserController {
 
 
     const check = await this.userService.authorizationCheck(req.headers.authorization)   
+   
+
     const paginatedUsers = await this.userService.findAll(page);//passamos a variavel page como parametro do metodo FindAll
     const {  users,
              currentPage,
@@ -75,8 +76,46 @@ export class UserController {
     }
   }
 
+  @Get()
+  async findAll(@Request() req,
+  @Query('page') page:number
+  ){
+
+    console.log(req.headers.authorization)
   
-  @UseGuards(JwtAuthGuard)
+    console.log("I've passed 'till here")
+    const thisUser = await this.userService.findByEmail(req.user.email);
+
+    console.log(`\n\n\n:::::::This user (logged)::::::: \n`)
+    console.log(thisUser)
+
+
+    const check = await this.userService.authorizationCheck(req.headers.authorization)   
+   
+
+    const paginatedUsers = await this.userService.findAll(page);//passamos a variavel page como parametro do metodo FindAll
+    const {  users,
+             currentPage,
+             prevPage,
+             nextPage,
+             perPage,
+             totalRegisters} = paginatedUsers
+
+
+ 
+    return {
+      users,
+      currentPage,
+      prevPage,
+      nextPage,
+      perPage,
+      totalRegisters
+    }
+  }
+
+
+  
+  
   @UsePipes(ValidationPipe)
   @ApiOkResponse({description:"The user has been succesfull created"})
   @ApiForbiddenResponse({ description:"Forbidden" })

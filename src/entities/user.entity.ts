@@ -47,7 +47,7 @@ export class User {
   @UpdateDateColumn()
   updated_at: Date;
 
-  @Column({ default: true })
+  @Column({ default: false })
   isAdmin: boolean
 
   @Column({ default: "logout"})

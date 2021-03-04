@@ -22,7 +22,7 @@ export class Category {
   @Column({ default: '' })
   authorLogin: string;
 
-  @Column()
+  @Column({default: ' '})
   authorSlug:string;
 
   @Column()
