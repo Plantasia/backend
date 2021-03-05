@@ -21,7 +21,7 @@ import { HttpException } from '@nestjs/common/exceptions/http.exception';
 import { UserService } from '../../profile/user/user.service';
 
 @ApiTags("topics")
-@Controller('forum/topics')
+@Controller('topics')
 export class TopicsController {
   constructor(
     private readonly topicsService: TopicsService,
@@ -29,6 +29,15 @@ export class TopicsController {
     ) {}
 
  
+    @Get('category')
+    async getTopicsByCategory( @Query('categoryId') categoryId: string){
+      console.log("entrei aqui")
+      console.log("**************")
+      return this.topicsService.findByCategory(categoryId);
+    
+  
+    }
+  
   @ApiOkResponse({description:"topic succesfully returned"})
   @ApiForbiddenResponse({ description:"Forbidden" })
   @Get()
@@ -98,29 +107,7 @@ export class TopicsController {
     return response;
   }
 
-
-  @Get('date')
-  async getTopicsByDate(){
-    return this.topicsService.findWithOrderBy();
-  }
-
-  /*Função para trazer os topicos sem respostas. 
-   * Não usado ainda não tem o campo Response no banco */
-  @Get('response')
-  async getTopicsWithNoResponse(){
-    return this.topicsService.findNoResponse();
-  }
-
   
-  @ApiOkResponse({description:"topic succesfully returned"})
-  @ApiForbiddenResponse({ description:"Forbidden" })
-  @Get(':id')
-  async findOne(@Param('id') id: string): Promise<Topic> {
-    return this.topicsService.findOne(id);
-  }
-
-
-
   @UseGuards(JwtAuthGuard)
   @ApiOkResponse({description:"topic succesfully deleted"})
   @ApiForbiddenResponse({ description:"Forbidden" })

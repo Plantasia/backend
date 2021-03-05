@@ -99,8 +99,8 @@ export class TopicsService {
   }
 
   async findByCategory(idCategory: string){
-    const qb = this.topicRepository.createQueryBuilder("Topic");
-      qb.where("topic.category_id = :id", { id: idCategory })
+    const qb = this.topicRepository.createQueryBuilder("topic");
+      qb.where("topic.categoryId = :categoryId", { categoryId: idCategory })
       console.log(qb.getQuery());
       return await qb.getMany();
   }
