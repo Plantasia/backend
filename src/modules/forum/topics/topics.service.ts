@@ -76,13 +76,46 @@ export class TopicsService {
  
 
 
-  async findOne(id: string): Promise<Topic> {
-    return this.topicRepository.findOne({
+  async findOne(userId: string): Promise<Topic> {
+    return  this.topicRepository.findOne({
       where: {
-        id: id,
+        id: userId,
       },
     });
+
+    /*titulo do topico, todas as palavras chave relacionada ao topico
+     e todos os comentários => (
+       usuario => avatar, nome, created_at, bio, id
+     )
+      comentarios by asc
+
+    */
+   
+    
+  
   }
+
+  async findByTopicId(userId: string): Promise<Partial<Topic>> {
+    const thisTopic = await  this.topicRepository.findOne({
+      where: {
+        id: userId,
+      },
+    });
+
+    /*titulo do topico, todas as palavras chave relacionada ao topico
+     e todos os comentários => (
+       usuario => avatar, nome, created_at, bio, id
+     )
+      comentarios by asc
+
+    */
+    const {id, name,textBody, imageStorage, reaction, created_at, updated_at} = thisTopic
+    
+    return {
+      id, name, textBody, imageStorage, reaction, created_at, updated_at
+    }
+  }
+
 
   async findWithOrderBy(){
     const qb = this.topicRepository.createQueryBuilder("Topic");

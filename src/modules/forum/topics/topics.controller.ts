@@ -31,12 +31,19 @@ export class TopicsController {
  
     @Get('category')
     async getTopicsByCategory( @Query('categoryId') categoryId: string){
-      console.log("entrei aqui")
-      console.log("**************")
       return this.topicsService.findByCategory(categoryId);
-    
+      
+      
+    }
+
+    @Get(':topicId')
+    async getTopicById( @Param('topicId') topicId: string){
+      return this.topicsService.findByTopicId(topicId)
+      
   
     }
+
+    
   
   @ApiOkResponse({description:"topic succesfully returned"})
   @ApiForbiddenResponse({ description:"Forbidden" })
