@@ -64,14 +64,14 @@ export class CategoryService {
 
 
       // Sweeping away each topic
-     for( let t =0; t< topicsThatBelongsThisCategory.length; t++){
+     for( let topic of  topicsThatBelongsThisCategory){
       
       
-      if(topicsThatBelongsThisCategory[t]!== undefined){
+      if(topic!== undefined){
 
-        var topicId = topicsThatBelongsThisCategory[t].id
+        var topicId = topic.id
          console.log("Topic")
-         console.log(topicsThatBelongsThisCategory[t])
+         console.log(topic)
 
        
          /**This instance of Topic has any comments? */

@@ -52,7 +52,7 @@
     "rxjs": "^6.5.4",
     "swagger-ui-express": "^4.1.6",
     "ts-node-dev": "^1.0.0",
-    "typeorm": "^0.2.29",
+    "typeorm": "^0.2.31",
     "typeorm-seeding": "^1.6.1",
     "uuidv4": "^6.2.5"
   },

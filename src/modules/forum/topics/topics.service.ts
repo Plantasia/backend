@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { createQueryBuilder, getConnection, getRepository, Repository } from 'typeorm';
 
 import { Topic } from '../../../entities/topic.entity';
+import { Comment } from '../../../entities/comments.entity';
 import { User } from '@entities/user.entity';
 import { CreateTopicDTO } from './create-topic.dto';
 import { CategoryService } from '../categories/categories.service';
@@ -95,26 +96,53 @@ export class TopicsService {
   
   }
 
-  async findByTopicId(userId: string): Promise<Partial<Topic>> {
-    const thisTopic = await  this.topicRepository.findOne({
-      where: {
-        id: userId,
-      },
-    });
+  async takeTopicData(topicId: string){
 
-    /*titulo do topico, todas as palavras chave relacionada ao topico
+  
+    console.log("__________start_____________")
+    const thisTopic = await getRepository(Topic)
+    .createQueryBuilder("t")
+    .innerJoin("t.category","cat",'cat.id = t.categoryId')
+    .innerJoin("t.comments","com", "com.topicId = t.id")
+    .innerJoinAndSelect("t.user","user","t.userId = user.id")
+    .innerJoinAndSelect("com.user","userComment","com.userId = userComment.id")
+    .orderBy({
+      "com.created_at":"ASC"
+    })
+    .where("t.id = :id", { id: topicId })
+
+   .select([
+    "userComment.id", "userComment.name","userComment.avatar",
+    "userComment.email","userComment.created_at",
+
+    "user.id", "user.name","user.avatar",
+    "user.email","user.created_at",
+    
+
+    "t.id","t.name","t.textBody","t.imageStorage",
+    "t.reaction","t.created_at","t.updated_at",
+
+    "cat.id","cat.name","cat.authorSlug","cat.description","cat.imageStorage",
+    "cat.created_at","cat.updated_at",
+
+    "com.id","com.userId","com.text","com.reaction","com.created_at", "com.updated_at",
+  ])
+    .getMany()
+    console.log("__________end_______________") 
+
+    return {thisTopic}
+   
+    /*titulo do topico, todas as palavras chave (categorias) relacionada ao topico
      e todos os comentários => (
        usuario => avatar, nome, created_at, bio, id
      )
       comentarios by asc
-
-    */
-    const {id, name,textBody, imageStorage, reaction, created_at, updated_at} = thisTopic
-    
-    return {
-      id, name, textBody, imageStorage, reaction, created_at, updated_at
-    }
+     }*/
+  
   }
+
+   
+  
 
 
   async findWithOrderBy(){
