@@ -11,14 +11,14 @@ export class AdminSeed1614898695707 implements MigrationInterface {
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
-        for( let i=0; i<= admins.length;i++){
+        for(let admin of admins){
 
-            const adminId =admins[i].id
+            const adminId =admin
            await getConnection()
            .createQueryBuilder()
            .delete()
            .from(User)
-           .where("id =:id",{id:adminId})
+           .where("id =:id",{id:admin.id})
            .execute();
        }
     }

@@ -44,6 +44,17 @@ export class createComment1605894914570 implements MigrationInterface {
             isNullable: true,
             isGenerated: true,
           },
+          {
+            name: 'created_at',
+            type: 'datetime',
+            isNullable: false,
+          },
+
+          {
+            name: 'updated_at',
+            type: 'datetime',
+            isNullable: false,
+          },
         ],
       }),
     );

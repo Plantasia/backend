@@ -1,3 +1,4 @@
+import { truncate } from 'fs';
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
 export class createUser1605879828481 implements MigrationInterface {
@@ -53,16 +54,12 @@ export class createUser1605879828481 implements MigrationInterface {
             type: 'boolean',
             isNullable: false,
           },
-          
-          {
-            name: 'deleted',
-            type: 'boolean',
-            isNullable: false,
-          },
+      
           {
             name: 'quarentineNum',
             type: 'int',
             isNullable: false,
+            default:0
           },
           {
             name: 'changedEmail',
@@ -75,6 +72,29 @@ export class createUser1605879828481 implements MigrationInterface {
             type: 'boolean',
             isNullable: false,
           },
+          {
+            name: 'tokenLogout',
+            type: 'text',
+            isNullable: true,
+          },
+          {
+            name: 'created_at',
+            type: 'datetime',
+            isNullable: false,
+
+          },
+          {
+            name: 'updated_at',
+            type: 'datetime',
+            isNullable: false,
+          },
+          {
+            name: 'deleted',
+            type: 'tinyint',
+            isNullable: true,
+            default:0
+          },
+
 
        
         ],

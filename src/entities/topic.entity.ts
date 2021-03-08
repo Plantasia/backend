@@ -7,13 +7,14 @@ import {
   OneToOne,
   CreateDateColumn,
   OneToMany,
+  BaseEntity,
 } from 'typeorm';
 import { Category } from './category.entity';
 import { User } from './user.entity';
 import { Comment } from './comments.entity';
 
 @Entity('topics')
-export class Topic {
+export class Topic extends BaseEntity{
   @PrimaryGeneratedColumn('uuid')
   id: string;
 

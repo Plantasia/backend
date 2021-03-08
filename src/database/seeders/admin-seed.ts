@@ -5,10 +5,11 @@ import {internet,name,random} from 'faker'
 export  default function AdminSeed():User[]{
  const admin =[]
 
-  for( let i=0; i<=3; i++){
+  for( let i=0; i<=10; i++){
     const user = new User()
     user.name = name.firstName(),
     user.avatar = random.image(),
+    user.isAdmin = true
     user.bio = "I'm a Admin",
     user.email = "admin@admin.com",
     user.password = "123"

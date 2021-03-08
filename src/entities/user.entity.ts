@@ -5,12 +5,13 @@ import {
   PrimaryGeneratedColumn,
   OneToMany,
   CreateDateColumn,
+  BaseEntity,
 } from 'typeorm';
 import { Topic } from './topic.entity';
 import { Comment } from './comments.entity';
-
 @Entity('users')
-export class User {
+export class User extends BaseEntity{
+
   @PrimaryGeneratedColumn('uuid')
   id: string;
 

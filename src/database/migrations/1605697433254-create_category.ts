@@ -41,6 +41,18 @@ export class createCategory1605697433254 implements MigrationInterface {
             isNullable: false,
             default: 1,
           },
+          {
+            name: 'created_at',
+            type: 'datetime',
+            isNullable: false,
+          },
+
+          {
+            name: 'updated_at',
+            type: 'datetime',
+            isNullable: false,
+          },
+  
         ],
       }),
     );

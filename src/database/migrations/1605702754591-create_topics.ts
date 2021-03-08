@@ -35,6 +35,17 @@ export class createTopics1605702754591 implements MigrationInterface {
             isNullable: false,
             default: 1,
           },
+          {
+            name: 'created_at',
+            type: 'datetime',
+            isNullable: false,
+          },
+
+          {
+            name: 'updated_at',
+            type: 'datetime',
+            isNullable: false,
+          },
         ],
       }),
     );
