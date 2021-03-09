@@ -1,4 +1,5 @@
-import { MigrationInterface, QueryRunner, Table } from 'typeorm';
+import { Category } from '@entities/category.entity';
+import { getConnection, MigrationInterface, QueryRunner, Table } from 'typeorm';
 
 export class createCategory1605697433254 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
@@ -19,22 +20,31 @@ export class createCategory1605697433254 implements MigrationInterface {
             isNullable: false,
           },
           {
-            name: 'author',
+            name: 'authorEmail',
             type: 'text',
-            isNullable: false,
+            isNullable: true,
+        
           },
 
           {
-            name: 'authorSlug',
+            name: 'authorId',
             type: 'text',
-            isNullable: false,
+            isNullable: true,
+         
+          },
+          {
+            name: 'description',
+            type: 'text',
+            isNullable: true,
           },
 
           {
             name: 'imageStorage',
             type: 'text',
             isNullable: true,
+            
           },
+
           {
             name: 'isActive',
             type: 'tinyint',
@@ -44,13 +54,20 @@ export class createCategory1605697433254 implements MigrationInterface {
           {
             name: 'created_at',
             type: 'datetime',
-            isNullable: false,
+            isNullable: true,
           },
 
           {
             name: 'updated_at',
             type: 'datetime',
-            isNullable: false,
+            isNullable: true,
+  
+          },
+
+          {
+            name: 'deleted_at',
+            type: 'datetime',
+            isNullable: true,
           },
   
         ],
@@ -59,6 +76,12 @@ export class createCategory1605697433254 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable('categories');
+    await getConnection()
+    .createQueryBuilder()
+    .delete()
+    .from(Category)
+    .execute();
+
+    await queryRunner.dropTable("categories")
   }
 }

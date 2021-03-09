@@ -203,8 +203,8 @@ export class UserController {
       if((userRequestedToDelete.id === req.user.id) &&(userRequestedToDelete.email ===  req.user.email) ){
         
         /**Soft delete applied */
-        userRequestedToDelete.deleted=true;
-        return 
+       var now = new Date()
+        userRequestedToDelete.deleted_at = now
 
       }
       else{

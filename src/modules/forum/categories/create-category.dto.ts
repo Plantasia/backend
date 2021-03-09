@@ -18,11 +18,11 @@ export class CreateCategoryDTO {
 
 
   @IsEmpty()
-  public  authorSlug: string;
+  public  authorId: string;
 
 
   @IsEmpty()
-  public  authorLogin: string;
+  public  authorEmail: string;
 
   @IsNotEmpty()
   @ApiProperty({

@@ -8,6 +8,7 @@ import {
   CreateDateColumn,
   OneToMany,
   BaseEntity,
+  DeleteDateColumn,
 } from 'typeorm';
 import { Category } from './category.entity';
 import { User } from './user.entity';
@@ -27,17 +28,9 @@ export class Topic extends BaseEntity{
   @Column({default:""})
   imageStorage: string;
 
-  @Column({ default: 0 })
-  reaction: number;
 
   @Column({ default: true })
   isActive: boolean;
-
-  @CreateDateColumn()
-  created_at: Date;
-
-  @UpdateDateColumn()
-  updated_at: Date;
 
   @ManyToOne(
     () => User,
@@ -56,5 +49,16 @@ export class Topic extends BaseEntity{
     comments => comments.topic,
   )
   comments: Comment[];
+
+
+  @CreateDateColumn()
+  created_at: Date;
+
+  @UpdateDateColumn()
+  updated_at: Date;
+
+  @DeleteDateColumn()
+  deleted_at: Date;
+
 
 }

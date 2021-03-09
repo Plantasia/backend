@@ -52,11 +52,11 @@ export class CategoryController {
    const id = req.user.id
    const email = req.user.email
    
-    const authorSlug =(await this.userService.findByEmail(req.user.email)).id
+    const authorId =(await this.userService.findByEmail(req.user.email)).id
     
-    console.log("authorSlug:",authorSlug)
-    createCategoryDTO.authorLogin =  email
-    createCategoryDTO.authorSlug =authorSlug
+    console.log("authorId:",authorId)
+    createCategoryDTO.authorEmail =  email
+    createCategoryDTO.authorId =authorId
 
        
      const requestedName = createCategoryDTO.name 
@@ -102,7 +102,7 @@ export class CategoryController {
     const thisUser = await this.userService.findByEmail(req.user.email);
     const check = await this.userService.authorizationCheck(req.headers.authorization)
     const  selectedCategory = await this.categoryService.findOne(categoryId);
-    const {id,name,imageStorage,description,authorSlug, authorLogin} = selectedCategory
+    const {id,name,imageStorage,description,authorId, authorEmail} = selectedCategory
 
     return {id,name,imageStorage,description}
 
@@ -149,7 +149,7 @@ export class CategoryController {
     const categoryExists = await (await this.categoryService.findById(id))
       const thisUser = await this.userService.findByEmail(req.user.email);
       const check = await this.userService.authorizationCheck(req.headers.authorization)
-    const authorLogin = await (await this.categoryService.findById(id)).authorLogin
+    const authorEmail = await (await this.categoryService.findById(id)).authorEmail
 
     console.log(email)
     if(!categoryExists){
@@ -163,10 +163,10 @@ export class CategoryController {
      *  That is, if he is the author
      **/
 
-    const authorSlug = (await this.categoryService.findById(id)).authorSlug;
-    /* authorSlug is the id of author (related to users table) */
+    const authorId = (await this.categoryService.findById(id)).authorId;
+    /* authorId is the id of author (related to users table) */
 
-    const userIsAuthorized = this.userService.findById(authorSlug);
+    const userIsAuthorized = this.userService.findById(authorId);
 
     if(!userIsAuthorized){
       throw new  UnauthorizedException({error:"You are not authorized to update this category!"})

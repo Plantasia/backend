@@ -50,10 +50,6 @@ export class CommentService {
 
   
     comment.text = data.text;
-    comment.reaction = data.reaction;
-    comment.disable = data.disable;
-    comment.hasParentComment = data.hasParenteComment;
-    comment.idParentComment = data.idParentComment;
     const topic_id = data.topic_id;
     const user_id = data.user_id;
 

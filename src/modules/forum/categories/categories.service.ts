@@ -48,7 +48,7 @@ export class CategoryService {
       category.name= categories[i].name
       category.id= categories[i].id
       category.description= categories[i].description
-      category.authorSlug= categories[i].authorSlug
+      category.authorId= categories[i].authorId
 
 
       /**NOTE: Each category
@@ -136,10 +136,10 @@ export class CategoryService {
     });
   }
 
-  async findByAuthorSlug(id: string ,authorSlug: string): Promise<Category> {
+  async findByAuthorSlug(id: string ,authorId: string): Promise<Category> {
     return this.categoryRepository.findOne({
       where: {
-        authorSlug,
+        authorId,
         id
       },
     });
@@ -175,9 +175,9 @@ export class CategoryService {
   async create(createCategoryDTO: CreateCategoryDTO): Promise<Category> {
     const category = new Category();
      
-    category.authorSlug= createCategoryDTO.authorSlug
+    category.authorId= createCategoryDTO.authorId
     category.name = createCategoryDTO.name;
-    category.authorLogin = createCategoryDTO.authorLogin;
+    category.authorEmail = createCategoryDTO.authorEmail;
     category.description = createCategoryDTO.description;
     category.imageStorage = createCategoryDTO.imageStorage;
     const cat = await this.categoryRepository.create(category);

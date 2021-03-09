@@ -1,4 +1,5 @@
-import { MigrationInterface, QueryRunner, Table } from 'typeorm';
+import { Comment } from '@entities/comments.entity';
+import { getConnection, MigrationInterface, QueryRunner, Table } from 'typeorm';
 
 export class createComment1605894914570 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
@@ -19,46 +20,35 @@ export class createComment1605894914570 implements MigrationInterface {
             isNullable: false,
           },
           {
-            name: 'reaction',
-            type: 'text',
-            isNullable: false,
-          },
-          {
-            name: 'disable',
+            name: 'deleted',
             type: 'boolean',
             isNullable: true,
-          },
-          {
-            name: 'hasParentComment',
-            type: 'boolean',
-            isNullable: false,
-          },
-          {
-            name: 'idParentComment',
-            type: 'text',
-            isNullable: false,
-          },
-          {
-            name: 'indexOrder',
-            type: 'int',
-            isNullable: true,
-            isGenerated: true,
           },
           {
             name: 'created_at',
             type: 'datetime',
-            isNullable: false,
+            isNullable: true,
+            
           },
 
           {
             name: 'updated_at',
             type: 'datetime',
-            isNullable: false,
+            isNullable: true,
+            
           },
         ],
       }),
     );
   }
 
-  public async down(queryRunner: QueryRunner): Promise<void> {}
+  public async down(queryRunner: QueryRunner): Promise<void> {
+    await getConnection()
+    .createQueryBuilder()
+    .delete()
+    .from(Comment)
+    .execute();
+
+    await queryRunner.dropTable("comments")
+  }
 }

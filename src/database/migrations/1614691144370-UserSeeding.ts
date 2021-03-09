@@ -19,6 +19,7 @@ export class UserSeeding1614691144370 implements MigrationInterface {
             .createQueryBuilder()
             .delete()
             .from(User)
+            .where("isAdmin = 1")
             .execute();
        
     }

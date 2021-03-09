@@ -1,4 +1,5 @@
-import { MigrationInterface, QueryRunner, Table } from 'typeorm';
+import { Topic } from '@entities/topic.entity';
+import { getConnection, MigrationInterface, QueryRunner, Table } from 'typeorm';
 
 export class createTopics1605702754591 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
@@ -20,7 +21,7 @@ export class createTopics1605702754591 implements MigrationInterface {
             isNullable: false,
           },
           {
-            name: 'topicBody',
+            name: 'textBody',
             type: 'text',
             isNullable: false,
           },
@@ -38,13 +39,20 @@ export class createTopics1605702754591 implements MigrationInterface {
           {
             name: 'created_at',
             type: 'datetime',
-            isNullable: false,
+            isNullable: true,
+           
           },
 
           {
             name: 'updated_at',
             type: 'datetime',
-            isNullable: false,
+            isNullable: true,
+           
+          },{
+            name: 'deleted_at',
+            type: 'datetime',
+            isNullable: true,
+           
           },
         ],
       }),
@@ -52,6 +60,13 @@ export class createTopics1605702754591 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable('topics');
+    await getConnection()
+    .createQueryBuilder()
+    .delete()
+    .from(Topic)
+    .execute();
+
+    await queryRunner.dropTable("topics")
+
   }
 }

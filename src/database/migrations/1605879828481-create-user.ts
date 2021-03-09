@@ -1,5 +1,6 @@
+import { User } from '@entities/user.entity';
 import { truncate } from 'fs';
-import { MigrationInterface, QueryRunner, Table } from 'typeorm';
+import { getConnection, MigrationInterface, QueryRunner, Table } from 'typeorm';
 
 export class createUser1605879828481 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
@@ -23,7 +24,7 @@ export class createUser1605879828481 implements MigrationInterface {
           {
             name: 'bio',
             type: 'text',
-            isNullable: false,
+            isNullable: true,
           },
           {
             name: 'role',
@@ -40,7 +41,7 @@ export class createUser1605879828481 implements MigrationInterface {
           {
             name: 'avatar',
             type: 'text',
-            isNullable: false,
+            isNullable: true,
           },
          
           {
@@ -53,6 +54,7 @@ export class createUser1605879828481 implements MigrationInterface {
             name: 'isActive',
             type: 'boolean',
             isNullable: false,
+            default:true
           },
       
           {
@@ -62,15 +64,10 @@ export class createUser1605879828481 implements MigrationInterface {
             default:0
           },
           {
-            name: 'changedEmail',
-            type: 'boolean',
-            isNullable: false,
-          }
-          ,
-          {
             name: 'isAdmin',
             type: 'boolean',
             isNullable: false,
+            default:0
           },
           {
             name: 'tokenLogout',
@@ -80,19 +77,21 @@ export class createUser1605879828481 implements MigrationInterface {
           {
             name: 'created_at',
             type: 'datetime',
-            isNullable: false,
+            isNullable: true,
+              
 
           },
           {
             name: 'updated_at',
             type: 'datetime',
-            isNullable: false,
+            isNullable: true,
+              
           },
           {
-            name: 'deleted',
-            type: 'tinyint',
+            name: 'deleted_at',
+            type: 'datetime',
             isNullable: true,
-            default:0
+              
           },
 
 
@@ -102,5 +101,13 @@ export class createUser1605879828481 implements MigrationInterface {
     );
   }
 
-  public async down(queryRunner: QueryRunner): Promise<void> {}
+  public async down(queryRunner: QueryRunner): Promise<void> {
+    await getConnection()
+    .createQueryBuilder()
+    .delete()
+    .from(User)
+    .execute();
+
+    await queryRunner.dropTable("users")
+  }
 }
