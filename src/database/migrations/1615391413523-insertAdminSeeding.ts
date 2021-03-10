@@ -1,12 +1,11 @@
-
 import { User } from "@entities/user.entity";
 import {getConnection, getRepository, MigrationInterface, QueryRunner} from "typeorm";
-import AdminSeed from "../seeders/admin-seed";
-
-const admins = AdminSeed();
-export class AdminSeed1614898695707 implements MigrationInterface {
-
+import AdminSeed from "../seeders/user-seed";
+const admins = AdminSeed()
+export class insertAdminSeeding1615391413523 implements MigrationInterface {
+   
     public async up(queryRunner: QueryRunner): Promise<void> {
+        
         await getRepository(User).save(admins)
     }
 
@@ -22,5 +21,6 @@ export class AdminSeed1614898695707 implements MigrationInterface {
            .execute();
        }
     }
+
 
 }

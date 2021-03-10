@@ -1,10 +1,10 @@
 
 import { Topic } from "@entities/topic.entity";
 import {getConnection,createConnection, getRepository, MigrationInterface, QueryRunner} from "typeorm";
-import { Category } from '../../entities/category.entity';
-import { User } from '../../entities/user.entity';
+import { Category } from '@entities/category.entity';
+import { User } from '@entities/user.entity';
 import {internet, random} from 'faker';
-import TopicsSeed from '../seeders/topics-seed'
+import TopicsSeed from '../database/seeders/topics-seed'
 
 export class TopicSeeding1615210339481 implements MigrationInterface {
 

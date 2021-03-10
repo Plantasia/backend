@@ -10,6 +10,7 @@ import {
 } from 'typeorm';
 import { Topic } from './topic.entity';
 import { Comment } from './comments.entity';
+
 @Entity('users')
 export class User extends BaseEntity{
 
@@ -63,4 +64,6 @@ export class User extends BaseEntity{
 
   @DeleteDateColumn()
   deleted_at: Date;
+
+
 }

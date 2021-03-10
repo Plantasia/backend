@@ -1,11 +1,11 @@
-import { Topic } from '@entities/topic.entity';
+import { User } from '@entities/user.entity';
 import { getConnection, MigrationInterface, QueryRunner, Table } from 'typeorm';
 
-export class createTopics1605702754591 implements MigrationInterface {
+export class createUser1605879828481 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: 'topics',
+        name: 'users',
         columns: [
           {
             name: 'id',
@@ -21,39 +21,80 @@ export class createTopics1605702754591 implements MigrationInterface {
             isNullable: false,
           },
           {
-            name: 'textBody',
-            type: 'text',
-            isNullable: false,
-          },
-          {
-            name: 'imageStorage',
+            name: 'bio',
             type: 'text',
             isNullable: true,
           },
           {
-            name: 'isActive',
-            type: 'tinyint',
+            name: 'role',
+            type: 'text',
+            isNullable: true,
+          },
+
+          {
+            name: 'email',
+            type: 'text',
             isNullable: false,
-            default: 1,
+          },
+
+          {
+            name: 'avatar',
+            type: 'text',
+            isNullable: true,
+          },
+         
+          {
+            name: 'password',
+            type: 'text',
+            isNullable: false,
+          },
+
+          {
+            name: 'isActive',
+            type: 'boolean',
+            isNullable: false,
+            default:true
+          },
+      
+          {
+            name: 'quarentineNum',
+            type: 'int',
+            isNullable: false,
+            default:0
+          },
+          {
+            name: 'isAdmin',
+            type: 'boolean',
+            isNullable: false,
+            default:0
+          },
+          {
+            name: 'tokenLogout',
+            type: 'text',
+            isNullable: true,
           },
           {
             name: 'created_at',
             type: 'datetime',
             isNullable: true,
-           
-          },
+              
 
+          },
           {
             name: 'updated_at',
             type: 'datetime',
             isNullable: true,
-           
-          },{
+              
+          },
+          {
             name: 'deleted_at',
             type: 'datetime',
             isNullable: true,
-           
+              
           },
+
+
+       
         ],
       }),
     );
@@ -63,10 +104,9 @@ export class createTopics1605702754591 implements MigrationInterface {
     await getConnection()
     .createQueryBuilder()
     .delete()
-    .from(Topic)
+    .from(User)
     .execute();
 
-    await queryRunner.dropTable("topics")
-
+    await queryRunner.dropTable("users")
   }
 }

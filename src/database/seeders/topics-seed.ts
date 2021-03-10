@@ -178,11 +178,12 @@ export default async function TopicsSeed(){
   t20.textBody = random.words()
   var topic20 =await  Topic.create(t20)
   
-const topics = [
+/*const topics = [
  topic1,topic2,topic3,topic4,topic5,
  topic6,topic7,topic8,topic9,topic10,
  topic11,topic12,topic13,topic14,topic15,topic16,
  topic17,topic18,topic19,topic20
-]
-return topics
+]*/
+ return topic1
+//return topics
 }

@@ -1,6 +1,6 @@
 import { User } from "@entities/user.entity";
 import {getConnection, getRepository, MigrationInterface, QueryRunner} from "typeorm";
-import UserSeed from '../seeders/user-seed';
+import UserSeed from '../database/seeders/user-seed';
 
 var usersSeed = UserSeed()
  

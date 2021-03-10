@@ -1,8 +1,9 @@
 import { Category } from '@entities/category.entity';
-import { getConnection, MigrationInterface, QueryRunner, Table } from 'typeorm';
+import { getConnection, MigrationInterface, QueryRunner, Table, TableForeignKey } from 'typeorm';
 
 export class createCategory1605697433254 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
+   
     await queryRunner.createTable(
       new Table({
         name: 'categories',
@@ -14,6 +15,7 @@ export class createCategory1605697433254 implements MigrationInterface {
             generationStrategy: 'uuid',
             isNullable: false,
           },
+          
           {
             name: 'name',
             type: 'text',
@@ -54,13 +56,16 @@ export class createCategory1605697433254 implements MigrationInterface {
           {
             name: 'created_at',
             type: 'datetime',
-            isNullable: true,
+            isNullable: false,
+            default:'now()'
+
           },
 
           {
             name: 'updated_at',
             type: 'datetime',
             isNullable: true,
+            default:'now()'
   
           },
 
@@ -72,7 +77,11 @@ export class createCategory1605697433254 implements MigrationInterface {
   
         ],
       }),
+      
     );
+  
+
+    await queryRunner.clearSqlMemory();
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
