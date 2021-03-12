@@ -9,10 +9,12 @@ import {
   OneToMany,
   BaseEntity,
   DeleteDateColumn,
+  Generated,
 } from 'typeorm';
 import { Category } from './category.entity';
 import { User } from './user.entity';
 import { Comment } from './comments.entity';
+
 
 @Entity('topics')
 export class Topic extends BaseEntity{
@@ -59,6 +61,10 @@ export class Topic extends BaseEntity{
 
   @DeleteDateColumn()
   deleted_at: Date;
+
+  @Column()
+  @Generated('increment')
+  seedingId: number;
 
 
 }

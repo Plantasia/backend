@@ -1,9 +1,14 @@
-import { Category } from '@entities/category.entity'
+import { Category } from '../../entities/category.entity'
 import { User } from '@entities/user.entity';
 import {internet} from 'faker';
 import {UserService} from '../../modules/profile/user/user.service'
+import { getRepository } from 'typeorm';
 
-export default function CategorySeed():Category[]{
+export default async function CategorySeed(verifyRun:boolean){
+  let resp:boolean=true
+  verifyRun? resp=true: resp=false
+  
+  if(!resp)return resp
 
 
   const category1 = new Category() 
@@ -60,7 +65,7 @@ export default function CategorySeed():Category[]{
   category7.description =` Essa categoria é destinada às algas de 
   todas espécie`;
   category7.authorId = '237eec28-d2a9-4d0d-8d0b-6d0105475f33'
-  category1.authorEmail ='admin@admin.com'
+  category7.authorEmail ='admin@admin.com'
   category7.imageStorage = internet.avatar()
 
 
@@ -102,6 +107,17 @@ export default function CategorySeed():Category[]{
     category9,
     category10,
   ]
+ const categoryRepository = await getRepository(Category)
+ const categoriesToSave =[]
+ for(let category of categories){
+  const newCategory = categoryRepository.create(category)
+  categoriesToSave.push(newCategory)
+ }
+ const categoriesInserted =categoryRepository.save(categoriesToSave)
 
-  return categories
+ let exitStatus =false
+  categoriesInserted?exitStatus= true: exitStatus=false
+  return exitStatus
+
+
 }

@@ -42,6 +42,7 @@ export class createTopics1615387637872 implements MigrationInterface {
                 name: 'created_at',
                 type: 'datetime',
                 isNullable: true,
+                default:'now()'
                
               },
     
@@ -49,6 +50,7 @@ export class createTopics1615387637872 implements MigrationInterface {
                 name: 'updated_at',
                 type: 'datetime',
                 isNullable: true,
+                default:'now()'
                
               },{
                 name: 'deleted_at',
@@ -56,6 +58,16 @@ export class createTopics1615387637872 implements MigrationInterface {
                 isNullable: true,
                
               },
+              {
+                name: 'seedingId',
+                type: 'int',
+                isPrimary:false,
+                isUnique:true,
+                generationStrategy:'increment',
+                isGenerated:true
+               
+              },
+              
               
             ],
           }),

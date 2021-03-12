@@ -3,16 +3,18 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder} from '@nestjs/swagger'
 import cors from 'cors'
+import {CallingSeeders} from './database/seeders/calling-seeders'
 
 
 
 async function bootstrap() {
+
   const PORT = process.env.PORT || 3333;
   const HOST = process.env.HOST || '0.0.0.0';
   const app = await NestFactory.create(AppModule, {cors:true});
   try{
 
-
+  CallingSeeders()
   const swaggerConfig = new DocumentBuilder()
     .setTitle('Plantasia Docs')
     .setDescription('Swagger API Documentation')

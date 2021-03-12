@@ -13,16 +13,14 @@ import {
 import { Topic } from './topic.entity';
 import { User } from '../entities/user.entity';
 
-@Entity()
+@Entity('comments')
 export class Comment {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column()
-  text: string;
+  textBody: string;
 
-  @UpdateDateColumn()
-  updated_at: Date;
 
   @ManyToOne(
     () => User,
@@ -36,8 +34,8 @@ export class Comment {
   )
   topic: Topic;
 
-  @UpdateDateColumn({ default: null })
-  deleted: boolean;
+  @UpdateDateColumn()
+  updated_at: boolean;
 
   @CreateDateColumn()
   created_at: Date;

@@ -6,6 +6,7 @@ import { UserModule } from './modules/profile/user/user.module';
 import { ForumModule } from './modules/forum/forum.module';
 import {AuthService} from './/auth/auth.service'
 import {  AppService } from './app.service';
+import { CallingSeeders } from './database/seeders/calling-seeders';
 
 
 
@@ -13,6 +14,6 @@ import {  AppService } from './app.service';
 
 
 @Module({
-  imports: [UserModule, AuthModule, ForumModule, AppService,TypeOrmModule.forRoot({})],
+  imports: [UserModule, AuthModule ,ForumModule, AppService,TypeOrmModule.forRoot({})],
 })
 export class AppModule {}

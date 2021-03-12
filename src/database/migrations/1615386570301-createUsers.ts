@@ -78,13 +78,14 @@ export class createUsers1615386570301 implements MigrationInterface {
                 name: 'created_at',
                 type: 'datetime',
                 isNullable: true,
-                  
+                default:'now()'     
     
               },
               {
                 name: 'updated_at',
                 type: 'datetime',
                 isNullable: true,
+                default:'now()'
                   
               },
               {
@@ -93,7 +94,16 @@ export class createUsers1615386570301 implements MigrationInterface {
                 isNullable: true,
                   
               },
-    
+              {
+                name:'seedingId',
+                generationStrategy:'increment',
+                isGenerated:true,
+                isUnique:true,
+                type:'int',
+                isNullable:false,
+               
+      
+              }
     
            
             ],

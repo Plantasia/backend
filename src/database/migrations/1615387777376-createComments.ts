@@ -17,7 +17,7 @@ export class createComments1615387777376 implements MigrationInterface {
                 isNullable: false,
               },
               {
-                name: 'bodyText',
+                name: 'textBody',
                 type: 'text',
                 isNullable: false,
               },
@@ -30,14 +30,21 @@ export class createComments1615387777376 implements MigrationInterface {
                 name: 'created_at',
                 type: 'datetime',
                 isNullable: true,
-                
+                default:'now()'
+               
               },
     
               {
                 name: 'updated_at',
                 type: 'datetime',
                 isNullable: true,
-                
+                default:'now()'
+               
+              },{
+                name: 'deleted_at',
+                type: 'datetime',
+                isNullable: true,
+               
               },
             ],
           }),

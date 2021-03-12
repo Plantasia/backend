@@ -7,6 +7,7 @@ import {
   CreateDateColumn,
   BaseEntity,
   DeleteDateColumn,
+  Generated,
 } from 'typeorm';
 import { Topic } from './topic.entity';
 import { Comment } from './comments.entity';
@@ -32,6 +33,11 @@ export class User extends BaseEntity{
   @Column()
   email: string;
 
+
+  @Generated('increment')
+  @Column()
+  seedingId:number
+
   @Column()
   password: string;
 
@@ -55,6 +61,7 @@ export class User extends BaseEntity{
     topic => topic.user,
   )
   topics: Topic[];
+
 
   @CreateDateColumn()
   created_at: Date;

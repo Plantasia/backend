@@ -49,7 +49,7 @@ export class CommentService {
     const user = new User();
 
   
-    comment.text = data.text;
+    comment.textBody = data.textBody
     const topic_id = data.topic_id;
     const user_id = data.user_id;
 
