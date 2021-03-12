@@ -9,6 +9,7 @@ import {
   OneToOne,
   JoinColumn,
   BaseEntity,
+  DeleteDateColumn,
 } from 'typeorm';
 import { Topic } from './topic.entity';
 
@@ -20,20 +21,26 @@ export class Category extends BaseEntity{
   @Column()
   name: string;
 
-  @Column({ default: '' })
-  authorLogin: string;
+  @Column({ default: "" })
+  authorEmail: string;
 
-  @Column({default: ' '})
-  authorSlug:string;
+  @Column({default: ""})
+  authorId:string;
 
   @Column()
   description: string;
 
-  @Column({ default: '' })
+  @Column({ default: "" })
   imageStorage: string;
 
   @Column({ default: true })
   isActive: boolean;
+
+  @OneToMany(
+    () => Topic,
+    topic => topic.category,
+  )
+  topics: Topic[];
 
   @CreateDateColumn()
   created_at: Date;
@@ -41,9 +48,7 @@ export class Category extends BaseEntity{
   @UpdateDateColumn()
   updated_at: Date;
 
-  @OneToMany(
-    () => Topic,
-    topic => topic.category,
-  )
-  topics: Topic[];
+  @DeleteDateColumn()
+  deleted_at: Date;
+
 }

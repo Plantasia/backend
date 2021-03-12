@@ -1,0 +1,49 @@
+import {User} from '../../entities/user.entity'
+import {internet,name,random} from 'faker'
+import { createConnection, getConnection, getRepository } from 'typeorm'
+import UserSeed from './user-seed'
+import { Comment } from '@entities/comments.entity'
+import { Topic } from '@entities/topic.entity'
+
+
+export default async function CommentsSeed( verifyRun:boolean):Promise<boolean>{
+  let resp:boolean=true
+  verifyRun? resp=true: resp=false
+  
+  if(!resp)return resp
+
+ const comments =[]
+ let seedingId = 1
+ let topicSeedingId =1
+ const commentsRepository = await getRepository(Comment)
+ const userRepository = await getRepository(User)
+ const topicRepository = await getRepository(Topic)
+
+
+  for( let i=0; i<=100; i++){
+
+    if(i%20===0) topicSeedingId = 1
+    if(i%30===0) seedingId =1
+    const comment = new Comment
+    const ownerComment = await userRepository.findOne({where:{seedingId}});
+    const topic = await topicRepository.findOne({where:{seedingId:topicSeedingId}})
+    comment.user = ownerComment
+    comment.topic = topic
+    comment.textBody = random.words()
+    topicSeedingId++
+    seedingId++
+
+
+   
+    const newComment = await commentsRepository.create(comment)
+    comments.push(newComment)
+  }
+
+  const commentsInserted = await  commentsRepository.save(comments)
+
+  let exitStatus =false
+  commentsInserted?exitStatus= true: exitStatus=false
+  return exitStatus
+
+  
+}

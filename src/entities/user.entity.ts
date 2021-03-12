@@ -6,9 +6,12 @@ import {
   OneToMany,
   CreateDateColumn,
   BaseEntity,
+  DeleteDateColumn,
+  Generated,
 } from 'typeorm';
 import { Topic } from './topic.entity';
 import { Comment } from './comments.entity';
+
 @Entity('users')
 export class User extends BaseEntity{
 
@@ -21,7 +24,7 @@ export class User extends BaseEntity{
   @Column({ default: '' })
   bio: string;
 
-  @Column({ default: 'user' })
+  @Column({ default: 'USER' })
   role: string;
 
   @Column({ default: '' })
@@ -30,23 +33,16 @@ export class User extends BaseEntity{
   @Column()
   email: string;
 
+
+  @Generated('increment')
+  @Column()
+  seedingId:number
+
   @Column()
   password: string;
 
   @Column({ default: 0 })
-  deleted: boolean;
-
-  @Column({ default: 0 })
   quarentineNum: number;
-
-  @Column({default:0})
-  changedEmail:boolean;
-
-  @CreateDateColumn()
-  created_at: Date;
-
-  @UpdateDateColumn()
-  updated_at: Date;
 
   @Column({ default: false })
   isAdmin: boolean
@@ -65,4 +61,16 @@ export class User extends BaseEntity{
     topic => topic.user,
   )
   topics: Topic[];
+
+
+  @CreateDateColumn()
+  created_at: Date;
+
+  @UpdateDateColumn()
+  updated_at: Date;
+
+  @DeleteDateColumn()
+  deleted_at: Date;
+
+
 }

@@ -6,7 +6,7 @@ module.exports = {
   username: 'root',
   password: 'plantasia@123',
   host: 'database',
-  synchronize: true,
+  synchronize: false,
   port: 3306,
   logging: true,
   entities: [path.resolve(__dirname, 'build', 'entities', '*')],
