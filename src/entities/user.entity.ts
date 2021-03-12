@@ -21,7 +21,7 @@ export class User extends BaseEntity{
   @Column({ default: '' })
   bio: string;
 
-  @Column({ default: 'usuario' })
+  @Column({ default: 'user' })
   role: string;
 
   @Column({ default: '' })

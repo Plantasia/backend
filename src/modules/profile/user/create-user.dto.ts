@@ -3,13 +3,16 @@ import { IsEmpty, IsNotEmpty } from 'class-validator';
 
 export class CreateUserDTO {
 
+  @IsEmpty()
+  id:string
+
   @IsNotEmpty()
   @ApiProperty({
     type: String,
     description: 'Username',
     default: '',
   })
-  public readonly name: string;
+  public  name: string;
 
 
   @ApiProperty({
@@ -17,13 +20,13 @@ export class CreateUserDTO {
     description: 'user bio',
     default: '',
   })
-  public readonly bio: string;
+  public  bio: string;
 
 
 
 
   @IsEmpty()
-  public readonly role: string;
+  public  role: string;
 
 
   @ApiProperty({
@@ -31,7 +34,7 @@ export class CreateUserDTO {
     description: 'Avatar URL',
     default: '',
   })
-  public readonly avatar: string;
+  public  avatar: string;
 
 
 
@@ -42,7 +45,7 @@ export class CreateUserDTO {
     description: 'Email',
     default: '',
   })
-  public readonly email: string;
+  public  email: string;
 
   @IsNotEmpty()
   @ApiProperty({
@@ -50,15 +53,15 @@ export class CreateUserDTO {
     description: 'Password',
     default: '',
   })
-  public readonly password: string;
+  public  password: string;
 
   @IsEmpty()
-  public readonly isActive: boolean;
+  public  isActive: boolean;
 
   @IsEmpty()
-  public readonly quarentineNum: number;
+  public  quarentineNum: number;
 
-  public readonly isAdmin: boolean;
+  public  isAdmin: boolean;
 
   @IsEmpty()
   public tokenLogout: string;

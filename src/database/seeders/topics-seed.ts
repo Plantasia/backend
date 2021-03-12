@@ -5,7 +5,7 @@ import {internet, random} from 'faker';
 import { createConnection, getConnection } from 'typeorm';
 import {UserService} from '../../modules/profile/user/user.service'
 
-export default async function TopicsSeed():Promise<Topic>{
+export default async function TopicsSeed():Promise<void>{
 
  
 
