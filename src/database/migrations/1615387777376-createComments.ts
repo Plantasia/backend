@@ -22,11 +22,6 @@ export class createComments1615387777376 implements MigrationInterface {
                 isNullable: false,
               },
               {
-                name: 'deleted',
-                type: 'boolean',
-                isNullable: true,
-              },
-              {
                 name: 'created_at',
                 type: 'datetime',
                 isNullable: true,

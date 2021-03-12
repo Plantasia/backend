@@ -2,7 +2,6 @@ import 'reflect-metadata'
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder} from '@nestjs/swagger'
-import {createUsersCRUD} from './database/factories/create-user-crud'
 import cors from 'cors'
 import {CallingSeeders} from './database/seeders/calling-seeders'
 
