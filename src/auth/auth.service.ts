@@ -1,12 +1,14 @@
-import { Injectable,UnauthorizedException, ArgumentsHost, NotFoundException} from '@nestjs/common';
+import { Injectable,UnauthorizedException, ArgumentsHost, NotFoundException, UnprocessableEntityException} from '@nestjs/common';
 import { UserService } from '../modules/profile/user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { tokenToString } from 'typescript';
+import { MailerService } from '@nestjs-modules/mailer';
+import { randomBytes } from 'crypto';
 import { User } from '@entities/user.entity';
 import { CreateUserDTO } from '../modules/profile/user/create-user.dto';
 import { logoutConstant} from './logout'
+import { NewPasswordDto } from './newPassworDTO';
 
 import * as bcrypt from 'bcrypt';
 
@@ -15,6 +17,7 @@ export class AuthService {
   constructor(
     private userService: UserService,
     private jwtService: JwtService,
+    private mailerService: MailerService,
     @InjectRepository(User)
     private UserRepository: Repository<User>
     
@@ -115,6 +118,54 @@ export class AuthService {
     user.tokenLogout=logoutConstant.constant
     const update = await this.userService.passwordLogoutByEmail(userEmail,user);
     return console.log(update)
+  }
+
+  async sendRecoverPasswordEmail(email: string): Promise<void> {
+    const user = await this.userService.findByEmail(email);
+
+    if (!user)
+      throw new NotFoundException('Não há usuário cadastrado com esse email.');
+
+    user.recoverToken = randomBytes(32).toString('hex');
+    await this.UserRepository.save(user);
+
+    const mail = {
+      subject: 'Recuperação de senha',
+      template: 'recover-password',
+      from: 'plantasia.fatec@gmail.com',
+      to: user.email,
+      context: {
+        token: user.recoverToken,
+      },
+    };
+    await this.mailerService.sendMail(mail);
+  }
+
+  async changePassword(
+    id: string,
+    newPasswordDto: NewPasswordDto,
+  ): Promise<void> {
+    const { password, passwordConfirmation } = newPasswordDto;
+
+    if (password != passwordConfirmation)
+      throw new UnprocessableEntityException('As senhas não conferem');
+    const user = new CreateUserDTO();
+    user.password = password
+    await this.userService.changePassword(id, user);
+  }
+
+  async resetPassword(
+    recoverToken: string,
+    newPasswordDto: NewPasswordDto,
+  ): Promise<void> {
+    const user = await this.userService.findByRecoverToken(recoverToken)
+    if (!user) throw new NotFoundException('Token inválido.');
+
+    try {
+      await this.changePassword(user.id, newPasswordDto);
+    } catch (error) {
+      throw error;
+    }
   }
 
 }

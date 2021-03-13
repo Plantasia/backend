@@ -6,13 +6,14 @@ import { UserModule } from './modules/profile/user/user.module';
 import { ForumModule } from './modules/forum/forum.module';
 import {AuthService} from './/auth/auth.service'
 import {  AppService } from './app.service';
-
+import { MailerModule } from '@nestjs-modules/mailer';
+import { mailerConfig } from './mailer/mailer.config';
 
 
 
 
 
 @Module({
-  imports: [UserModule, AuthModule, ForumModule, AppService,TypeOrmModule.forRoot({})],
+  imports: [UserModule, AuthModule, ForumModule, AppService,TypeOrmModule.forRoot({}), MailerModule.forRoot(mailerConfig)],
 })
 export class AppModule {}

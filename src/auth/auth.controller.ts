@@ -1,11 +1,11 @@
 
-import { Controller, UseGuards, Request, Post, Get, NotFoundException } from '@nestjs/common';
+import { Controller, UseGuards, Request, Post, Get, NotFoundException, Body, Patch, Param, ValidationPipe } from '@nestjs/common';
 import { ApiCreatedResponse, ApiForbiddenResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { CreateSessionDTO } from './createSessionDTO';
 import { LocalAuthGuard } from './local-auth.guard';
 import { JwtAuthGuard } from '@auth/jwt-auth.guard';
-import { exception } from 'console';
+import { NewPasswordDto } from './newPassworDTO';
 
 @ApiTags('Signin & Signup')
 @Controller()
@@ -40,4 +40,25 @@ export class AuthController {
     return this.authService.logout(req.user.email);
   }
 
+  @Post('/send-recover-email')
+  async sendRecoverPasswordEmail(
+    @Body('email') email: string,
+  ): Promise<{ message: string }> {
+    await this.authService.sendRecoverPasswordEmail(email);
+    return {
+      message: 'Foi enviado um email com instruções para resetar sua senha',
+    };
+  }
+
+  @Patch('/reset-password/:token')
+  async resetPassword(
+    @Param('token') token: string,
+    @Body(ValidationPipe) newPasswordDto: NewPasswordDto,
+  ): Promise<{ message: string }> {
+    await this.authService.resetPassword(token, newPasswordDto);
+
+    return {
+      message: 'Senha alterada com sucesso',
+    };
+  }
 }

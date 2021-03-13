@@ -50,7 +50,7 @@ export class CreateUserDTO {
     description: 'Password',
     default: '',
   })
-  public readonly password: string;
+  public  password: string;
 
   @IsEmpty()
   public readonly isActive: boolean;
@@ -62,4 +62,7 @@ export class CreateUserDTO {
 
   @IsEmpty()
   public tokenLogout: string;
+
+  @IsEmpty()
+  public recoverToken: string;
 }

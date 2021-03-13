@@ -53,6 +53,9 @@ export class User {
   @Column({ default: "logout"})
   tokenLogout: string;
 
+  @Column({ default: ""})
+  recoverToken: string;
+  
   @OneToMany(
     () => Comment,
     comment => comment.user,

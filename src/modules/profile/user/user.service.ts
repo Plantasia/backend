@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserDTO } from './create-user.dto';
 import { User } from '@entities/user.entity';
-import { Topic } from '@entities/topic.entity';
+import * as bcrypt from 'bcrypt';
 import { TopicsService } from '../../forum/topics/topics.service';
 import {PaginatedUsersDTO} from '../paginated-users.dto'
 
@@ -187,5 +187,23 @@ export class UserService {
     }
 
   }
+  async changePassword(id: string,  password: CreateUserDTO) {
+    const user = await this.findOne(id);
+    console.log(user)
+    const newPassword = await this.userRepository.update(id, password);
+    console.log(newPassword)
+    
+    return newPassword
+  }
 
+  async findByRecoverToken(recoverToken: string){
+    const idUser = ( await this.userRepository.findOne(
+      {
+        where:{
+          recoverToken:recoverToken
+        }
+      }))
+      return idUser
+    }
+    
 }
