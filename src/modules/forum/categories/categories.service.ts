@@ -39,7 +39,7 @@ export class CategoryService {
     const categories = result
 
 
-    const allCategories =[]
+    const data =[]
     var x=0;
     /**Formatting each category register for API */
     for(let i=0; i<categories.length;i++){
@@ -58,6 +58,10 @@ export class CategoryService {
        */
       const topicsThatBelongsThisCategory = await getRepository(Topic)
       .createQueryBuilder("topic")
+      .select([
+        "topic.id","topic.name","topic.textBody"
+        ,"topic.imageStorage","topic.created_at", "topic.updated_at",
+        ])
       .orderBy("topic.updated_at","DESC")
       .where("categoryId = :id", { id: category.id })
       .getMany();
@@ -99,22 +103,22 @@ export class CategoryService {
         const lastTopic =  topicsThatBelongsThisCategory[0];
         
         category.lastComment = lastComment
-        category.qtdeComments = comments.length
-        category.qtdeTopics =  topicsThatBelongsThisCategory.length
+        category.countComments = comments.length
+        category.countTopics =  topicsThatBelongsThisCategory.length
         category.lastTopic = lastTopic
        
       }
 
     }  
    
-    allCategories.push(category)
+    data.push(category)
       
   }
   
 
   
     return{
-      categories:allCategories,
+      data,
       currentPage:page,      
       prevPage:  page > 1? (page-1): null,
       nextPage:  total > (skip + take) ? page+1 : null,

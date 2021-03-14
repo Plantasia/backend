@@ -1,4 +1,4 @@
-import {User} from '../../entities/user.entity'
+import {User} from '@entities/user.entity'
 import {internet,name,random} from 'faker'
 import { createConnection, getConnection, getRepository } from 'typeorm'
 import UserSeed from './user-seed'

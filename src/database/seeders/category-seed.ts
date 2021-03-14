@@ -1,4 +1,4 @@
-import { Category } from '../../entities/category.entity'
+import { Category } from '@entities/category.entity'
 import { User } from '@entities/user.entity';
 import {internet} from 'faker';
 import {UserService} from '../../modules/profile/user/user.service'

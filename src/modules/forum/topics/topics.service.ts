@@ -10,6 +10,7 @@ import { CategoryService } from '../categories/categories.service';
 import { UserService } from '../../profile/user/user.service';
 import { Category } from '../../../entities/category.entity';
 import { PaginatedTopicsDTO } from './paginated-topics.dto';
+import { userInfo } from 'os';
 
 @Injectable()
 export class TopicsService {
@@ -155,6 +156,7 @@ export class TopicsService {
 
 
   async update(id: string, data): Promise<Topic> {
+  
     await this.topicRepository.update(id, data);
 
     return await this.topicRepository.findOne(id);

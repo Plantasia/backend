@@ -93,7 +93,7 @@ export class CategoryController {
 
 
 
-  @UseGuards(JwtAuthGuard)
+
   @Get(':id')
   @ApiOkResponse({description:"The category has been successful deleted"})
   @ApiForbiddenResponse({ description:"Forbidden" })

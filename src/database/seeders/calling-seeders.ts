@@ -1,5 +1,5 @@
 
-import { LogsSeeding } from '@entities/logsSeeding.entity'
+import { LogsSeeding } from '../../entities/logsSeeding.entity'
 import { getRepository } from 'typeorm'
 import AdminSeed from './admin-seed'
 import CategorySeed from './category-seed'

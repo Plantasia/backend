@@ -52,10 +52,10 @@ export class CreateCategoryDTO {
   public  lastTopic: Topic
 
   @IsEmpty()
-  public qtdeTopics: number;
+  public countTopics: number;
 
   @IsEmpty()
-  public qtdeComments: number;
+  public countComments: number;
 
   @IsEmpty()
   public lastComment: Comment

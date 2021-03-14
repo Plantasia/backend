@@ -1,6 +1,6 @@
-import { Category } from '../../entities/category.entity'
-import { Topic } from '../../entities/topic.entity'
-import { User } from '../../entities/user.entity'
+import { Category } from '@entities/category.entity'
+import { Topic } from '@entities/topic.entity'
+import { User } from '@entities/user.entity'
 import { internet, random } from "faker"
 import { getRepository } from 'typeorm'
 
