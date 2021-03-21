@@ -63,9 +63,32 @@ export class TopicsService {
       skip: skip
     });
 
+    const thisTopic = await getRepository(Topic)
+    .createQueryBuilder("t")
+    .innerJoin("t.category","cat",'cat.id = t.categoryId')
+    .innerJoin("t.comments","com", "com.topicId = t.id")
+    .innerJoinAndSelect("t.user","user","t.userId = user.id")
+    .innerJoinAndSelect("com.user","userComment","com.userId = userComment.id")
+
+   .select([
+
+    "user.id", "user.name","user.avatar",
+    "user.email","user.created_at",
+    
+    "t.id","t.name","t.textBody","t.imageStorage",
+    "t.created_at","t.updated_at","t.userId",
+
+    "com.userId","com.updated_at",
+    ])
+    .orderBy({
+      "com.created_at":"ASC"
+    })
+    .getMany()
+    
+
    
    return{ 
-    results:result,
+    results:thisTopic,
     currentPage:page,      
     totalRegisters: total,
     prevPage: page > 1? (page-1): null,
