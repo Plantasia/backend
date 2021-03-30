@@ -51,50 +51,48 @@ export class TopicsService {
   }
 
   async findAll(page): Promise<PaginatedTopicsDTO> {
-    const skip =10 * (page-1)
-    const take =10
+    
     if(!page){
       page=1
     }
     else page = parseInt(page)
 
-    const [result, total]= await this.topicRepository.findAndCount({
-      take:take ,
-      skip: skip
-    });
+    const skip =10 * (page-1)
+    const take =10
 
-    const topicsInfo = await getRepository(Topic)
+    const topics = await getRepository(Topic)
     .createQueryBuilder("t")
     .innerJoin("t.category","cat",'cat.id = t.categoryId')
     .innerJoin("t.comments","com", "com.topicId = t.id")
     .innerJoin("t.user","topicOwner","t.userId = topicOwner.id")
     .innerJoin("com.user","ownerComment","com.userId = ownerComment.id")
     .addSelect("SUM(comments.id)","totalComments")
+    .take(take)
+    .skip(skip)
    .select([
 
     "t.id","t.name","t.textBody","t.imageStorage",
     "t.created_at","t.updated_at",
     "topicOwner.id","topicOwner.avatar","topicOwner.name",
 
-     "com.id","com.updated_at",
+     "com.id","com.created_at",'com.updated_at',
      "ownerComment.id","ownerComment.name","ownerComment.avatar"
 
     
 
     ])
-    .orderBy({
-      "com.created_at":"ASC"
-    })
+    .orderBy('com.created_at','DESC')
+    
     .getMany()
     
 
    
    return{ 
-    results:topicsInfo,
+    topics,
     currentPage:page,      
-    totalRegisters: total,
+    perPage: take,
     prevPage: page > 1? (page-1): null,
-    nextPage: total > (skip + take) ? page+1 : null,
+    nextPage: take > (skip + take) ? page+1 : null,
     }
   
   }

@@ -47,23 +47,12 @@ export class TopicsController {
   
   @ApiOkResponse({description:"topic succesfully returned"})
   @ApiForbiddenResponse({ description:"Forbidden" })
-  @Get()
-  async findAll(@Query('page') page:number) {
-    const{  currentPage,
-            results,
-            nextPage,
-            prevPage,
-            totalRegisters }= await this.topicsService.findAll(page);
+  @Get('/page/:page')
+  async findAll(@Param('page') page:number) {
+    return this.topicsService.findAll(page);
 
   
-      const data = results
-      return {
-        data, 
-        currentPage,
-        nextPage,
-        prevPage,
-        totalRegisters
-      }
+   
 
   }
 
