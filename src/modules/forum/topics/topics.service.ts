@@ -63,22 +63,24 @@ export class TopicsService {
       skip: skip
     });
 
-    const thisTopic = await getRepository(Topic)
+    const topicsInfo = await getRepository(Topic)
     .createQueryBuilder("t")
     .innerJoin("t.category","cat",'cat.id = t.categoryId')
     .innerJoin("t.comments","com", "com.topicId = t.id")
-    .innerJoinAndSelect("t.user","user","t.userId = user.id")
-    .innerJoinAndSelect("com.user","userComment","com.userId = userComment.id")
-
+    .innerJoin("t.user","topicOwner","t.userId = topicOwner.id")
+    .innerJoin("com.user","ownerComment","com.userId = ownerComment.id")
+    .addSelect("SUM(comments.id)","totalComments")
    .select([
 
-    "user.id", "user.name","user.avatar",
-    "user.email","user.created_at",
-    
     "t.id","t.name","t.textBody","t.imageStorage",
-    "t.created_at","t.updated_at","t.userId",
+    "t.created_at","t.updated_at",
+    "topicOwner.id","topicOwner.avatar","topicOwner.name",
 
-    "com.userId","com.updated_at",
+     "com.id","com.updated_at",
+     "ownerComment.id","ownerComment.name","ownerComment.avatar"
+
+    
+
     ])
     .orderBy({
       "com.created_at":"ASC"
@@ -88,7 +90,7 @@ export class TopicsService {
 
    
    return{ 
-    results:thisTopic,
+    results:topicsInfo,
     currentPage:page,      
     totalRegisters: total,
     prevPage: page > 1? (page-1): null,
@@ -124,17 +126,17 @@ export class TopicsService {
     "user.email","user.created_at",
     
     "t.id","t.name","t.textBody","t.imageStorage",
-    "t.reaction","t.created_at","t.updated_at",
+    "t.created_at","t.updated_at",
 
-    "cat.id","cat.name","cat.authorSlug",
+    "cat.id","cat.name","cat.authorId",
     "cat.description", "cat.imageStorage",
     "cat.created_at","cat.updated_at",
 
-    "com.id","com.userId","com.text","com.reaction",
+    "com.id","com.userId","com.textBody",
     "com.created_at", "com.updated_at",
     ])
     .orderBy({
-      "com.created_at":"ASC"
+      "com.created_at":"DESC"// Getting the last comment
     })
     .getMany()
 

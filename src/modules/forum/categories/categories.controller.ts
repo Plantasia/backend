@@ -81,10 +81,10 @@ export class CategoryController {
    
   }
 
-  @Get()
+  @Get("/page/:page")
   @ApiOkResponse({description:"The categories has been succesfful returned"})
   @ApiForbiddenResponse({ description:"Forbidden" })
-  async findAll( @Query('page') page:number){
+  async findAll( @Param('page') page:number){
     
      return  this.categoryService.findAll(page);
   

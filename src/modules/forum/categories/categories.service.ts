@@ -40,9 +40,39 @@ export class CategoryService {
 
 
     const data =[]
-    var x=0;
+    const x=0;
+
+    console.log("____START____")
+    const categoriesData =await getRepository(Category)
+    .createQueryBuilder("cat")
+    .take(take)
+    .skip(skip)
+    .innerJoin("cat.topics", "t"," cat.id  = t.categoryId")
+    .innerJoin("t.comments","com","com.topicId = t.Id")
+    .select([
+        'cat.id', 'cat.name', 
+        'cat.description', 'cat.authorId',
+
+        't.id','t.name',
+        't.textBody','t.imageStorage',
+
+        'com.id','com.userId',  'com.textBody',
+
+    ])
+   
+    .orderBy('com.id','DESC')
+    .orderBy('t.id', 'DESC')
+    .getMany();
+
+  
+  
+    console.log("____END____")
+
+    console.log(categoriesData.length);
+    
     /**Formatting each category register for API */
-    for(let i=0; i<categories.length;i++){
+    /*
+    for(let i=0; i<take;i++){
       const category = new CreateCategoryDTO()
      
       category.name= categories[i].name
@@ -51,11 +81,7 @@ export class CategoryService {
       category.authorId= categories[i].authorId
 
 
-      /**NOTE: Each category
-       * 'll have many topics
-       *  and we need  to know
-       *  info about them
-       */
+
       const topicsThatBelongsThisCategory = await getRepository(Topic)
       .createQueryBuilder("topic")
       .select([
@@ -68,17 +94,17 @@ export class CategoryService {
 
 
       // Sweeping away each topic
-     for( let topic of  topicsThatBelongsThisCategory){
+     for( const topic of  topicsThatBelongsThisCategory){
       
       
       if(topic!== undefined){
 
-        var topicId = topic.id
+        const topicId = topic.id
          console.log("Topic")
          console.log(topic)
 
        
-         /**This instance of Topic has any comments? */
+      
          const comments = await getRepository(Comment)
         .createQueryBuilder("comment")
         .orderBy("comment.created_at","DESC")
@@ -87,7 +113,6 @@ export class CategoryService {
 
         
 
-        /** Which is the last comments for this topic? */
         const lastComment = await getRepository(Comment)
         .createQueryBuilder("comment")
         .select("comment.created_at")
@@ -96,10 +121,6 @@ export class CategoryService {
         .getOne();
 
 
-
-         /** The first value ( [0] ) 'll be the last,
-          *  due to SQL order by DESC
-          **/
         const lastTopic =  topicsThatBelongsThisCategory[0];
         
         category.lastComment = lastComment
@@ -113,17 +134,17 @@ export class CategoryService {
    
     data.push(category)
       
-  }
+  }*/
   
 
-  
+    
     return{
-      data,
+      data: categoriesData,
       currentPage:page,      
       prevPage:  page > 1? (page-1): null,
       nextPage:  total > (skip + take) ? page+1 : null,
-      perPage: take,
-      totalRegisters: total
+      perPage: take, //
+      totalRegisters: categoriesData.length
     }
   }
 
