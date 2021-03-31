@@ -36,7 +36,7 @@ export class TopicsController {
   async findAll(@Query('page') page:number) {
     const{  currentPage,
             results,
-            nextPage,
+            nextPage, 
             prevPage,
             totalRegisters }= await this.topicsService.findAll(page);
 
