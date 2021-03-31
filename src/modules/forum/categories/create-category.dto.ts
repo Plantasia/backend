@@ -18,11 +18,11 @@ export class CreateCategoryDTO {
 
 
   @IsEmpty()
-  public  authorSlug: string;
+  public  authorId: string;
 
 
   @IsEmpty()
-  public  authorLogin: string;
+  public  authorEmail: string;
 
   @IsNotEmpty()
   @ApiProperty({
@@ -52,11 +52,11 @@ export class CreateCategoryDTO {
   public  lastTopic: Topic
 
   @IsEmpty()
-  public qtdeTopics: number;
+  public countTopics: number;
 
   @IsEmpty()
-  public totalComments: number;
+  public countComments: number;
 
   @IsEmpty()
-  public lastComment: Date
+  public lastComment: Comment
 }

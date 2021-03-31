@@ -52,10 +52,10 @@ export class UserService {
   async findAll(page): Promise<PaginatedUsersDTO> {//preparamos  o metodo para receber o parametro passado pela url na controller
     
     
-    const take =3
+    const take =10
     /* used to limit registers*/
 
-    const skip =3 * (page-1) 
+    const skip =10 * (page-1) 
     /* used to skip the already 
      *  catched up registers */
 
@@ -72,11 +72,11 @@ export class UserService {
     const allUsers =[]
     for(let i=0; i< result.length;i++){
   
-      const user = new User()
+      const user = new CreateUserDTO()
 
       user.id = result[i].id
       user.name = result[i].name
-      user.email =result[i].email
+      //user.email =result[i].email
       user.bio =result[i].bio
       user.avatar =result[i].avatar
 

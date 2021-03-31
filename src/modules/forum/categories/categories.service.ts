@@ -36,72 +36,115 @@ export class CategoryService {
 
     });
 
+    const categories = result
 
 
-    const allCategories =[]
+    const data =[]
+    const x=0;
 
+    console.log("____START____")
+    const categoriesData =await getRepository(Category)
+    .createQueryBuilder("cat")
+    .take(take)
+    .skip(skip)
+    .innerJoin("cat.topics", "t"," cat.id  = t.categoryId")
+    .innerJoin("t.comments","com","com.topicId = t.Id")
+    .select([
+        'cat.id', 'cat.name', 
+        'cat.description', 'cat.authorId',
+
+        't.id','t.name',
+        't.textBody','t.imageStorage',
+
+        'com.id','com.userId',  'com.textBody',
+
+    ])
+   
+    .orderBy('com.id','DESC')
+    .orderBy('t.id', 'DESC')
+    .getMany();
+
+  
+  
+    console.log("____END____")
+
+    console.log(categoriesData.length);
+    
     /**Formatting each category register for API */
-    for(let i=0; i<result.length;i++){
+    /*
+    for(let i=0; i<take;i++){
       const category = new CreateCategoryDTO()
+     
+      category.name= categories[i].name
+      category.id= categories[i].id
+      category.description= categories[i].description
+      category.authorId= categories[i].authorId
 
-      category.name= result[i].name
-      category.id= result[i].id
-      category.description= result[i].description
-      category.authorSlug= result[i].authorSlug
+
 
       const topicsThatBelongsThisCategory = await getRepository(Topic)
       .createQueryBuilder("topic")
+      .select([
+        "topic.id","topic.name","topic.textBody"
+        ,"topic.imageStorage","topic.created_at", "topic.updated_at",
+        ])
       .orderBy("topic.updated_at","DESC")
-      .where("topic.categoryId = :id", { id: category.id })
+      .where("categoryId = :id", { id: category.id })
       .getMany();
 
-    
-      let commentsFromthisCategory =[]
-      for (let i=0; i<=topicsThatBelongsThisCategory.length; i++){
 
-         const topicId = topicsThatBelongsThisCategory[i].id
-         const comment = await getRepository(Comment)
+      // Sweeping away each topic
+     for( const topic of  topicsThatBelongsThisCategory){
+      
+      
+      if(topic!== undefined){
+
+        const topicId = topic.id
+         console.log("Topic")
+         console.log(topic)
+
+       
+      
+         const comments = await getRepository(Comment)
         .createQueryBuilder("comment")
         .orderBy("comment.created_at","DESC")
-        .where("comment.topicId = :id")
+        .where("topicId = :id",{id:topicId})
         .getMany();
 
-
+        
 
         const lastComment = await getRepository(Comment)
         .createQueryBuilder("comment")
         .select("comment.created_at")
-        .orderBy("comment.created_at","ASC")
-        .where("comment.topicId =:topicId",{topicId:1 })
+        .orderBy("created_at","ASC")
+        .where("comment.topicId =:topicId",{topicId })
         .getOne();
 
 
-        
-        console.log("lastComment =>")
-        console.log(lastComment)
-
         const lastTopic =  topicsThatBelongsThisCategory[0];
-        category.totalComments = comment.length
-        category.qtdeTopics =  2//topicsThatBelongsThisCategory.length
+        
+        category.lastComment = lastComment
+        category.countComments = comments.length
+        category.countTopics =  topicsThatBelongsThisCategory.length
         category.lastTopic = lastTopic
+       
+      }
 
-      } 
-    
-    
-     
+    }  
+   
+    data.push(category)
       
-     
-      allCategories.push(category)
-    }
-
+  }*/
   
+
+    
     return{
-      categories:allCategories,
+      data: categoriesData,
       currentPage:page,      
       prevPage:  page > 1? (page-1): null,
       nextPage:  total > (skip + take) ? page+1 : null,
-      perPage: take,
-      totalRegisters: total
+      perPage: take, //
+      totalRegisters: categoriesData.length
     }
   }
 
@@ -118,10 +161,10 @@ export class CategoryService {
     });
   }
 
-  async findByAuthorSlug(id: string ,authorSlug: string): Promise<Category> {
+  async findByAuthorSlug(id: string ,authorId: string): Promise<Category> {
     return this.categoryRepository.findOne({
       where: {
-        authorSlug,
+        authorId,
         id
       },
     });
@@ -157,9 +200,9 @@ export class CategoryService {
   async create(createCategoryDTO: CreateCategoryDTO): Promise<Category> {
     const category = new Category();
      
-    category.authorSlug= createCategoryDTO.authorSlug
+    category.authorId= createCategoryDTO.authorId
     category.name = createCategoryDTO.name;
-    category.authorLogin = createCategoryDTO.authorLogin;
+    category.authorEmail = createCategoryDTO.authorEmail;
     category.description = createCategoryDTO.description;
     category.imageStorage = createCategoryDTO.imageStorage;
     const cat = await this.categoryRepository.create(category);

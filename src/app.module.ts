@@ -8,6 +8,8 @@ import {AuthService} from './/auth/auth.service'
 import {  AppService } from './app.service';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { mailerConfig } from './mailer/mailer.config';
+import { CallingSeeders } from './database/seeders/calling-seeders';
+
 
 
 

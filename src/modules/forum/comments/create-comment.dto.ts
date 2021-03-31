@@ -11,7 +11,7 @@ export class CreateCommentDTO {
     description: 'Body of Comment',
     default: '',
   })
-  public readonly text: string;
+  public readonly textBody: string;
 
 
 
@@ -20,6 +20,7 @@ export class CreateCommentDTO {
     description: 'Reaction',
     default: '',
   })
+  @IsEmpty()
   public readonly reaction: string;
 
 

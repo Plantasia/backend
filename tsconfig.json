@@ -13,7 +13,8 @@
     "paths": {
       "@entities/*": ["./src/entities/*"],
       "@controllers/*": ["./src/controllers/*"],
-      "@auth/*": ["./src/auth/*"]
+      "@auth/*": ["./src/auth/*"],
+      "@seeders/*":["./src/database/seeders/*"]
     }
   }
 }

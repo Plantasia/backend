@@ -7,13 +7,17 @@ import {
   OneToOne,
   CreateDateColumn,
   OneToMany,
+  BaseEntity,
+  DeleteDateColumn,
+  Generated,
 } from 'typeorm';
 import { Category } from './category.entity';
 import { User } from './user.entity';
 import { Comment } from './comments.entity';
 
+
 @Entity('topics')
-export class Topic {
+export class Topic extends BaseEntity{
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -26,17 +30,9 @@ export class Topic {
   @Column({default:""})
   imageStorage: string;
 
-  @Column({ default: 0 })
-  reaction: number;
 
   @Column({ default: true })
   isActive: boolean;
-
-  @CreateDateColumn()
-  created_at: Date;
-
-  @UpdateDateColumn()
-  updated_at: Date;
 
   @ManyToOne(
     () => User,
@@ -55,5 +51,20 @@ export class Topic {
     comments => comments.topic,
   )
   comments: Comment[];
+
+
+  @CreateDateColumn()
+  created_at: Date;
+
+  @UpdateDateColumn()
+  updated_at: Date;
+
+  @DeleteDateColumn()
+  deleted_at: Date;
+
+  @Column()
+  @Generated('increment')
+  seedingId: number;
+
 
 }

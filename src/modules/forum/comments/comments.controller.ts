@@ -18,7 +18,7 @@ import { CreateCommentDTO } from './create-comment.dto';
 import { Comment } from '../../../entities/comments.entity';
 import { uuid } from 'uuidv4';
 import { JwtAuthGuard } from '../../../auth/jwt-auth.guard';
-import { ApiCreatedResponse, ApiForbiddenResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiCreatedResponse, ApiForbiddenResponse, ApiHeader, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { UserService } from 'src/modules/profile/user/user.service';
 import { TopicsService } from '../topics/topics.service';
 @ApiTags('comments')
@@ -42,6 +42,8 @@ export class CommentController {
   //CREATING A COMMENT
   //@UseGuards(JwtAuthGuard)
   @Post()
+  @UseGuards(JwtAuthGuard)
+  @UsePipes(ValidationPipe)
   @ApiCreatedResponse({description:"comment succesfully created"})
   @ApiForbiddenResponse({ description:"Forbidden" })
   @UsePipes(ValidationPipe)
@@ -76,9 +78,13 @@ export class CommentController {
 
 
   @UseGuards(JwtAuthGuard)
-  @Get(':id')
   @ApiOkResponse({description:"The comments has been succesfful returned"})
   @ApiForbiddenResponse({ description:"Forbidden" })
+  @ApiHeader({
+    name: 'JWT',
+    description: 'JWT token must to be passed to do this request',
+  })
+  @Get(':id')
   async findOne(@Param('id') id: string, @Request() req): Promise<Comment> {
     const thisUser = await this.userService.findByEmail(req.user.email);
     const check = await this.userService.authorizationCheck(req.headers.authorization)
@@ -86,9 +92,13 @@ export class CommentController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Delete(':id')
   @ApiOkResponse({description:"The comment has been successful deleted"})
   @ApiForbiddenResponse({ description:"Forbidden" })
+  @ApiHeader({
+    name: 'JWT',
+    description: 'JWT token must to be passed to do this request',
+  })
+  @Delete(':id')
   async remove(@Param('id') id: string, @Request() req): Promise<void> {
     const thisUser = await this.userService.findByEmail(req.user.email);
     const check = await this.userService.authorizationCheck(req.headers.authorization)
