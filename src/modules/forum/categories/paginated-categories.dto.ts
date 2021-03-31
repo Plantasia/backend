@@ -1,7 +1,7 @@
 import { Category } from "@entities/category.entity";
 
 export class PaginatedCategoriesResultDTO{
-  public data: Category[];
+  public categoriesData: Category[];
   public currentPage: number;
   public prevPage: number;
   public nextPage:number;

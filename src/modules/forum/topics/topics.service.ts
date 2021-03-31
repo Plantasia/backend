@@ -1,4 +1,5 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException } from '@nestjs/common/exceptions/http.exception';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { createQueryBuilder, getConnection, getRepository, Repository } from 'typeorm';
 
@@ -52,7 +53,7 @@ export class TopicsService {
 
   async findAll(page): Promise<PaginatedTopicsDTO> {
     
-    if(!page){
+    if(!page ||page<=0){
       page=1
     }
     else page = parseInt(page)
@@ -84,15 +85,23 @@ export class TopicsService {
     .orderBy('com.created_at','DESC')
     
     .getMany()
-    
-
    
+
+    topics.length ===0 ? page=null: ''
+
+    if(page===null){
+      throw new HttpException({
+          status: HttpStatus.NOT_FOUND,
+          error: "There aren't any topics for this page",
+        }, HttpStatus.NOT_FOUND);
+    }
+
    return{ 
     topics,
     currentPage:page,      
     perPage: take,
     prevPage: page > 1? (page-1): null,
-    nextPage: take > (skip + take) ? page+1 : null,
+    nextPage: take >= (skip + take) ? page+1 : null,
     }
   
   }
@@ -140,7 +149,7 @@ export class TopicsService {
 
     console.log("__________end_______________") 
 
-    return {thisTopic}
+    return thisTopic
   
   }
 

@@ -18,11 +18,11 @@ export class CategoryService {
     
   ) {}
 
-  async findAll(page): Promise<PaginatedCategoriesResultDTO> {
+  async findAll(page): Promise<any> {
    console.log("PAGE:\n")
     console.log(page)
     
-    if(!page){
+    if(page <=0 ||!page ){
       page=1
     }
     else page = parseInt(page)
@@ -30,25 +30,13 @@ export class CategoryService {
     const take =10
     const skip =10 * (page-1)
 
-    const [result, total] = await this.categoryRepository.findAndCount({
-      take:skip ,
-      skip: skip
-
-    });
-
-    const categories = result
-
-
-    const data =[]
-    const x=0;
-
     console.log("____START____")
-    const categoriesData =await getRepository(Category)
+    const categories =await getRepository(Category)
     .createQueryBuilder("cat")
+    .innerJoinAndSelect("cat.topics", "t"," cat.id  = t.categoryId")
+    .innerJoinAndSelect("t.comments","com","com.topicId = t.Id")
     .take(take)
     .skip(skip)
-    .innerJoin("cat.topics", "t"," cat.id  = t.categoryId")
-    .innerJoin("t.comments","com","com.topicId = t.Id")
     .select([
         'cat.id', 'cat.name', 
         'cat.description', 'cat.authorId',
@@ -63,89 +51,20 @@ export class CategoryService {
     .orderBy('com.id','DESC')
     .orderBy('t.id', 'DESC')
     .getMany();
-
-  
   
     console.log("____END____")
 
-    console.log(categoriesData.length);
+    console.log(categories.length);
     
-    /**Formatting each category register for API */
-    /*
-    for(let i=0; i<take;i++){
-      const category = new CreateCategoryDTO()
-     
-      category.name= categories[i].name
-      category.id= categories[i].id
-      category.description= categories[i].description
-      category.authorId= categories[i].authorId
-
-
-
-      const topicsThatBelongsThisCategory = await getRepository(Topic)
-      .createQueryBuilder("topic")
-      .select([
-        "topic.id","topic.name","topic.textBody"
-        ,"topic.imageStorage","topic.created_at", "topic.updated_at",
-        ])
-      .orderBy("topic.updated_at","DESC")
-      .where("categoryId = :id", { id: category.id })
-      .getMany();
-
-
-      // Sweeping away each topic
-     for( const topic of  topicsThatBelongsThisCategory){
-      
-      
-      if(topic!== undefined){
-
-        const topicId = topic.id
-         console.log("Topic")
-         console.log(topic)
-
-       
-      
-         const comments = await getRepository(Comment)
-        .createQueryBuilder("comment")
-        .orderBy("comment.created_at","DESC")
-        .where("topicId = :id",{id:topicId})
-        .getMany();
-
-        
-
-        const lastComment = await getRepository(Comment)
-        .createQueryBuilder("comment")
-        .select("comment.created_at")
-        .orderBy("created_at","ASC")
-        .where("comment.topicId =:topicId",{topicId })
-        .getOne();
-
-
-        const lastTopic =  topicsThatBelongsThisCategory[0];
-        
-        category.lastComment = lastComment
-        category.countComments = comments.length
-        category.countTopics =  topicsThatBelongsThisCategory.length
-        category.lastTopic = lastTopic
-       
-      }
-
-    }  
-   
-    data.push(category)
-      
-  }*/
-  
-
-    
-    return{
-      data: categoriesData,
+   return{
+      categories,
       currentPage:page,      
       prevPage:  page > 1? (page-1): null,
-      nextPage:  total > (skip + take) ? page+1 : null,
-      perPage: take, //
-      totalRegisters: categoriesData.length
-    }
+      nextPage:  take >= (skip + take) ? page+1 : null,
+      perPage: categories.length, 
+   }
+   
+
   }
 
   async find(argument: any): Promise<Category[]> {
@@ -215,3 +134,85 @@ export class CategoryService {
     return this.categoryRepository.findOne(id);
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**Formatting each category register for API */
+    /*
+    for(let i=0; i<take;i++){
+      const category = new CreateCategoryDTO()
+     
+      category.name= categories[i].name
+      category.id= categories[i].id
+      category.description= categories[i].description
+      category.authorId= categories[i].authorId
+
+
+
+      const topicsThatBelongsThisCategory = await getRepository(Topic)
+      .createQueryBuilder("topic")
+      .select([
+        "topic.id","topic.name","topic.textBody"
+        ,"topic.imageStorage","topic.created_at", "topic.updated_at",
+        ])
+      .orderBy("topic.updated_at","DESC")
+      .where("categoryId = :id", { id: category.id })
+      .getMany();
+
+
+      // Sweeping away each topic
+     for( const topic of  topicsThatBelongsThisCategory){
+      
+      
+      if(topic!== undefined){
+
+        const topicId = topic.id
+         console.log("Topic")
+         console.log(topic)
+
+       
+      
+         const comments = await getRepository(Comment)
+        .createQueryBuilder("comment")
+        .orderBy("comment.created_at","DESC")
+        .where("topicId = :id",{id:topicId})
+        .getMany();
+
+        
+
+        const lastComment = await getRepository(Comment)
+        .createQueryBuilder("comment")
+        .select("comment.created_at")
+        .orderBy("created_at","ASC")
+        .where("comment.topicId =:topicId",{topicId })
+        .getOne();
+
+
+        const lastTopic =  topicsThatBelongsThisCategory[0];
+        
+        category.lastComment = lastComment
+        category.countComments = comments.length
+        category.countTopics =  topicsThatBelongsThisCategory.length
+        category.lastTopic = lastTopic
+       
+      }
+
+    }  
+   
+    data.push(category)
+      
+  }*/

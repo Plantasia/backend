@@ -36,7 +36,7 @@ export class TopicsController {
       
     }
 
-    @Get(':topicId')
+    @Get('/:topicId')
     async getTopicById( @Param('topicId') topicId: string){
       return this.topicsService.takeTopicData(topicId)
       
