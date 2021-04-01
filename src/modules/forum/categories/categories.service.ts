@@ -2,7 +2,7 @@ import { Injectable, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateCategoryDTO } from './create-category.dto';
 import { Category } from '../../../entities/category.entity';
-import { getRepository, Repository } from 'typeorm';
+import { getRepository, Repository, createQueryBuilder } from 'typeorm';
 import { PaginatedCategoriesResultDTO } from './paginated-categories.dto';
 import { Topic } from '@entities/topic.entity';
 import { Comment } from '@entities/comments.entity';
@@ -36,6 +36,8 @@ export class CategoryService {
     .createQueryBuilder("cat")
     .leftJoinAndSelect("cat.topics", "t"," cat.id  = t.categoryId")
     .leftJoinAndSelect("t.comments","com","com.topicId = t.Id")
+    .loadRelationCountAndMap("cat.countTopics","cat.topics")
+    .loadRelationCountAndMap("t.countComments","t.comments")
     .take(take)
     .skip(skip)
     .select([
@@ -44,12 +46,21 @@ export class CategoryService {
 
         't.id','t.name',
         't.textBody','t.imageStorage',
-
-        'com.id', 'com.updated_at',
     ])
+    /*.addSelect( subQuery=>{
+      return  subQuery
+              .loadRelationCountAndMap()
+              .limit(1)
+
+    })*/
+    .orderBy("")
     .getMany();
     console.log("____END____")
 
+    for (let category of categories){
+      
+    }
+   
     return{
       categories,
       currentPage:page,      
