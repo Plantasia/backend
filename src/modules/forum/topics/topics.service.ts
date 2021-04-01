@@ -1,16 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { createQueryBuilder, getConnection, getRepository, Repository } from 'typeorm';
-
+import { getRepository, Repository } from 'typeorm';
 import { Topic } from '../../../entities/topic.entity';
-import { Comment } from '../../../entities/comments.entity';
 import { User } from '@entities/user.entity';
 import { CreateTopicDTO } from './create-topic.dto';
-import { CategoryService } from '../categories/categories.service';
-import { UserService } from '../../profile/user/user.service';
 import { Category } from '../../../entities/category.entity';
 import { PaginatedTopicsDTO } from './paginated-topics.dto';
-import { userInfo } from 'os';
+
 
 @Injectable()
 export class TopicsService {
@@ -51,50 +47,49 @@ export class TopicsService {
   }
 
   async findAll(page): Promise<PaginatedTopicsDTO> {
-    const skip =10 * (page-1)
-    const take =10
-    if(!page){
+  
+    if(!page || page<=0){
       page=1
     }
     else page = parseInt(page)
 
-    const [result, total]= await this.topicRepository.findAndCount({
-      take:take ,
-      skip: skip
-    });
+ 
 
-    const topicsInfo = await getRepository(Topic)
+    const skip =10 * (page-1)
+    const take =10
+
+    const topics = await getRepository(Topic)
     .createQueryBuilder("t")
     .innerJoin("t.category","cat",'cat.id = t.categoryId')
     .innerJoin("t.comments","com", "com.topicId = t.id")
     .innerJoin("t.user","topicOwner","t.userId = topicOwner.id")
     .innerJoin("com.user","ownerComment","com.userId = ownerComment.id")
+    .take(take)
+    .skip(skip)
     .addSelect("SUM(comments.id)","totalComments")
-   .select([
+    .select([
 
-    "t.id","t.name","t.textBody","t.imageStorage",
-    "t.created_at","t.updated_at",
-    "topicOwner.id","topicOwner.avatar","topicOwner.name",
+        "t.id","t.name","t.textBody","t.imageStorage",
+        "t.created_at","t.updated_at",
+        "topicOwner.id","topicOwner.avatar","topicOwner.name",
 
-     "com.id","com.updated_at",
-     "ownerComment.id","ownerComment.name","ownerComment.avatar"
-
-    
-
-    ])
-    .orderBy({
-      "com.created_at":"ASC"
-    })
-    .getMany()
-    
+        "com.id","com.updated_at","com.created_at",
+        "ownerComment.id","ownerComment.name","ownerComment.avatar"
+        
+      ])
+      .orderBy({
+        "com.created_at":"ASC"
+      })
+      .getMany()
+      
 
    
    return{ 
-    results:topicsInfo,
+    topics,
     currentPage:page,      
-    totalRegisters: total,
+    perPage:take,
     prevPage: page > 1? (page-1): null,
-    nextPage: total > (skip + take) ? page+1 : null,
+    nextPage: take >= (skip + take) ? page+1 : null,
     }
   
   }
@@ -110,7 +105,7 @@ export class TopicsService {
   async takeTopicData(topicId: string){
     console.log("__________start_____________")
 
-    const thisTopic = await getRepository(Topic)
+    const topic = await getRepository(Topic)
     .createQueryBuilder("t")
     .innerJoin("t.category","cat",'cat.id = t.categoryId')
     .innerJoin("t.comments","com", "com.topicId = t.id")
@@ -142,7 +137,7 @@ export class TopicsService {
 
     console.log("__________end_______________") 
 
-    return {thisTopic}
+    return {topic}
   
   }
 
@@ -164,11 +159,19 @@ export class TopicsService {
       return await qb.getMany();
   }
 
-  async findByCategory(idCategory: string){
+  async findByCategory(categoryId: string){
     const qb = this.topicRepository.createQueryBuilder("topic");
-      qb.where("topic.categoryId = :categoryId", { categoryId: idCategory })
+      qb.where("topic.categoryId = :categoryId", { categoryId})
+
+      qb.select([
+      'topic.id','topic.name',
+      'topic.textBody','topic.imageStorage',
+      'topic.created_at','topic.updated_at'])
+
       console.log(qb.getQuery());
-      return await qb.getMany();
+      const topic = await  qb.getMany();
+
+      return{topic}
   }
 
   async findById(id: string): Promise<Topic> {
@@ -188,7 +191,7 @@ export class TopicsService {
   }
 
   async delete(id: string): Promise<void> {
-    await this.topicRepository.delete(id);
+    await this.topicRepository.softDelete(id);
   }
 }
 

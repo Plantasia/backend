@@ -39,8 +39,6 @@ export class CommentController {
   }
 
 
-  //CREATING A COMMENT
-  //@UseGuards(JwtAuthGuard)
   @Post()
   @UseGuards(JwtAuthGuard)
   @UsePipes(ValidationPipe)
@@ -76,7 +74,7 @@ export class CommentController {
 
   }
 
-
+  @Get(':id')
   @UseGuards(JwtAuthGuard)
   @ApiOkResponse({description:"The comments has been succesfful returned"})
   @ApiForbiddenResponse({ description:"Forbidden" })
@@ -84,13 +82,13 @@ export class CommentController {
     name: 'JWT',
     description: 'JWT token must to be passed to do this request',
   })
-  @Get(':id')
   async findOne(@Param('id') id: string, @Request() req): Promise<Comment> {
     const thisUser = await this.userService.findByEmail(req.user.email);
     const check = await this.userService.authorizationCheck(req.headers.authorization)
     return this.commentService.findOne(id);
   }
 
+  @Delete(':id')
   @UseGuards(JwtAuthGuard)
   @ApiOkResponse({description:"The comment has been successful deleted"})
   @ApiForbiddenResponse({ description:"Forbidden" })
@@ -98,10 +96,9 @@ export class CommentController {
     name: 'JWT',
     description: 'JWT token must to be passed to do this request',
   })
-  @Delete(':id')
   async remove(@Param('id') id: string, @Request() req): Promise<void> {
     const thisUser = await this.userService.findByEmail(req.user.email);
     const check = await this.userService.authorizationCheck(req.headers.authorization)
-    return this.commentService.remove(id);
+    return this.commentService.delete(id);
   }
 }

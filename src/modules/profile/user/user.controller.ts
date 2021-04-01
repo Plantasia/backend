@@ -147,6 +147,7 @@ export class UserController {
   }
 
 
+ @Get(':id')
  @UseGuards(JwtAuthGuard)
  @ApiOkResponse({description:"The user has been succesfull returned"})
  @ApiForbiddenResponse({ description:"Forbidden" })
@@ -154,7 +155,6 @@ export class UserController {
    name: 'JWT',
    description: 'JWT token must to be passed to do this request',
  })
- @Get(':id')
  async findOne(@Param('id') idUser: string): Promise<Partial<User>> {
 
    const foundUser = await this.userService.findById(idUser);
@@ -172,7 +172,7 @@ export class UserController {
     }
   }
 
-
+  @Delete(':id')
   @UseGuards(JwtAuthGuard)
   @ApiOkResponse({description:"The user has been succesfull deleted"})
   @ApiForbiddenResponse({ description:"Forbidden" })
@@ -180,7 +180,6 @@ export class UserController {
     name: 'JWT',
     description: 'JWT token must to be passed to do this request',
   })
-  @Delete(':id')
  async remove(@Request() req, @Param('id') id: string): Promise<void> {
     const thisUser = await this.userService.findByEmail(req.user.email);
     console.log("thisUser\n\n")
@@ -191,11 +190,9 @@ export class UserController {
       console.log(req.user.id)
       
       /**
-       * 
        * For authentication we 'll receive data for request
        * and confirm user's identity for allow deleting
-       *  
-       */
+       **/
       const userRequestedToDelete =  await this.userService.findById(id);
       
       console.log(userRequestedToDelete)
@@ -212,11 +209,11 @@ export class UserController {
         throw new UnauthorizedException({error:"You are not permitted to remove this user!"})
         
       }
-       
-   
+  
   }
 
-  
+
+  @Put(':id')
   @UseGuards(JwtAuthGuard)
   @ApiOkResponse({description:"The user has been succesfull deleted"})
   @ApiForbiddenResponse({ description:"Forbidden" })
@@ -224,8 +221,6 @@ export class UserController {
     name: 'JWT',
     description: 'JWT token must to be passed to do this request',
   })
-  @Put(':id')
-  
   async update(
     @Param('id') idUser: string,
     @Body() createUserDTO: CreateUserDTO,

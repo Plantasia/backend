@@ -30,8 +30,6 @@ import { Topic } from '@entities/topic.entity';
 
 
 @ApiTags('categories')
-
-
 @Controller('forum/categories')
 export class CategoryController {
   constructor( private readonly categoryService: CategoryService,
@@ -89,10 +87,7 @@ export class CategoryController {
      return  this.categoryService.findAll(page);
   
   }
-
-
-
-
+  
 
   @Get(':id')
   @ApiOkResponse({description:"The category has been successful deleted"})
@@ -108,7 +103,7 @@ export class CategoryController {
 
   }
 
-  /*@UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   @ApiOkResponse({description:"The category has been successful deleted"})
   @ApiForbiddenResponse({ description:"Forbidden" })
@@ -120,14 +115,13 @@ export class CategoryController {
     
     if(thisUser && check){
       const categoryToDelete = await this.categoryService.findOne(id)
-
-      categoryToDelete.deleted = true
+      this.categoryService.delete(id);
     }
 
     else{
       throw new UnauthorizedException("You are not authorized to delete this category!")
     }
-  } */
+  } 
   
   
 

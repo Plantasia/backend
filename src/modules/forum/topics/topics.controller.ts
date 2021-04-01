@@ -28,46 +28,25 @@ export class TopicsController {
     private readonly userService: UserService
     ) {}
 
- 
-    @Get('category')
-    async getTopicsByCategory( @Query('categoryId') categoryId: string){
-      return this.topicsService.findByCategory(categoryId);
-      
-      
+    @Get('byCategory/:categoryId')
+    async getTopicsByCategory( @Param('categoryId') categoryId: string){
+      return this.topicsService.findByCategory(categoryId);  
     }
 
     @Get(':topicId')
     async getTopicById( @Param('topicId') topicId: string){
       return this.topicsService.takeTopicData(topicId)
-      
-  
     }
 
-    
-  
   @ApiOkResponse({description:"topic succesfully returned"})
   @ApiForbiddenResponse({ description:"Forbidden" })
-  @Get()
-  async findAll(@Query('page') page:number) {
-    const{  currentPage,
-            results,
-            nextPage, 
-            prevPage,
-            totalRegisters }= await this.topicsService.findAll(page);
-
-  
-      const data = results
-      return {
-        data, 
-        currentPage,
-        nextPage,
-        prevPage,
-        totalRegisters
-      }
-
+  @Get('page/:page')
+  async findAll(@Param('page') page:number) {
+    return this.topicsService.findAll(page);
   }
-
  
+
+
   @UseGuards(JwtAuthGuard)
   @ApiOkResponse({description:"topic succesfully updated"})
   @ApiForbiddenResponse({ description:"Forbidden" })
@@ -85,7 +64,6 @@ export class TopicsController {
     const check = await this.userService.authorizationCheck(req.headers.authorization)
     return this.topicsService.update(id, createTopicDTO);
   }
-
 
   
   @UseGuards(JwtAuthGuard)
@@ -113,6 +91,7 @@ export class TopicsController {
     }
     return response;
   }
+
 
   
   @UseGuards(JwtAuthGuard)

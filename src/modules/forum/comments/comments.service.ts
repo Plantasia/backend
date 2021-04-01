@@ -38,8 +38,8 @@ export class CommentService {
     });
   }
 
-  async remove(id: string): Promise<void> {
-    await this.commentsRepository.delete(id);
+  async delete(id: string): Promise<void> {
+    await this.commentsRepository.softDelete(id);
   }
 
   async create(data: CreateCommentDTO): Promise<Comment> {
