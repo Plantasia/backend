@@ -50,6 +50,13 @@ export class createComments1615387777376 implements MigrationInterface {
           type: "varchar",
           isNullable: false
          }));
+
+
+         await queryRunner.addColumn("comments", new TableColumn({
+          name: "categoryId",
+          type: "varchar",
+          isNullable: true
+         }));
   
          await queryRunner.addColumn("comments", new TableColumn({
           name: "topicId",
@@ -63,16 +70,24 @@ export class createComments1615387777376 implements MigrationInterface {
           referencedTableName:"users",
           onDelete:"CASCADE"
         });
-    
-        const fk_category_id = new TableForeignKey({
+
+        const fk_topic_id = new TableForeignKey({
           columnNames:["topicId"],
           referencedColumnNames:["id"],
           referencedTableName:"topics",
           onDelete:"CASCADE"
         });
+
+        const fk_category_Id = new TableForeignKey({
+          columnNames:["categoryId"],
+          referencedColumnNames:["id"],
+          referencedTableName:"categories",
+          onDelete:"CASCADE"
+        });
     
-        await queryRunner.createForeignKey("comments",fk_category_id)
+        await queryRunner.createForeignKey("comments",fk_topic_id)
         await queryRunner.createForeignKey("comments",fk_user_id)
+        await queryRunner.createForeignKey("comments",fk_category_Id)
     
     
       }

@@ -8,4 +8,5 @@ export class PaginatedCategoriesResultDTO{
   public perPage: number;
 
 
+
 }

@@ -12,6 +12,7 @@ import {
   DeleteDateColumn,
 } from 'typeorm';
 import { Topic } from './topic.entity';
+import {Comment} from './comments.entity'
 
 @Entity('categories')
 export class Category extends BaseEntity{
@@ -41,6 +42,12 @@ export class Category extends BaseEntity{
     topic => topic.category,
   )
   topics: Topic[];
+
+  @OneToMany(
+    ()=> Comment,
+     comment=> comment.category
+    )
+   comments: Comment[]
 
   @CreateDateColumn()
   created_at: Date;

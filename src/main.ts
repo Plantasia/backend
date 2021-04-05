@@ -4,13 +4,13 @@ import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder} from '@nestjs/swagger'
 import { CallingSeeders } from './database/seeders/calling-seeders';
 
-async function bootstrap() {
+async function bootstrap() {  
   const PORT = process.env.PORT || 3333;
   const HOST = process.env.HOST || '0.0.0.0';
   const app = await NestFactory.create(AppModule);
   app.enableCors({
     origin: 'http://localhost',
-  });
+  });   
   const path = require('path');
   try {
     CallingSeeders();

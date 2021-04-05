@@ -1,3 +1,4 @@
+import { Category } from './category.entity';
 import { userInfo } from 'os';
 import {
   Entity,
@@ -33,6 +34,13 @@ export class Comment {
     topic => topic.comments,
   )
   topic: Topic;
+
+
+  @ManyToOne(
+    ()=> Category,
+    category=>category.comments
+  )
+  category: Category
 
   @UpdateDateColumn()
   updated_at: boolean;

@@ -2,7 +2,7 @@ import { Injectable, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateCategoryDTO } from './create-category.dto';
 import { Category } from '../../../entities/category.entity';
-import { getRepository, Repository, createQueryBuilder } from 'typeorm';
+import { getRepository, Repository,EntityManager,createQueryBuilder, getManager, getConnectionManager } from 'typeorm';
 import { PaginatedCategoriesResultDTO } from './paginated-categories.dto';
 import { Topic } from '@entities/topic.entity';
 import { Comment } from '@entities/comments.entity';
@@ -31,42 +31,32 @@ export class CategoryService {
     const take =10
     const skip =10 * (page-1)
 
-    console.log("____START____")
-    const categories =await getRepository(Category)
-    .createQueryBuilder("cat")
-    .leftJoinAndSelect("cat.topics", "t"," cat.id  = t.categoryId")
-    .leftJoinAndSelect("t.comments","com","com.topicId = t.Id")
-    .loadRelationCountAndMap("cat.countTopics","cat.topics")
-    .loadRelationCountAndMap("t.countComments","t.comments")
-    .take(take)
-    .skip(skip)
-    .select([
-        'cat.id', 'cat.name', 
-        'cat.description', 'cat.authorId',
+   let categories:any
 
-        't.id','t.name',
-        't.textBody','t.imageStorage',
-    ])
-    /*.addSelect( subQuery=>{
-      return  subQuery
-              .loadRelationCountAndMap()
-              .limit(1)
+   console.log("____START____")
 
-    })*/
-    .orderBy("")
-    .getMany();
-    console.log("____END____")
+  const entityManager = getManager();
+  const query = await entityManager.query(`
 
-    for (let category of categories){
-      
-    }
-   
+    select c.name, c.id, c.imageStorage, c.description, 
+    (select topics.id from topics where categoryId = c.id order by created_at asc limit 1) as lastTopicId, 
+    (select topics.name from topics where categoryId = c.id order by created_at asc limit 1) as lastTopicName, 
+    max(c2.updated_at) as lastActivity, count(c2.id) as countComments, count(distinct(t.id)) as countTopics from categories c 
+    left join topics t 
+    on t.categoryId = c.id
+    left join comments c2 
+    on c2.topicId = t.id
+    group by c.id
+
+  `)
+
     return{
-      categories,
+      categories:query,
       currentPage:page,      
       prevPage:  page > 1? (page-1): null,
       nextPage:  take >= (skip + take) ? page+1 : null,
-      perPage: take
+      perPage: take,
+
     }
   }
 
@@ -139,3 +129,27 @@ export class CategoryService {
 
 
 }
+
+/*categories =await getRepository(Category)
+.createQueryBuilder("cat")
+.leftJoinAndSelect("cat.topics","lastTopic","cat.id = lastTopic.categoryId")
+.select('cat.name')
+.leftJoinAndSelect("cat.comments",'com','com.categoryId = cat.id')
+.loadRelationCountAndMap("cat.countTopics","cat.topics")
+.loadRelationCountAndMap("cat.countComments","cat.comments")
+.take(take)
+.skip(skip)
+.select([
+    'cat.id', 'cat.name', 
+    
+    'cat.description', 'cat.authorId',
+
+    'lastTopic.id','lastTopic.name','lastTopic.updated_at',
+    'lastTopic.textBody','lastTopic.imageStorage',
+])
+.orderBy("lastTopic.updated_at")
+.orderBy("cat.id","ASC")
+
+
+.getMany();
+console.log("____END____") */
