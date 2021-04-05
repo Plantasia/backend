@@ -2,7 +2,14 @@ import { Injectable, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateCategoryDTO } from './create-category.dto';
 import { Category } from '../../../entities/category.entity';
-import { getRepository, Repository,EntityManager,createQueryBuilder, getManager, getConnectionManager } from 'typeorm';
+import {
+  getRepository,
+  Repository,
+  EntityManager,
+  createQueryBuilder,
+  getManager,
+  getConnectionManager,
+} from 'typeorm';
 import { PaginatedCategoriesResultDTO } from './paginated-categories.dto';
 import { Topic } from '@entities/topic.entity';
 import { Comment } from '@entities/comments.entity';
@@ -14,29 +21,26 @@ export class CategoryService {
     private categoryRepository: Repository<Category>,
 
     @InjectRepository(Topic)
-    private topicRepository: Repository<Topic>
-    
+    private topicRepository: Repository<Topic>,
   ) {}
 
   async findAll(page): Promise<PaginatedCategoriesResultDTO> {
-   console.log("PAGE:\n")
-    console.log(page)
-    
-    if(!page|| page<=0){
-      page=1
-    }
-    else page = parseInt(page)
-    
-   
-    const take =10
-    const skip =10 * (page-1)
+    console.log('PAGE:\n');
+    console.log(page);
 
-   let categories:any
+    if (!page || page <= 0) {
+      page = 1;
+    } else page = parseInt(page);
 
-   console.log("____START____")
+    const take = 10;
+    const skip = 10 * (page - 1);
 
-  const entityManager = getManager();
-  const query = await entityManager.query(`
+    let categories: any;
+
+    console.log('____START____');
+
+    const entityManager = getManager();
+    const query = await entityManager.query(`
 
     select c.name, c.id, c.imageStorage, c.description, 
     (select topics.id from topics where categoryId = c.id order by created_at asc limit 1) as lastTopicId, 
@@ -46,24 +50,23 @@ export class CategoryService {
     on t.categoryId = c.id
     left join comments c2 
     on c2.topicId = t.id
+    where t.id is not null
     group by c.id
 
-  `)
+  `);
 
-    return{
-      categories:query,
-      currentPage:page,      
-      prevPage:  page > 1? (page-1): null,
-      nextPage:  take >= (skip + take) ? page+1 : null,
+    return {
+      categories: query,
+      currentPage: page,
+      prevPage: page > 1 ? page - 1 : null,
+      nextPage: take >= skip + take ? page + 1 : null,
       perPage: take,
-
-    }
+    };
   }
 
   async find(argument: any): Promise<Category[]> {
     return this.categoryRepository.find(argument);
   }
-
 
   async findById(id: string): Promise<Category> {
     return this.categoryRepository.findOne({
@@ -73,11 +76,11 @@ export class CategoryService {
     });
   }
 
-  async findByAuthorSlug(id: string ,authorId: string): Promise<Category> {
+  async findByAuthorSlug(id: string, authorId: string): Promise<Category> {
     return this.categoryRepository.findOne({
       where: {
         authorId,
-        id
+        id,
       },
     });
   }
@@ -89,8 +92,6 @@ export class CategoryService {
       },
     });
   }
-
-
 
   async findByName(name: string): Promise<Category> {
     return this.categoryRepository.findOne({
@@ -111,8 +112,8 @@ export class CategoryService {
 
   async create(createCategoryDTO: CreateCategoryDTO): Promise<Category> {
     const category = new Category();
-     
-    category.authorId= createCategoryDTO.authorId
+
+    category.authorId = createCategoryDTO.authorId;
     category.name = createCategoryDTO.name;
     category.authorEmail = createCategoryDTO.authorEmail;
     category.description = createCategoryDTO.description;
@@ -126,8 +127,6 @@ export class CategoryService {
     await this.categoryRepository.update(id, data);
     return this.categoryRepository.findOne(id);
   }
-
-
 }
 
 /*categories =await getRepository(Category)
