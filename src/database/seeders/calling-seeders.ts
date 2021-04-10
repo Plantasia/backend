@@ -1,31 +1,27 @@
+import { LogsSeeding } from '../../entities/logsSeeding.entity';
+import { getRepository } from 'typeorm';
+import AdminSeed from './admin-seed';
+import CategorySeed from './category-seed';
+import CommentsSeed from './comments-seed';
+import TopicsSeed from './topics-seed';
+import UserSeed from './user-seed';
 
-import { LogsSeeding } from '../../entities/logsSeeding.entity'
-import { getRepository } from 'typeorm'
-import AdminSeed from './admin-seed'
-import CategorySeed from './category-seed'
-import CommentsSeed from './comments-seed'
-import TopicsSeed from './topics-seed'
-import UserSeed from './user-seed'
+export async function CallingSeeders() {
+  const logSeedingRepository = await getRepository(LogsSeeding);
+  const seedingAlreadyRunned = await logSeedingRepository.findOne();
 
+  if (!seedingAlreadyRunned) {
+    const exitUsersSeed = await UserSeed();
 
-export async function CallingSeeders(){
-const logSeedingRepository = await getRepository(LogsSeeding)
- const seedingAlreadyRunned = await logSeedingRepository.findOne()
+    const exitAdminsSeed = await AdminSeed(exitUsersSeed);
 
- if(!seedingAlreadyRunned){
+    const exitCategoriesSeed = await CategorySeed(exitAdminsSeed);
 
-  const exitUsersSeed = await UserSeed()
+    const commentsSeed = await TopicsSeed(exitCategoriesSeed);
 
-  const exitAdminsSeed = await AdminSeed(exitUsersSeed)
+    CommentsSeed(commentsSeed);
 
-  const exitCategoriesSeed = await CategorySeed(exitAdminsSeed)
-
-  const commentsSeed = await TopicsSeed(exitCategoriesSeed)
-
-  CommentsSeed(commentsSeed)
-  
-  let newLog = new LogsSeeding(true)
-  logSeedingRepository.save(logSeedingRepository.create(newLog))
- }
-
+    const newLog = new LogsSeeding(true);
+    logSeedingRepository.save(logSeedingRepository.create(newLog));
+  }
 }

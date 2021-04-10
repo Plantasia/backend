@@ -9,7 +9,7 @@
     "prebuild": "rimraf dist",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "seed":"ts-node src/database/seeders/calling-seeders.ts",
+    "seed": "ts-node src/database/seeders/calling-seeders.ts",
     "start": "ts-node-dev src/index.ts",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug  --watch",

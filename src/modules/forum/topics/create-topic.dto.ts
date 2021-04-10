@@ -2,7 +2,6 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty } from 'class-validator';
 
 export class CreateTopicDTO {
-
   @ApiProperty({
     type: String,
     description: 'Topic name',
@@ -10,9 +9,6 @@ export class CreateTopicDTO {
   })
   @IsNotEmpty()
   public readonly name: string;
-
-
-  
 
   @ApiProperty({
     type: String,
@@ -22,19 +18,12 @@ export class CreateTopicDTO {
   @IsNotEmpty()
   public readonly textBody: string;
 
-
-
-
   @ApiProperty({
     type: String,
     description: 'The image of topic',
     default: '',
   })
   public readonly imageStorage: string;
-
-
-
-
 
   @ApiProperty({
     type: String,
@@ -43,9 +32,6 @@ export class CreateTopicDTO {
   })
   @IsNotEmpty()
   public category_id: string;
-
-
-
 
   @ApiProperty({
     type: String,

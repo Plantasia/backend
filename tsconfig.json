@@ -14,7 +14,8 @@
       "@entities/*": ["./src/entities/*"],
       "@controllers/*": ["./src/controllers/*"],
       "@auth/*": ["./src/auth/*"],
-      "@seeders/*":["./src/database/seeders/*"]
+      "@seeders/*":["./src/database/seeders/*"],
+      "@@services/*": ["./src/services/*"]
     }, 
   },
   "include": ["**/*.ts", "**/*.tsx"],
