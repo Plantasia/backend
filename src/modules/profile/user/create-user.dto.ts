@@ -2,9 +2,8 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsEmpty, IsNotEmpty } from 'class-validator';
 
 export class CreateUserDTO {
-
   @IsEmpty()
-  id:string
+  id: string;
 
   @IsNotEmpty()
   @ApiProperty({
@@ -12,32 +11,24 @@ export class CreateUserDTO {
     description: 'Username',
     default: '',
   })
-  public  name: string;
-
+  public name: string;
 
   @ApiProperty({
     type: String,
     description: 'user bio',
     default: '',
   })
-  public  bio: string;
-
-
-
+  public bio: string;
 
   @IsEmpty()
-  public  role: string;
-
+  public role: string;
 
   @ApiProperty({
     type: String,
     description: 'Avatar URL',
     default: '',
   })
-  public  avatar: string;
-
-
-
+  public avatar: string;
 
   @IsNotEmpty()
   @ApiProperty({
@@ -45,7 +36,7 @@ export class CreateUserDTO {
     description: 'Email',
     default: '',
   })
-  public  email: string;
+  public email: string;
 
   @IsNotEmpty()
   @ApiProperty({
@@ -53,15 +44,15 @@ export class CreateUserDTO {
     description: 'Password',
     default: '',
   })
-  public  password: string;
+  public password: string;
 
   @IsEmpty()
-  public  isActive: boolean;
+  public isActive: boolean;
 
   @IsEmpty()
-  public  quarentineNum: number;
+  public quarentineNum: number;
 
-  public  isAdmin: boolean;
+  public isAdmin: boolean;
 
   @IsEmpty()
   public tokenLogout: string;

@@ -1,7 +1,6 @@
 import {
   Injectable,
   UnauthorizedException,
-  ArgumentsHost,
   NotFoundException,
   UnprocessableEntityException,
 } from '@nestjs/common';
@@ -13,10 +12,7 @@ import { MailerService } from '@nestjs-modules/mailer';
 import { randomBytes } from 'crypto';
 import { User } from '@entities/user.entity';
 import { CreateUserDTO } from '../modules/profile/user/create-user.dto';
-import { logoutConstant } from './logout';
 import { NewPasswordDto } from './newPassworDTO';
-
-import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -92,8 +88,7 @@ export class AuthService {
   async login(user: any) {
     const payload = { email: user.email, sub: user.id };
     const token = await this.jwtService.sign(payload);
-    const update = await this.updatePasswordLogout('Bearer ' + token, user.id);
-    console.log('Logado');
+    await this.updatePasswordLogout('Bearer ' + token, user.id);
     return {
       access_token: token,
     };
@@ -112,7 +107,7 @@ export class AuthService {
 
   async nullPasswordLogout(userEmail: string) {
     const user = new CreateUserDTO();
-    user.tokenLogout = logoutConstant.constant;
+    user.tokenLogout = process.env.LOGOUT_CONSTANT;
     const update = await this.userService.passwordLogoutByEmail(
       userEmail,
       user,
@@ -132,7 +127,7 @@ export class AuthService {
     const mail = {
       subject: 'Recuperação de senha',
       template: 'recover-password',
-      from: 'plantasia.fatec@gmail.com',
+      from: process.env.SENDER_EMAIL,
       to: user.email,
       context: {
         token: user.recoverToken,

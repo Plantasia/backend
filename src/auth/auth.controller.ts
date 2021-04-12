@@ -18,8 +18,7 @@ import {
 } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { CreateSessionDTO } from './createSessionDTO';
-import { LocalAuthGuard } from './local-auth.guard';
-import { JwtAuthGuard } from '@auth/jwt-auth.guard';
+import { LocalAuthGuard } from '@auth/local-auth.guard';
 import { NewPasswordDto } from './newPassworDTO';
 
 @ApiTags('Signin & Signup')
@@ -35,7 +34,7 @@ export class AuthController {
     return this.authService.login(req.user);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(LocalAuthGuard)
   @Get('logout')
   async logout(@Request() req: any) {
     //Colocar o metodo de validar o token
@@ -71,7 +70,4 @@ export class AuthController {
       message: 'Senha alterada com sucesso',
     };
   }
-
-  @Post('signup')
-  async createUser() {}
 }
