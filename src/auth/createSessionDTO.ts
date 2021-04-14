@@ -1,19 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {IsNotEmpty} from 'class-validator'
+import { IsNotEmpty } from 'class-validator';
 
-
-export class CreateSessionDTO{
-
-  
+export class CreateSessionDTO {
   @IsNotEmpty()
   @ApiProperty({
     type: String,
     description: 'Name of user',
     default: '',
   })
-  public name:string;
-
-
+  public name: string;
 
   @IsNotEmpty()
   @ApiProperty({
@@ -21,12 +16,8 @@ export class CreateSessionDTO{
     description: 'Email of user',
     default: '',
   })
-  public email:string;
+  public email: string;
 
-
-
-
-  @IsNotEmpty()
   @ApiProperty({
     type: String,
     description: 'User which comes from Request Object (cookie)',
@@ -34,5 +25,5 @@ export class CreateSessionDTO{
   })
   public user: any;
 
-  public headers:{authorization};
+  public headers: { authorization: string };
 }

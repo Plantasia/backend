@@ -1,19 +1,18 @@
 import 'reflect-metadata';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { SwaggerModule, DocumentBuilder} from '@nestjs/swagger'
-import { CallingSeeders } from './database/seeders/calling-seeders';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { CallingSeeders } from '@seeders/calling-seeders';
 
-async function bootstrap() {  
+async function bootstrap() {
   const PORT = process.env.PORT || 3333;
   const HOST = process.env.HOST || '0.0.0.0';
   const app = await NestFactory.create(AppModule);
   app.enableCors({
-    origin: 'http://localhost',
-  });   
-  const path = require('path');
+    origin: process.env.FRONT_END_CORS,
+  });
+  CallingSeeders();
   try {
-    CallingSeeders();
     const swaggerConfig = new DocumentBuilder()
       .setTitle('Plantasia Docs')
       .setDescription('Swagger API Documentation')

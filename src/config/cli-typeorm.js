@@ -7,9 +7,9 @@ const path = require('path');
  */
 module.exports = {
   type: 'mysql',
-  database: 'plantasia',
-  username: 'root',
-  password: 'plantasia@123',
+  username: process.env.ORM_USER,
+  password: process.env.ORM_PASSWORD,
+  database: process.env.ORM_DB,
   host: 'database',
   synchronize: true,
   port: 3306,
@@ -17,7 +17,13 @@ module.exports = {
   entities: [path.resolve(__dirname, 'src', 'entities', '*')],
   migrations: [path.resolve(__dirname, '..', 'database', 'migrations', '*')],
   cli: {
-    entitiesDir: path.resolve(__dirname, '..', 'entities'),
-    migrationsDir: path.resolve(__dirname, '..', 'database', 'migrations'),
+    entitiesDir: path.resolve(__dirname, 'build', 'entities', '**.*.js'),
+    migrationsDir: path.resolve(
+      __dirname,
+      'build',
+      'database',
+      'migrations',
+      '*.js',
+    ),
   },
 };

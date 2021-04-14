@@ -11,7 +11,11 @@ import { TopicsService } from '../topics/topics.service';
 import { Topic } from '@entities/topic.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Category, Topic]),  TopicModule, UserModule],
+  imports: [
+    TypeOrmModule.forFeature([Category, Topic]),
+    TopicModule,
+    UserModule,
+  ],
   providers: [CategoryService, UserService, TopicsService],
   controllers: [CategoryController],
   exports: [],
