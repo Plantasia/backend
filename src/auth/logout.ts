@@ -1,3 +1,3 @@
 export const logoutConstant = {
-    constant: '__deslogged__Rq${wN*wCwWHuOb#n',
-  };
+  constant: process.env.LOGOUT_CONSTANT,
+};

@@ -1,4 +1,8 @@
-import { Injectable, UnauthorizedException , ArgumentsHost} from '@nestjs/common';
+import {
+  Injectable,
+  UnauthorizedException,
+  ArgumentsHost,
+} from '@nestjs/common';
 import { Strategy } from 'passport-local';
 import { PassportStrategy } from '@nestjs/passport';
 import { AuthService } from './auth.service';
@@ -13,9 +17,9 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(email: string, password: string): Promise<any> {
-    const user = await this.authService.validateUser(email, password)
+    const user = await this.authService.validateUser(email, password);
     if (!user) {
-      throw new UnauthorizedException("Error: Invalid arguments");
+      throw new UnauthorizedException('Error: Invalid arguments');
     }
     return user;
   }

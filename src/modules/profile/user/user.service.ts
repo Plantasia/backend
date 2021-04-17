@@ -5,7 +5,7 @@ import { CreateUserDTO } from './create-user.dto';
 import { User } from '@entities/user.entity';
 import * as bcrypt from 'bcrypt';
 import { TopicsService } from '../../forum/topics/topics.service';
-import {PaginatedUsersDTO} from '../paginated-users.dto'
+import { PaginatedUsersDTO } from '../paginated-users.dto';
 
 @Injectable()
 export class UserService {
@@ -23,12 +23,10 @@ export class UserService {
     });
   }
 
-  
-
-  async checkIfAlreadyExists(email:string): Promise<User> {
+  async checkIfAlreadyExists(email: string): Promise<User> {
     return this.userRepository.findOne({
       where: {
-        email
+        email,
       },
     });
   }
@@ -49,48 +47,46 @@ export class UserService {
     });
   }
 
-  async findAll(page): Promise<PaginatedUsersDTO> {//preparamos  o metodo para receber o parametro passado pela url na controller
-    
-    
-    const take =10
+  async findAll(page): Promise<PaginatedUsersDTO> {
+    //preparamos  o metodo para receber o parametro passado pela url na controller
+
+    const take = 10;
     /* used to limit registers*/
 
-    const skip =10 * (page-1) 
-    /* used to skip the already 
+    const skip = 10 * (page - 1);
+    /* used to skip the already
      *  catched up registers */
 
-    if(!page){
-      page=1
-    }
-    else page = parseInt(page)
+    if (!page) {
+      page = 1;
+    } else page = parseInt(page);
 
     const [result, total] = await this.userRepository.findAndCount({
-      take:take ,
-      skip:skip 
-    });    
+      take: take,
+      skip: skip,
+    });
 
-    const allUsers =[]
-    for(let i=0; i< result.length;i++){
-  
-      const user = new CreateUserDTO()
+    const allUsers = [];
+    for (let i = 0; i < result.length; i++) {
+      const user = new CreateUserDTO();
 
-      user.id = result[i].id
-      user.name = result[i].name
+      user.id = result[i].id;
+      user.name = result[i].name;
       //user.email =result[i].email
-      user.bio =result[i].bio
-      user.avatar =result[i].avatar
+      user.bio = result[i].bio;
+      user.avatar = result[i].avatar;
 
-      allUsers.push(user)  
+      allUsers.push(user);
     }
 
-    return{
-      users:allUsers,
-      currentPage:page,      
-      prevPage:  page > 1? (page-1): null,
-      nextPage:  total > (skip + take) ? page+1 : null,
-      perPage:take,
-      totalRegisters: total
-    }
+    return {
+      users: allUsers,
+      currentPage: page,
+      prevPage: page > 1 ? page - 1 : null,
+      nextPage: total > skip + take ? page + 1 : null,
+      perPage: take,
+      totalRegisters: total,
+    };
   }
 
   async remove(id: string): Promise<void> {
@@ -98,7 +94,6 @@ export class UserService {
   }
 
   async create(createUserDTO: CreateUserDTO): Promise<Partial<User>> {
-
     const user = new User();
     user.name = createUserDTO.name;
     user.bio = createUserDTO.bio;
@@ -109,101 +104,96 @@ export class UserService {
     user.isAdmin = createUserDTO.isAdmin;
     user.quarentineNum = createUserDTO.quarentineNum;
     user.tokenLogout = createUserDTO.tokenLogout;
-  
+
     const newUser = await this.userRepository.create(user);
     console.log('User created!');
     this.userRepository.save(newUser);
 
-    
-    
-    const {name,password,email,bio}= newUser
+    const { name, password, email, bio } = newUser;
 
     return {
-      name, password,email, bio
-    }
-  
-    
+      name,
+      password,
+      email,
+      bio,
+    };
   }
 
   async update(id: string, data: CreateUserDTO): Promise<User> {
-    
     await this.userRepository.update(id, data);
 
     return this.userRepository.findOne(id);
   }
 
-  async passwordLogout(id: string, passwordLogout: CreateUserDTO): Promise<User> {
+  async passwordLogout(
+    id: string,
+    passwordLogout: CreateUserDTO,
+  ): Promise<User> {
     await this.userRepository.update(id, passwordLogout);
     return this.userRepository.findOne(id);
   }
 
-  async passwordLogoutByEmail(userEmail: string, passwordLogout: CreateUserDTO): Promise<Partial<User>> {
-    const userToUpdate = (await this.userRepository.findOne(
-      {
-        where:{
-          email:userEmail
-        }
-      })).id
-    const resp =  await this.userRepository.update(userToUpdate, passwordLogout);
+  async passwordLogoutByEmail(
+    userEmail: string,
+    passwordLogout: CreateUserDTO,
+  ): Promise<Partial<User>> {
+    const userToUpdate = (
+      await this.userRepository.findOne({
+        where: {
+          email: userEmail,
+        },
+      })
+    ).id;
+    const resp = await this.userRepository.update(userToUpdate, passwordLogout);
     const user = await this.findByEmail(userEmail);
 
-    return user
+    return user;
   }
 
   async findByToken(token: string): Promise<User> {
-    
-     console.log("\nFindByToken :***** This is the token  ******\n")
-     console.log(token)
+    console.log('\nFindByToken :***** This is the token  ******\n');
+    console.log(token);
 
-     
-    const userToCheck= (await this.userRepository.findOne(
-      {
-  
-        where:{
-          tokenLogout:token
-        }
-        }))
+    const userToCheck = await this.userRepository.findOne({
+      where: {
+        tokenLogout: token,
+      },
+    });
 
-    if(!userToCheck){
-          throw new UnauthorizedException({error:"Unauthorized"})
+    if (!userToCheck) {
+      throw new UnauthorizedException({ error: 'Unauthorized' });
     }
-    return userToCheck
-  
-
+    return userToCheck;
   }
 
-  async authorizationCheck(tokenRequest:string){
+  async authorizationCheck(tokenRequest: string) {
     const userToCheck = await this.findByToken(tokenRequest);
-    console.log("Check",userToCheck)
-    if ((userToCheck.tokenLogout === tokenRequest) || userToCheck){
+    console.log('Check', userToCheck);
+    if (userToCheck.tokenLogout === tokenRequest || userToCheck) {
       return {
-        Message: "Valid token ",
+        Message: 'Valid token ',
       };
-    }else {
-     
+    } else {
       throw new UnauthorizedException({
-        error: 'Unauthorized, your credentials is invalid'
+        error: 'Unauthorized, your credentials is invalid',
       });
     }
-
   }
-  async changePassword(id: string,  password: CreateUserDTO) {
+  async changePassword(id: string, password: CreateUserDTO) {
     const user = await this.findOne(id);
-    console.log(user)
+    console.log(user);
     const newPassword = await this.userRepository.update(id, password);
-    console.log(newPassword)
-    
-    return newPassword
+    console.log(newPassword);
+
+    return newPassword;
   }
 
-  async findByRecoverToken(recoverToken: string){
-    const idUser = ( await this.userRepository.findOne(
-      {
-        where:{
-          recoverToken:recoverToken
-        }
-      }))
-      return idUser
-    }
-    
+  async findByRecoverToken(recoverToken: string) {
+    const idUser = await this.userRepository.findOne({
+      where: {
+        recoverToken: recoverToken,
+      },
+    });
+    return idUser;
+  }
 }
