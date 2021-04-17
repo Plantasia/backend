@@ -17,6 +17,6 @@
       "@seeders/*":["./src/database/seeders/*"]
     }, 
   },
-  "include": ["**/*.ts", "**/*.tsx"],
+  "include": ["**/*.ts"],
   "exclude": ["node_modules"],
 }

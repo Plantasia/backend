@@ -129,26 +129,32 @@ export class CategoryService {
   }
 }
 
-/*categories =await getRepository(Category)
-.createQueryBuilder("cat")
-.leftJoinAndSelect("cat.topics","lastTopic","cat.id = lastTopic.categoryId")
-.select('cat.name')
-.leftJoinAndSelect("cat.comments",'com','com.categoryId = cat.id')
-.loadRelationCountAndMap("cat.countTopics","cat.topics")
-.loadRelationCountAndMap("cat.countComments","cat.comments")
-.take(take)
-.skip(skip)
-.select([
-    'cat.id', 'cat.name', 
-    
-    'cat.description', 'cat.authorId',
 
-    'lastTopic.id','lastTopic.name','lastTopic.updated_at',
-    'lastTopic.textBody','lastTopic.imageStorage',
-])
-.orderBy("lastTopic.updated_at")
-.orderBy("cat.id","ASC")
+/** DON'T REMOVE, PLEASE
+ * 
+ *    categories =await getRepository(Category)
+      .createQueryBuilder("cat")
+      .leftJoinAndSelect("cat.topics","topic","cat.id = topic.categoryId")
+      .select('cat.name')
+      .leftJoinAndSelect("cat.comments",'com','com.categoryId = cat.id')
+      .loadRelationCountAndMap("cat.countTopics","cat.topics")
+      .loadRelationCountAndMap("cat.countComments","cat.comments")
+      .take(take)
+      .skip(skip)
+      .select([
+          'cat.id', 'cat.name', 
+          
+          'cat.description', 'cat.authorId',
+
+          'topic.id','topic.name','topic.updated_at',
+          'topic.textBody','topic.imageStorage',
+      ])
+      .orderBy("lastTopic.updated_at")
+      .orderBy("cat.id","ASC")
 
 
-.getMany();
-console.log("____END____") */
+      .getMany();
+      console.log("____END____") 
+ *
+ **/
+
