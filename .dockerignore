@@ -1,0 +1,7 @@
+node_modules
+.vscode
+.prettierrc.json
+.gitignore
+.eslintrc.json
+.eslintignore
+build 
