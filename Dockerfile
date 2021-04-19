@@ -12,4 +12,4 @@ RUN yarn
 
 RUN yarn build
 
-CMD [ "yarn", "dev" ]
+CMD [ "yarn", "start:dev" ]
