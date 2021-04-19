@@ -5,7 +5,6 @@ import { CreateCommentDTO } from './create-comment.dto';
 import { Comment } from '../../../entities/comments.entity';
 import { Topic } from '../../../entities/topic.entity';
 import { TopicsService } from '../topics/topics.service';
-import { User } from '../../../entities/user.entity';
 import { UserService } from '../../profile/user/user.service';
 
 //import  User  from '../user/user.entity';
@@ -42,25 +41,25 @@ export class CommentService {
     await this.commentsRepository.softDelete(id);
   }
 
-  async create(data: CreateCommentDTO): Promise<Comment> {
+  async create(data: CreateCommentDTO, req: any): Promise<Comment> {
     
     const comment = new Comment();
     const topic = new Topic();
-    const user = new User();
+    
 
   
     comment.textBody = data.textBody
     const topic_id = data.topic_id;
-    const user_id = data.user_id;
+    const token = req;
 
     this.topicService.findOne(topic_id);
-    this.userService.findOne(user_id);
-
-    comment.user = await this.userService.findOne(user_id);
+    const user = await this.userService.findByToken(token);
+    //console.log("O User é: ",user_id)
+    comment.user = await this.userService.findOne(user.id);
     comment.topic = await this.topicService.findOne(topic_id);
 
     console.log("User")
-    console.log(user)
+    console.log(comment.user)
 
     console.log("Topic")
     console.log(topic)

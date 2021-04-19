@@ -15,8 +15,8 @@ import {
 } from '@nestjs/common';
 import { CommentService } from './comments.service';
 import { CreateCommentDTO } from './create-comment.dto';
+import { DeletedItenCommentDTO } from './delete-comment.dto';
 import { Comment } from '../../../entities/comments.entity';
-import { uuid } from 'uuidv4';
 import { LocalAuthGuard } from '@auth/local-auth.guard';
 import {
   ApiCreatedResponse,
@@ -44,7 +44,7 @@ export class CommentController {
   }
 
   @Post()
-  @UseGuards(LocalAuthGuard)
+  //@UseGuards(LocalAuthGuard)
   @UsePipes(ValidationPipe)
   @ApiCreatedResponse({ description: 'comment succesfully created' })
   @ApiForbiddenResponse({ description: 'Forbidden' })
@@ -53,36 +53,37 @@ export class CommentController {
     @Body() createCommentDTO: CreateCommentDTO,
     @Request() req,
   ): Promise<Comment> {
-    const thisUser = await this.userService.findByEmail(req.user.email);
-    const check = await this.userService.authorizationCheck(
-      req.headers.authorization,
+    const token =  req.headers.authorization
+    const userAlreadyExists = await this.userService.authorizationCheck(
+      token,
     );
-    const user_id = createCommentDTO.user_id;
     const topic_id = createCommentDTO.topic_id;
-
-    //NOTE: Checking both user and topic if they already exists
-    const userAlreadyExists = await this.userService.findById(user_id);
     const topicAlreadyExists = await this.topicsService.findById(topic_id);
-
-    console.log(` User Exists?  ==>${userAlreadyExists}`);
-
-    console.log(` User Exists?  ==>${topicAlreadyExists}`);
-
-    if (!userAlreadyExists || !topicAlreadyExists) {
+    //We do not use the userID, but the token, is this   if (!userAlreadyExists) necessary?
+    if (!userAlreadyExists) {
       throw new HttpException(
         {
           status: HttpStatus.FORBIDDEN,
-          error: 'User or Topic does not exists, please check data!',
+          error: 'User does not exists, please check data!',
+        },
+        HttpStatus.FORBIDDEN,
+      );
+    }
+    else if (!topicAlreadyExists) {
+      throw new HttpException(
+        {
+          status: HttpStatus.FORBIDDEN,
+          error: 'Topic does not exists, please check data!',
         },
         HttpStatus.FORBIDDEN,
       );
     } else {
-      return this.commentService.create(createCommentDTO);
+      return this.commentService.create(createCommentDTO, token);
     }
   }
 
   @Get(':id')
-  @UseGuards(LocalAuthGuard)
+  //@UseGuards(LocalAuthGuard)
   @ApiOkResponse({ description: 'The comments has been succesfful returned' })
   @ApiForbiddenResponse({ description: 'Forbidden' })
   @ApiHeader({
@@ -90,26 +91,40 @@ export class CommentController {
     description: 'JWT token must to be passed to do this request',
   })
   async findOne(@Param('id') id: string, @Request() req): Promise<Comment> {
-    const thisUser = await this.userService.findByEmail(req.user.email);
+    const token = req.headers.authorization
     const check = await this.userService.authorizationCheck(
-      req.headers.authorization,
+      token,
     );
     return this.commentService.findOne(id);
   }
 
   @Delete(':id')
-  @UseGuards(LocalAuthGuard)
+  //@UseGuards(LocalAuthGuard)
   @ApiOkResponse({ description: 'The comment has been successful deleted' })
   @ApiForbiddenResponse({ description: 'Forbidden' })
   @ApiHeader({
     name: 'JWT',
     description: 'JWT token must to be passed to do this request',
   })
-  async remove(@Param('id') id: string, @Request() req): Promise<void> {
-    const thisUser = await this.userService.findByEmail(req.user.email);
+  async remove(@Param('id') id: string, @Request() req): Promise<DeletedItenCommentDTO> {
+    const token = req.headers.authorization
     const check = await this.userService.authorizationCheck(
-      req.headers.authorization,
+      token,
     );
-    return this.commentService.delete(id);
+    const deletedIten = this.commentService.delete(id);
+    if (!deletedIten){
+      throw new HttpException(
+        {
+          status: HttpStatus.BAD_REQUEST,
+          error: 'Error to delete comment, please check data!',
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }else{
+      const mesage = 'Iten '+ id +' deleted'
+      return {
+        mesage: mesage
+      };
+    }
   }
 }

@@ -40,7 +40,7 @@ export class CategoryController {
     name: 'Bearer Token',
     description: 'JWT Token',
   })
-  @UseGuards(LocalAuthGuard)
+  //@UseGuards(LocalAuthGuard)
   @Post()
   @ApiCreatedResponse({ description: 'Category succesfully created' })
   @ApiForbiddenResponse({ description: 'Forbidden' })
@@ -49,11 +49,12 @@ export class CategoryController {
     @Body() createCategoryDTO: CreateCategoryDTO,
     @Request() req,
   ): Promise<Partial<Category>> {
-    const thisUser = await this.userService.findByEmail(req.user.email);
+    //const thisUser = await this.userService.findByEmail(req.user.email);
     const check = await this.userService.authorizationCheck(
       req.headers.authorization,
     );
-    const id = req.user.id;
+   
+    console.log("req:",req)
     const email = req.user.email;
 
     const authorId = (await this.userService.findByEmail(req.user.email)).id;
