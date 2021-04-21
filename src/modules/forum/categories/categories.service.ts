@@ -56,6 +56,7 @@ export class CategoryService {
   `);
 
     return {
+      withDeleted: false,
       categories: query,
       currentPage: page,
       prevPage: page > 1 ? page - 1 : null,
@@ -105,6 +106,7 @@ export class CategoryService {
     const resp = await this.categoryRepository.softDelete(id);
 
     /*affected property == 1 (deleted) */
+    console.log("resposyta: ",resp)
     if (resp.affected !== 0) {
       console.log(`deleted category ${id} `);
     }

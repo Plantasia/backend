@@ -6,4 +6,5 @@ export class PaginatedCategoriesResultDTO {
   public prevPage: number;
   public nextPage: number;
   public perPage: number;
+  public withDeleted: boolean;
 }
