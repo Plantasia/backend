@@ -17,6 +17,7 @@ import {
 } from '@nestjs/common';
 import { CategoryService } from './categories.service';
 import { CreateCategoryDTO } from './create-category.dto';
+import { DeletedItenCategoryDTO } from './delete-categories.dto';
 import { Category } from '../../../entities/category.entity';
 import {
   ApiCreatedResponse,
@@ -114,7 +115,7 @@ export class CategoryController {
   @Delete(':id')
   @ApiOkResponse({ description: 'The category has been successful deleted' })
   @ApiForbiddenResponse({ description: 'Forbidden' })
-  async remove(@Param('id') id: string, @Request() req): Promise<string> {
+  async remove(@Param('id') id: string, @Request() req): Promise<DeletedItenCategoryDTO> {
     //NOTE: Verifying if this user is authorized
     const token = req.headers.authorization
     const check = await this.userService.authorizationCheck(
@@ -133,7 +134,7 @@ export class CategoryController {
       );
     }else{
       const mesage = 'Iten '+ id +' deleted'
-      return mesage 
+      return {mesage} 
     }
     } else {
       throw new UnauthorizedException(

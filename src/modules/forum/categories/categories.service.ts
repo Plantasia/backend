@@ -49,7 +49,7 @@ export class CategoryService {
     on t.categoryId = c.id
     left join comments c2 
     on c2.topicId = t.id
-    where t.id is not null
+    where t.id is not null and c.deleted_at is null 
     group by c.id
 
   `);
