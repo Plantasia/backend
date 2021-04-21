@@ -15,7 +15,7 @@ import {
 import { TopicsService } from './topics.service';
 import { Topic } from '../../../entities/topic.entity';
 import { CreateTopicDTO } from './create-topic.dto';
-import { LocalAuthGuard } from '@auth/local-auth.guard';
+import { JwtAuthGuard } from '../../../auth/jwt-auth.guard';
 import {
   ApiCreatedResponse,
   ApiForbiddenResponse,
@@ -53,7 +53,7 @@ export class TopicsController {
     return this.topicsService.findAll(page);
   }
 
-  @UseGuards(LocalAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @ApiOkResponse({ description: 'topic succesfully updated' })
   @ApiForbiddenResponse({ description: 'Forbidden' })
   @ApiHeader({
@@ -73,7 +73,7 @@ export class TopicsController {
     return this.topicsService.update(id, createTopicDTO);
   }
 
-  @UseGuards(LocalAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @UsePipes(ValidationPipe)
   @ApiHeader({
     name: 'JWT',
@@ -103,7 +103,7 @@ export class TopicsController {
     return response;
   }
 
-  @UseGuards(LocalAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @ApiOkResponse({ description: 'topic succesfully deleted' })
   @ApiForbiddenResponse({ description: 'Forbidden' })
   @ApiHeader({

@@ -19,7 +19,7 @@ import { CommentService } from './comments.service';
 import { CreateCommentDTO } from './create-comment.dto';
 import { DeletedItenCommentDTO } from './delete-comment.dto';
 import { Comment } from '../../../entities/comments.entity';
-import { LocalAuthGuard } from '@auth/local-auth.guard';
+import { JwtAuthGuard } from '../../../auth/jwt-auth.guard';
 import {
   ApiCreatedResponse,
   ApiForbiddenResponse,
@@ -46,7 +46,7 @@ export class CommentController {
   }
 
   @Post()
-  //@UseGuards(LocalAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @UsePipes(ValidationPipe)
   @ApiCreatedResponse({ description: 'comment succesfully created' })
   @ApiForbiddenResponse({ description: 'Forbidden' })
@@ -85,7 +85,7 @@ export class CommentController {
   }
 
   @Get(':id')
-  //@UseGuards(LocalAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @ApiOkResponse({ description: 'The comments has been succesfful returned' })
   @ApiForbiddenResponse({ description: 'Forbidden' })
   @ApiHeader({
@@ -101,7 +101,7 @@ export class CommentController {
   }
 
   @Delete(':id')
-  //@UseGuards(LocalAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @ApiOkResponse({ description: 'The comment has been successful deleted' })
   @ApiForbiddenResponse({ description: 'Forbidden' })
   @ApiHeader({
@@ -130,7 +130,7 @@ export class CommentController {
     }
   }
 
-  //@UseGuards(LocalAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Patch(':id')
   @ApiOkResponse({ description: 'The comment has beenn successful updated' })
   @ApiForbiddenResponse({ description: 'Forbidden' })
