@@ -19,7 +19,7 @@ import { CommentService } from './comments.service';
 import { CreateCommentDTO } from './create-comment.dto';
 import { DeletedItenCommentDTO } from './delete-comment.dto';
 import { Comment } from '../../../entities/comments.entity';
-import { JwtAuthGuard } from '../../../auth/jwt-auth.guard';
+import { JwtAuthGuard } from '@auth/guard/jwt-auth.guard';
 import {
   ApiCreatedResponse,
   ApiForbiddenResponse,
