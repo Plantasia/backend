@@ -73,6 +73,7 @@ export class UserController {
     };
   }
  
+ @UseGuards(JwtAuthGuard)
  @Get("/findme")
  async findOneByToken(@Request() req){
 
