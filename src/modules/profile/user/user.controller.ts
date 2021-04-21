@@ -71,12 +71,18 @@ export class UserController {
       totalRegisters,
     };
   }
+ 
+ @Get("/findme")
+ async findOneByToken(@Query('token') token:string){
+
+  return this.userService.findByToken(token);
+ }
 
   @Get()
   async findAll(@Request() req, @Query('page') page: number) {
     console.log(req.headers.authorization);
 
-    console.log("I've passed 'till here");
+   
     const thisUser = await this.userService.findByEmail(req.user.email);
 
     console.log(`\n\n\n:::::::This user (logged)::::::: \n`);

@@ -153,13 +153,17 @@ export class UserService {
   async findByToken(token: string): Promise<User> {
     const userToCheck = await this.userRepository.findOne({
       where: {
-        tokenLogout: token,
+        tokenLogout: "Bearer "+token,
       },
     });
+    console.log("###############")
+    console.log(userToCheck)
+
 
     if (!userToCheck) {
       throw new UnauthorizedException({ error: 'Unauthorized' });
     }
+   
     return userToCheck;
   }
 
