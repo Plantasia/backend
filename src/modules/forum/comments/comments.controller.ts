@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Patch,
   HttpException,
   HttpStatus,
   Param,
@@ -12,6 +13,7 @@ import {
   UsePipes,
   ValidationPipe,
   Query,
+  NotFoundException,
 } from '@nestjs/common';
 import { CommentService } from './comments.service';
 import { CreateCommentDTO } from './create-comment.dto';
@@ -126,5 +128,25 @@ export class CommentController {
         mesage: mesage
       };
     }
+  }
+
+  //@UseGuards(LocalAuthGuard)
+  @Patch(':id')
+  @ApiOkResponse({ description: 'The comment has beenn successful updated' })
+  @ApiForbiddenResponse({ description: 'Forbidden' })
+  async update(
+    @Param('id') id: string,
+    @Body() createCommentDTO: CreateCommentDTO,
+    @Request() req: any,
+  ): Promise<Comment> {
+    const categoryExists = await await this.commentService.findOne(id);
+    const check = await this.userService.authorizationCheck(
+      req.headers.authorization,
+    );
+    if (!categoryExists) {
+      throw new NotFoundException({ error: 'This Comment does not exists' });
+    }
+
+    return this.commentService.update(id, createCommentDTO);
   }
 }

@@ -51,19 +51,10 @@ export class CommentService {
     comment.textBody = data.textBody
     const topic_id = data.topic_id;
     const token = req;
-
     this.topicService.findOne(topic_id);
     const user = await this.userService.findByToken(token);
-    //console.log("O User é: ",user_id)
     comment.user = await this.userService.findOne(user.id);
     comment.topic = await this.topicService.findOne(topic_id);
-
-    console.log("User")
-    console.log(comment.user)
-
-    console.log("Topic")
-    console.log(topic)
-
     const newComment = await this.commentsRepository.create(comment);
     this.commentsRepository.save(newComment);
 
