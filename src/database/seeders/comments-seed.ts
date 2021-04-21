@@ -1,7 +1,7 @@
 import { User } from '@entities/user.entity';
 import { random } from 'faker';
 import { getRepository } from 'typeorm';
-
+import { Category } from '../../entities/category.entity';
 import { Comment } from '../../entities/comments.entity';
 import { Topic } from '../../entities/topic.entity';
 
@@ -20,6 +20,7 @@ export default async function CommentsSeed(
   const commentsRepository = await getRepository(Comment);
   const userRepository = await getRepository(User);
   const topicRepository = await getRepository(Topic);
+  const categoryRepository = await getRepository(Category);
 
 
   for (let i = 0; i <= 100; i++) {
@@ -27,12 +28,15 @@ export default async function CommentsSeed(
     if (i % 30 === 0) seedingId = 1;
     const comment = new Comment();
     const ownerComment = await userRepository.findOne({ where: { seedingId } });
-    const topic = await topicRepository.find({ where: { seedingId: topicSeedingId },
+    const topic = await topicRepository.find({
+      relations: ['category'],
+      where: { seedingId: topicSeedingId },
     });
 
     comment.user = ownerComment;
     comment.topic = topic[0];
     comment.textBody = random.words();
+    comment.category = topic[0].category;
     topicSeedingId++;
     seedingId++;
 

@@ -31,7 +31,6 @@ export class CategoryService {
     if (!page || page <= 0) {
       page = 1;
     } else page = parseInt(page);
-
     const take = 10;
     const skip = 10 * (page - 1);
 
@@ -56,7 +55,6 @@ export class CategoryService {
   `);
 
     return {
-      withDeleted: false,
       categories: query,
       currentPage: page,
       prevPage: page > 1 ? page - 1 : null,
