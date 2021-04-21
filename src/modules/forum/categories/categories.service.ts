@@ -31,7 +31,6 @@ export class CategoryService {
     if (!page || page <= 0) {
       page = 1;
     } else page = parseInt(page);
-
     const take = 10;
     const skip = 10 * (page - 1);
 
@@ -50,7 +49,7 @@ export class CategoryService {
     on t.categoryId = c.id
     left join comments c2 
     on c2.topicId = t.id
-    where t.id is not null
+    where t.id is not null and c.deleted_at is null 
     group by c.id
 
   `);
@@ -105,6 +104,7 @@ export class CategoryService {
     const resp = await this.categoryRepository.softDelete(id);
 
     /*affected property == 1 (deleted) */
+    console.log("resposyta: ",resp)
     if (resp.affected !== 0) {
       console.log(`deleted category ${id} `);
     }

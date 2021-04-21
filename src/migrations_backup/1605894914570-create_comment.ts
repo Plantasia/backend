@@ -46,7 +46,7 @@ export class createComment1605894914570 implements MigrationInterface {
       referencedTableName:"users",
       onDelete:"CASCADE"
     });
-
+/*
     const fk_category_id = new TableForeignKey({
       columnNames:["categoryId"],
       referencedColumnNames:["id"],
@@ -55,6 +55,7 @@ export class createComment1605894914570 implements MigrationInterface {
     });
 
     await queryRunner.createForeignKey("topics",fk_category_id)
+    */
     await queryRunner.createForeignKey("topics",fk_user_id)
 
 

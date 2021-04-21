@@ -47,12 +47,4 @@ export class CreateCommentDTO {
   })
   public topic_id: string;
 
-
-  @IsNotEmpty()
-  @ApiProperty({
-    type: String,
-    description: 'Id of user (author)',
-    default: '',
-  })
-  public user_id: string;
 }
