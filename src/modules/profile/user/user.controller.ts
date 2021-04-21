@@ -19,7 +19,7 @@ import {
 import { UserService } from './user.service';
 import { CreateUserDTO } from './create-user.dto';
 import { User } from '@entities/user.entity';
-import { LocalAuthGuard } from '../../../auth/local-auth.guard';
+import { JwtAuthGuard } from '../../../auth/jwt-auth.guard';
 import { ValidationPipe } from '@nestjs/common/pipes/validation.pipe';
 import {
   ApiForbiddenResponse,
@@ -33,7 +33,7 @@ import {
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @UseGuards(LocalAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @ApiOkResponse({ description: 'The users has been succesfull returned' })
   @ApiForbiddenResponse({ description: 'Forbidden' })
   @ApiHeader({
@@ -149,7 +149,7 @@ export class UserController {
   }
 
   @Get(':id')
-  @UseGuards(LocalAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @ApiOkResponse({ description: 'The user has been succesfull returned' })
   @ApiForbiddenResponse({ description: 'Forbidden' })
   @ApiHeader({
@@ -175,7 +175,7 @@ export class UserController {
   }
 
   @Delete(':id')
-  @UseGuards(LocalAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @ApiOkResponse({ description: 'The user has been succesfull deleted' })
   @ApiForbiddenResponse({ description: 'Forbidden' })
   @ApiHeader({
@@ -216,7 +216,7 @@ export class UserController {
   }
 
   @Put(':id')
-  @UseGuards(LocalAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @ApiOkResponse({ description: 'The user has been succesfull deleted' })
   @ApiForbiddenResponse({ description: 'Forbidden' })
   @ApiHeader({
