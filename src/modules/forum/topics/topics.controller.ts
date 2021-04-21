@@ -13,9 +13,9 @@ import {
   Query,
 } from '@nestjs/common';
 import { TopicsService } from './topics.service';
-import { Topic } from '@entities/topic.entity';
+import { Topic } from '../../../entities/topic.entity';
 import { CreateTopicDTO } from './create-topic.dto';
-import { JwtAuthGuard } from '@auth/guard/jwt-auth.guard';
+import { JwtAuthGuard } from '../../../auth/jwt-auth.guard';
 import {
   ApiCreatedResponse,
   ApiForbiddenResponse,
