@@ -14,6 +14,7 @@ import {
   ForbiddenException,
   ParseIntPipe,
   Query,
+  Header
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDTO } from './create-user.dto';
@@ -73,8 +74,11 @@ export class UserController {
   }
  
  @Get("/findme")
- async findOneByToken(@Query('token') token:string){
+ async findOneByToken(@Request() req){
 
+  const token =  req.headers.authorization;
+  console.log("$$$$$")
+  console.log(req);
   return this.userService.findByToken(token);
  }
 

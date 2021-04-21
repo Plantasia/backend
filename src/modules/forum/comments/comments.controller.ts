@@ -46,7 +46,7 @@ export class CommentController {
   }
 
   @Post()
-  //@UseGuards(LocalAuthGuard)
+  @UseGuards(LocalAuthGuard)
   @UsePipes(ValidationPipe)
   @ApiCreatedResponse({ description: 'comment succesfully created' })
   @ApiForbiddenResponse({ description: 'Forbidden' })
