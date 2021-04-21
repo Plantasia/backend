@@ -18,7 +18,7 @@ import {
 } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { CreateSessionDTO } from './createSessionDTO';
-import { LocalAuthGuard } from '@auth/local-auth.guard';
+import { LocalAuthGuard } from '@auth/guard/local-auth.guard';
 import { NewPasswordDto } from './newPassworDTO';
 
 @ApiTags('Signin & Signup')

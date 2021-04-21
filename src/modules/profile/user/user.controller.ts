@@ -19,7 +19,7 @@ import {
 import { UserService } from './user.service';
 import { CreateUserDTO } from './create-user.dto';
 import { User } from '@entities/user.entity';
-import { JwtAuthGuard } from '../../../auth/jwt-auth.guard';
+import { JwtAuthGuard } from '@auth/guard/jwt-auth.guard'  //' ' auth/jwt-auth.guard';
 import { ValidationPipe } from '@nestjs/common/pipes/validation.pipe';
 import {
   ApiForbiddenResponse,
