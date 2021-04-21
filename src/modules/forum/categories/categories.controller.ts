@@ -26,7 +26,7 @@ import {
   ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { LocalAuthGuard } from '../../../auth/local-auth.guard';
+import { JwtAuthGuard } from '../../../auth/jwt-auth.guard';
 import { UserService } from 'src/modules/profile/user/user.service';
 
 @ApiTags('categories')
@@ -41,7 +41,7 @@ export class CategoryController {
     name: 'Bearer Token',
     description: 'JWT Token',
   })
-  //@UseGuards(LocalAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Post()
   @ApiCreatedResponse({ description: 'Category succesfully created' })
   @ApiForbiddenResponse({ description: 'Forbidden' })
@@ -111,7 +111,7 @@ export class CategoryController {
     return { id, name, imageStorage, description };
   }
 
-  //@UseGuards(LocalAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   @ApiOkResponse({ description: 'The category has been successful deleted' })
   @ApiForbiddenResponse({ description: 'Forbidden' })
@@ -143,7 +143,7 @@ export class CategoryController {
     }
   }
 
-  //@UseGuards(LocalAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Patch(':id')
   @ApiOkResponse({ description: 'The category has beenn successful updated' })
   @ApiForbiddenResponse({ description: 'Forbidden' })
