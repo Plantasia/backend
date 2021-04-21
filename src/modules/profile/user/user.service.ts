@@ -151,9 +151,6 @@ export class UserService {
   }
 
   async findByToken(token: string): Promise<User> {
-    console.log('\nFindByToken :***** This is the token  ******\n');
-    console.log(token);
-
     const userToCheck = await this.userRepository.findOne({
       where: {
         tokenLogout: token,
@@ -168,7 +165,6 @@ export class UserService {
 
   async authorizationCheck(tokenRequest: string) {
     const userToCheck = await this.findByToken(tokenRequest);
-    console.log('Check', userToCheck);
     if (userToCheck.tokenLogout === tokenRequest || userToCheck) {
       return {
         Message: 'Valid token ',

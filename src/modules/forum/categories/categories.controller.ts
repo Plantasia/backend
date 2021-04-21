@@ -6,7 +6,7 @@ import {
   Get,
   Param,
   Post,
-  Put,
+  Patch,
   UseGuards,
   UsePipes,
   ValidationPipe,
@@ -17,6 +17,7 @@ import {
 } from '@nestjs/common';
 import { CategoryService } from './categories.service';
 import { CreateCategoryDTO } from './create-category.dto';
+import { DeletedItenCategoryDTO } from './delete-categories.dto';
 import { Category } from '../../../entities/category.entity';
 import {
   ApiCreatedResponse,
@@ -40,7 +41,7 @@ export class CategoryController {
     name: 'Bearer Token',
     description: 'JWT Token',
   })
-  @UseGuards(LocalAuthGuard)
+  //@UseGuards(LocalAuthGuard)
   @Post()
   @ApiCreatedResponse({ description: 'Category succesfully created' })
   @ApiForbiddenResponse({ description: 'Forbidden' })
@@ -49,24 +50,19 @@ export class CategoryController {
     @Body() createCategoryDTO: CreateCategoryDTO,
     @Request() req,
   ): Promise<Partial<Category>> {
-    const thisUser = await this.userService.findByEmail(req.user.email);
+    const token = req.headers.authorization
     const check = await this.userService.authorizationCheck(
-      req.headers.authorization,
+      token,
     );
-    const id = req.user.id;
-    const email = req.user.email;
+    const author = (await this.userService.findByToken(token));
 
-    const authorId = (await this.userService.findByEmail(req.user.email)).id;
-
-    console.log('authorId:', authorId);
-    createCategoryDTO.authorEmail = email;
-    createCategoryDTO.authorId = authorId;
+    console.log('authorId:', author.id);
+    createCategoryDTO.authorEmail = author.email;
+    createCategoryDTO.authorId = author.id;
 
     const requestedName = createCategoryDTO.name;
     const exists = await this.categoryService.findByName(requestedName);
-
     if (!exists) {
-      console.log(`result***: ${exists}`);
       console.log(createCategoryDTO);
       const newCategory = await this.categoryService.create(createCategoryDTO);
 
@@ -80,7 +76,7 @@ export class CategoryController {
     } else {
       throw new HttpException(
         `There is a category with this name, please choose another`,
-        HttpStatus.FORBIDDEN,
+        HttpStatus.BAD_REQUEST,
       );
     }
   }
@@ -99,7 +95,6 @@ export class CategoryController {
     @Param('id') categoryId: string,
     @Request() req,
   ): Promise<Partial<Category>> {
-    const thisUser = await this.userService.findByEmail(req.user.email);
     const check = await this.userService.authorizationCheck(
       req.headers.authorization,
     );
@@ -116,19 +111,31 @@ export class CategoryController {
     return { id, name, imageStorage, description };
   }
 
-  @UseGuards(LocalAuthGuard)
+  //@UseGuards(LocalAuthGuard)
   @Delete(':id')
   @ApiOkResponse({ description: 'The category has been successful deleted' })
   @ApiForbiddenResponse({ description: 'Forbidden' })
-  async remove(@Param('id') id: string, @Request() req): Promise<void> {
+  async remove(@Param('id') id: string, @Request() req): Promise<DeletedItenCategoryDTO> {
     //NOTE: Verifying if this user is authorized
-    const thisUser = await this.userService.findByEmail(req.user.email);
+    const token = req.headers.authorization
     const check = await this.userService.authorizationCheck(
-      req.headers.authorization,
+      token,
     );
 
-    if (thisUser && check) {
-      this.categoryService.delete(id);
+    if (check) {
+      const itenDeletedCategory = this.categoryService.delete(id);
+      if (!itenDeletedCategory){
+      throw new HttpException(
+        {
+          status: HttpStatus.BAD_REQUEST,
+          error: 'Error to delete comment, please check data!',
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }else{
+      const mesage = 'Iten '+ id +' deleted'
+      return {mesage} 
+    }
     } else {
       throw new UnauthorizedException(
         'You are not authorized to delete this category!',
@@ -136,8 +143,8 @@ export class CategoryController {
     }
   }
 
-  @UseGuards(LocalAuthGuard)
-  @Put(':id')
+  //@UseGuards(LocalAuthGuard)
+  @Patch(':id')
   @ApiOkResponse({ description: 'The category has beenn successful updated' })
   @ApiForbiddenResponse({ description: 'Forbidden' })
   async update(
@@ -145,37 +152,15 @@ export class CategoryController {
     @Body() createCategoryDTO: CreateCategoryDTO,
     @Request() req: any,
   ): Promise<Category> {
-    const email = req.headers;
-
-    /**
-     *  Verifying if the category
-     *  requested to update
-     *  really exists
-     **/
-
     const categoryExists = await await this.categoryService.findById(id);
-    const thisUser = await this.userService.findByEmail(req.user.email);
+    const token = req.headers.authorization
     const check = await this.userService.authorizationCheck(
-      req.headers.authorization,
+      token,
     );
-    const authorEmail = await (await this.categoryService.findById(id))
-      .authorEmail;
-
-    console.log(email);
     if (!categoryExists) {
       throw new NotFoundException({ error: 'This category does not exists' });
     }
-
-    /**
-     *  Verifying if the users
-     *  is authorized to update;
-     *
-     *  That is, if he is the author
-     **/
-
     const authorId = (await this.categoryService.findById(id)).authorId;
-    /* authorId is the id of author (related to users table) */
-
     const userIsAuthorized = this.userService.findById(authorId);
 
     if (!userIsAuthorized) {

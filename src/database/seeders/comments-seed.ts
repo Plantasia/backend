@@ -1,10 +1,9 @@
 import { User } from '@entities/user.entity';
 import { random } from 'faker';
 import { getRepository } from 'typeorm';
-
+import { Category } from '../../entities/category.entity';
 import { Comment } from '../../entities/comments.entity';
 import { Topic } from '../../entities/topic.entity';
-import { Category } from '../../entities/category.entity';
 
 export default async function CommentsSeed(
   verifyRun: boolean,
@@ -22,6 +21,7 @@ export default async function CommentsSeed(
   const userRepository = await getRepository(User);
   const topicRepository = await getRepository(Topic);
   const categoryRepository = await getRepository(Category);
+
 
   for (let i = 0; i <= 100; i++) {
     if (i % 20 === 0) topicSeedingId = 1;
