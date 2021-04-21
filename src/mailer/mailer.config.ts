@@ -4,27 +4,26 @@ import * as path from 'path';
 
 export const mailerConfig: MailerOptions = {
   template: {
-    dir: path.resolve(__dirname, '..', '..', 'templates'),
+    dir: path.resolve(__dirname, 'templates'),
     adapter: new HandlebarsAdapter(),
     options: {
       extName: '.hbs',
-      layoutsDir: path.resolve(__dirname, '..', '..', 'templates'),
+      layoutsDir: path.resolve(__dirname, 'templates'),
     },
   },
-  transport:{
-    host: "smtp.gmail.com",
-    port: 587,
+  transport: {
+    host: process.env.SMTP_HOST,
+    port: process.env.SMTP_PORT,
     secure: false, // use TLS
     auth: {
-      user: "plantasia.fatec@gmail.com",
-      pass: "Plantasia@123#"
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASSWORD,
     },
-    tls:{
-        rejectUnauthorized: false
-    }
-
-  }
+    tls: {
+      rejectUnauthorized: false,
+    },
+  },
   //plantasia.fatec@gmail.com
-  //Plantasia@123#  
+  //Plantasia@123#
   //`smtps://plantasia.fatec@gmail.com:Plantasia@123#@smtp.gmail.com`,
 };
