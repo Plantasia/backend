@@ -79,7 +79,7 @@ export class UserController {
 
   const token =  req.headers.authorization;
   console.log("$$$$$")
-  console.log(req);
+  console.log(req.headers);
   return this.userService.findByToken(token);
  }
 

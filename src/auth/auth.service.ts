@@ -81,7 +81,7 @@ export class AuthService {
   async updatePasswordLogout(token: string, userId: string) {
     const user = new CreateUserDTO();
     user.tokenLogout = token;
-    const update = this.userService.passwordLogout(userId, user);
+    const update = await this.userService.passwordLogout(userId, user);
     return console.log(update);
   }
 

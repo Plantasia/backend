@@ -31,6 +31,8 @@ export class AuthController {
   @ApiOkResponse({ description: 'user succesfully logged' })
   @ApiForbiddenResponse({ description: 'Forbidden' })
   login(@Request() req: CreateSessionDTO) {
+    console.log("token!!!!")
+    console.log(req.user)
     return this.authService.login(req.user);
   }
 

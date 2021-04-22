@@ -153,7 +153,7 @@ export class UserService {
   async findByToken(token: string): Promise<User> {
     const userToCheck = await this.userRepository.findOne({
       where: {
-        tokenLogout: "Bearer "+token,
+        tokenLogout: token,
       },
     });
     console.log("###############")
