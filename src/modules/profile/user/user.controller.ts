@@ -1,3 +1,4 @@
+import { QueryPage } from './../../../utils/page';
 import {
   Body,
   Controller,
@@ -78,25 +79,25 @@ export class UserController {
  async findOneByToken(@Request() req){
 
   const token =  req.headers.authorization;
-  console.log("$$$$$")
-  console.log(req.headers);
   return this.userService.findByToken(token);
+  
  }
 
   @Get()
-  async findAll(@Request() req, @Query('page') page: number) {
+  async findAll(@Request() req, @Query() query:QueryPage) {
     console.log(req.headers.authorization);
 
    
     const thisUser = await this.userService.findByEmail(req.user.email);
 
-    console.log(`\n\n\n:::::::This user (logged)::::::: \n`);
+    console.log(`::::::This user (logged):::::::`);
     console.log(thisUser);
 
     const check = await this.userService.authorizationCheck(
       req.headers.authorization,
     );
-
+    
+    const page = query.page;
     const paginatedUsers = await this.userService.findAll(page); //passamos a variavel page como parametro do metodo FindAll
     const {
       users,

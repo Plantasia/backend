@@ -30,7 +30,12 @@ export class CommentService {
     });
   }
 
-  async findAll(page: number = 1): Promise<Comment[]> {
+  async findAll(page): Promise<Comment[]> {
+    
+    if (!page || page <= 0) {
+      page = 1;
+    } else page = parseInt(page);
+
     return this.commentsRepository.find({
       take:10 ,
       skip: 10 * (page-1)

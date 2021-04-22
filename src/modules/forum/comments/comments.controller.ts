@@ -1,3 +1,4 @@
+import { QueryPage } from './../../../utils/page';
 import {
   Body,
   Controller,
@@ -41,7 +42,9 @@ export class CommentController {
   @Get()
   @ApiCreatedResponse({ description: 'comment succesfully created' })
   @ApiForbiddenResponse({ description: 'Forbidden' })
-  findAll(@Query('page') page: number): Promise<Comment[]> {
+  findAll(@Query() query: QueryPage ) {
+  
+    const page = query.page;
     return this.commentService.findAll(page);
   }
 

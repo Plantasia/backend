@@ -31,6 +31,8 @@ export class CategoryService {
     if (!page || page <= 0) {
       page = 1;
     } else page = parseInt(page);
+
+    
     const take = 10;
     const skip = 10 * (page - 1);
 
