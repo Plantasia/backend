@@ -6,12 +6,14 @@ import {
   Post,
   Param,
   Delete,
-  Put,
+  Patch,
   Request,
   UseGuards,
   UsePipes,
   ValidationPipe,
   Query,
+  UnauthorizedException,
+  HttpStatus,
 } from '@nestjs/common';
 import { TopicsService } from './topics.service';
 import { Topic } from '../../../entities/topic.entity';
@@ -22,8 +24,6 @@ import {
   ApiForbiddenResponse,
   ApiHeader,
   ApiOkResponse,
-  ApiOperation,
-  ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
 import { HttpException } from '@nestjs/common/exceptions/http.exception';
@@ -64,16 +64,23 @@ export class TopicsController {
     name: 'JWT',
     description: 'JWT token must to be passed to do this request',
   })
-  @Put(':id')
+  @Patch(':id')
   async update(
     @Param('id') id: string,
     @Body() createTopicDTO: CreateTopicDTO,
     @Request() req,
   ): Promise<Topic> {
-    const thisUser = await this.userService.findByEmail(req.user.email);
+    const token = req.headers.authorization
     const check = await this.userService.authorizationCheck(
-      req.headers.authorization,
+      token,
     );
+    const authorId = (await this.topicsService.findById(id)).user.id;
+    const userIsAuthorized = this.userService.findById(authorId);
+    if (!userIsAuthorized) {
+      throw new UnauthorizedException({
+        error: 'You are not authorized to update this topic!',
+      });
+    }
     return this.topicsService.update(id, createTopicDTO);
   }
 
@@ -90,21 +97,29 @@ export class TopicsController {
     @Body() createTopicDTO: CreateTopicDTO,
     @Request() req,
   ): Promise<Topic> {
-    const thisUser = await this.userService.findByEmail(req.user.email);
-    const check = await this.userService.authorizationCheck(
-      req.headers.authorization,
+    const token =req.headers.authorization
+    const userAlreadyExists = await this.userService.authorizationCheck(
+      token ,
     );
-
-    const response = this.topicsService.create(createTopicDTO);
-
-    const category = this.topicsService.findOne(createTopicDTO.category_id);
-    const user = this.topicsService.findOne(createTopicDTO.user_id);
-
-    if (!category && !user) {
-      const errors = { Error: 'User or Category not passed into' };
-      throw new HttpException({ errors }, 401);
+    if (!userAlreadyExists) {
+      throw new HttpException(
+        {
+          status: HttpStatus.BAD_REQUEST,
+          error: 'User does not exists, please check data!',
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }else{
+      const response = this.topicsService.create(createTopicDTO);
+      const category = this.topicsService.findOne(createTopicDTO.category_id);
+      const user = this.topicsService.findOne(createTopicDTO.user_id);
+      
+      if (!category && !user) {
+        const errors = { Error: 'User or Category not passed into' };
+        throw new HttpException({ errors }, 401);
+      }
+      return response;
     }
-    return response;
   }
 
   @UseGuards(JwtAuthGuard)

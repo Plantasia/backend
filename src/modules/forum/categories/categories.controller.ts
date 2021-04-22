@@ -57,19 +57,13 @@ export class CategoryController {
       token,
     );
     const author = (await this.userService.findByToken(token));
-
-    console.log('authorId:', author.id);
     createCategoryDTO.authorEmail = author.email;
     createCategoryDTO.authorId = author.id;
-
     const requestedName = createCategoryDTO.name;
     const exists = await this.categoryService.findByName(requestedName);
     if (!exists) {
-      console.log(createCategoryDTO);
       const newCategory = await this.categoryService.create(createCategoryDTO);
-
       const { id, name, imageStorage } = newCategory;
-
       return {
         id,
         name,
