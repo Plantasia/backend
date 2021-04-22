@@ -1,3 +1,4 @@
+import { QueryPage } from './../../../utils/page';
 import {
   Body,
   Controller,
@@ -48,9 +49,12 @@ export class TopicsController {
 
   @ApiOkResponse({ description: 'topic succesfully returned' })
   @ApiForbiddenResponse({ description: 'Forbidden' })
-  @Get('page/:page')
-  async findAll(@Param('page') page: number) {
+  @Get()
+  async findAll(@Query() query:QueryPage) {
+
+    const page = query.page;
     return this.topicsService.findAll(page);
+
   }
 
   @UseGuards(JwtAuthGuard)

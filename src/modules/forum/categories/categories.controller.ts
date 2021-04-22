@@ -1,3 +1,4 @@
+import { QueryPage } from './../../../utils/page';
 import {
   Body,
   Controller,
@@ -14,6 +15,7 @@ import {
   HttpStatus,
   UnauthorizedException,
   NotFoundException,
+  Query,
 } from '@nestjs/common';
 import { CategoryService } from './categories.service';
 import { CreateCategoryDTO } from './create-category.dto';
@@ -81,10 +83,13 @@ export class CategoryController {
     }
   }
 
-  @Get('/page/:page')
+  @Get()
   @ApiOkResponse({ description: 'The categories has been succesfful returned' })
   @ApiForbiddenResponse({ description: 'Forbidden' })
-  async findAll(@Param('page') page: number) {
+  async findAll(@Query() query: QueryPage) {
+  
+    const page = query.page;
+    console.log(page)
     return this.categoryService.findAll(page);
   }
 

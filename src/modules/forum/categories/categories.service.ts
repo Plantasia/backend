@@ -51,6 +51,8 @@ export class CategoryService {
     on c2.topicId = t.id
     where t.id is not null and c.deleted_at is null 
     group by c.id
+    LIMIT ${take} 
+    OFFSET ${skip}
 
   `);
 
@@ -59,7 +61,7 @@ export class CategoryService {
       currentPage: page,
       prevPage: page > 1 ? page - 1 : null,
       nextPage: take >= skip + take ? page + 1 : null,
-      perPage: take,
+      perPage: query.length,
     };
   }
 
@@ -104,7 +106,7 @@ export class CategoryService {
     const resp = await this.categoryRepository.softDelete(id);
 
     /*affected property == 1 (deleted) */
-    console.log("resposyta: ",resp)
+    console.log("has been deleted?  ",resp)
     if (resp.affected !== 0) {
       console.log(`deleted category ${id} `);
     }

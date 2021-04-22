@@ -12,10 +12,11 @@
     "baseUrl": ".",
     "paths": {
       "@entities/*": ["./src/entities/*"],
+      "@utils/*":["./src/utils/*"],
       "@controllers/*": ["./src/controllers/*"],
       "@auth/*": ["./src/auth/*"],
       "@seeders/*":["./src/database/seeders/*"],
-      "@@services/*": ["./src/services/*"]
+      "@services/*": ["./src/services/*"]
     }, 
   },
   "include": ["**/*.ts"],
