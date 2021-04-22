@@ -30,7 +30,7 @@ import { HttpException } from '@nestjs/common/exceptions/http.exception';
 import { UserService } from '../../profile/user/user.service';
 
 @ApiTags('topics')
-@Controller('topics')
+@Controller('forum/topics')
 export class TopicsController {
   constructor(
     private readonly topicsService: TopicsService,
@@ -50,11 +50,9 @@ export class TopicsController {
   @ApiOkResponse({ description: 'topic succesfully returned' })
   @ApiForbiddenResponse({ description: 'Forbidden' })
   @Get()
-  async findAll(@Query() query:QueryPage) {
-
+  async findAll(@Query() query: QueryPage) {
     const page = query.page;
     return this.topicsService.findAll(page);
-
   }
 
   @UseGuards(JwtAuthGuard)
