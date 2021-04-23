@@ -67,6 +67,22 @@ export class CategoryService {
     };
   }
 
+  async adminFindAll(page):Promise<Category[]>{
+
+    if (!page || page <= 0) {
+      page = 1;
+    } else page = parseInt(page);
+
+    const take = 10;
+    const skip = 10 * (page - 1);
+
+    const categories = await this.categoryRepository.find({
+      take:take,
+      skip:skip
+    })
+    return categories;
+  }
+
   async find(argument: any): Promise<Category[]> {
     return this.categoryRepository.find(argument);
   }
