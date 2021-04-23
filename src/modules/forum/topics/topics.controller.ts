@@ -18,6 +18,7 @@ import {
 import { TopicsService } from './topics.service';
 import { Topic } from '../../../entities/topic.entity';
 import { CreateTopicDTO } from './create-topic.dto';
+import { DeletedItenTopicDTO } from './delete-topic.dto';
 import { JwtAuthGuard } from '../../../auth/jwt-auth.guard';
 import {
   ApiCreatedResponse,
@@ -30,7 +31,7 @@ import { HttpException } from '@nestjs/common/exceptions/http.exception';
 import { UserService } from '../../profile/user/user.service';
 
 @ApiTags('topics')
-@Controller('topics')
+@Controller('/forum/topics')
 export class TopicsController {
   constructor(
     private readonly topicsService: TopicsService,
@@ -113,7 +114,7 @@ export class TopicsController {
       const response = this.topicsService.create(createTopicDTO);
       const category = this.topicsService.findOne(createTopicDTO.category_id);
       const user = this.topicsService.findOne(createTopicDTO.user_id);
-      
+
       if (!category && !user) {
         const errors = { Error: 'User or Category not passed into' };
         throw new HttpException({ errors }, 401);
@@ -130,12 +131,25 @@ export class TopicsController {
     description: 'JWT token must to be passed to do this request',
   })
   @Delete(':id')
-  async delete(@Param('id') id: string, @Request() req): Promise<void> {
-    const thisUser = await this.userService.findByEmail(req.user.email);
+  async delete(@Param('id') id: string, @Request() req): Promise<DeletedItenTopicDTO> {
+    const token = req.headers.authorization
     const check = await this.userService.authorizationCheck(
-      req.headers.authorization,
+      token,
     );
-    this.topicsService.findOne(id);
-    return;
+    const deletedIten = this.topicsService.findOne(id);
+    if (!deletedIten){
+      throw new HttpException(
+        {
+          status: HttpStatus.BAD_REQUEST,
+          error: 'Error to delete topic, please check data!',
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }else{
+      const mesage = 'Iten '+ id +' deleted'
+      return {
+        mesage: mesage
+      };
+    }
   }
 }

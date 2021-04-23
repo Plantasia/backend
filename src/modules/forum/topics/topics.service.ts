@@ -59,7 +59,7 @@ export class TopicsService {
       .innerJoin('t.user', 'topicOwner', 't.userId = topicOwner.id')
       .innerJoin('com.user', 'ownerComment', 'com.userId = ownerComment.id')
       .take(take)
-      .skip(skip)
+      .skip(skip) 
       .addSelect('SUM(comments.id)', 'totalComments')
       .select([
         't.id',
