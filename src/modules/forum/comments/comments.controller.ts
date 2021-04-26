@@ -48,6 +48,15 @@ export class CommentController {
     return this.commentService.findAll(page);
   }
 
+  @Get('admin')
+  @ApiCreatedResponse({ description: 'comment succesfully created' })
+  @ApiForbiddenResponse({ description: 'Forbidden' })
+  adminFindAll(@Query() query: QueryPage ) {
+  
+    const page = query.page;
+    return this.commentService.adminFindAll(page);
+  }
+
   @Post()
   @UseGuards(JwtAuthGuard)
   @UsePipes(ValidationPipe)
