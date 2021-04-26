@@ -39,7 +39,17 @@ export class CategoryService {
 
     console.log('____START____');
 
-    const [result, total] = await this.categoryRepository.findAndCount();
+    const { total } = (
+      await this.categoryRepository.query(
+        `SELECT count(distinct(categories.id)) as total
+        FROM categories 
+        LEFT JOIN topics 
+        ON categories.id = topics.categoryId 
+        inner join comments 
+        on comments.topicId = topics.id
+        WHERE topics.id is not null`,
+      )
+    )[0];
 
     const entityManager = getManager();
     const query = await entityManager.query(`
@@ -50,7 +60,7 @@ export class CategoryService {
     max(c2.updated_at) as lastActivity, count(c2.id) as countComments, count(distinct(t.id)) as countTopics from categories c 
     left join topics t 
     on t.categoryId = c.id
-    left join comments c2 
+    inner join comments c2 
     on c2.topicId = t.id
     where t.id is not null and c.deleted_at is null 
     group by c.id
@@ -64,7 +74,7 @@ export class CategoryService {
       currentPage: page,
       prevPage: page > 1 ? page - 1 : null,
       nextPage: take >= skip + take ? page + 1 : null,
-      perPage: query.length,
+      perPage: take,
       totalRegisters: total,
     };
   }
