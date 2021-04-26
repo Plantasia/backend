@@ -32,15 +32,14 @@ export class CategoryService {
       page = 1;
     } else page = parseInt(page);
 
-    
-    const take = 10;
-    const skip = 10 * (page - 1);
+    const take = 5;
+    const skip = 5 * (page - 1);
 
     let categories: any;
 
     console.log('____START____');
 
-    const [result,total]= await this.categoryRepository.findAndCount();
+    const [result, total] = await this.categoryRepository.findAndCount();
 
     const entityManager = getManager();
     const query = await entityManager.query(`
@@ -66,25 +65,22 @@ export class CategoryService {
       prevPage: page > 1 ? page - 1 : null,
       nextPage: take >= skip + take ? page + 1 : null,
       perPage: query.length,
-      totalRegisters:total
+      totalRegisters: total,
     };
   }
 
-  async adminFindAll(page):Promise<Category[]>{
-
+  async adminFindAll(page): Promise<Category[]> {
     if (!page || page <= 0) {
       page = 1;
     } else page = parseInt(page);
 
-    console.log("%%%PAGE:")
+    console.log('%%%PAGE:');
     console.log(page);
-    
+
     const take = 10;
     const skip = 10 * (page - 1);
 
-    const categories = await this.categoryRepository.find(
-
-    )
+    const categories = await this.categoryRepository.find();
     return categories;
   }
 
@@ -129,7 +125,7 @@ export class CategoryService {
     const resp = await this.categoryRepository.softDelete(id);
 
     /*affected property == 1 (deleted) */
-    console.log("has been deleted?  ",resp)
+    console.log('has been deleted?  ', resp);
     if (resp.affected !== 0) {
       console.log(`deleted category ${id} `);
     }
@@ -153,7 +149,6 @@ export class CategoryService {
     return this.categoryRepository.findOne(id);
   }
 }
-
 
 /** DON'T REMOVE, PLEASE
  * 
@@ -182,4 +177,3 @@ export class CategoryService {
       console.log("____END____") 
  *
  **/
-
