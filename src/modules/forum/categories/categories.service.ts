@@ -73,13 +73,15 @@ export class CategoryService {
       page = 1;
     } else page = parseInt(page);
 
+    console.log("%%%PAGE:")
+    console.log(page);
+    
     const take = 10;
     const skip = 10 * (page - 1);
 
-    const categories = await this.categoryRepository.find({
-      take:take,
-      skip:skip
-    })
+    const categories = await this.categoryRepository.find(
+
+    )
     return categories;
   }
 

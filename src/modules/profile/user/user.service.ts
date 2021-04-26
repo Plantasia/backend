@@ -89,6 +89,15 @@ export class UserService {
     };
   }
 
+  async adminFindAll(){
+   return this.userRepository.find(
+    { select: ["name","id","avatar",
+    "bio","isAdmin","created_at",
+    "updated_at","deleted_at"] }
+   );
+   
+  }
+
   async remove(id: string): Promise<void> {
     await this.userRepository.delete(id);
   }
