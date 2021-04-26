@@ -91,9 +91,6 @@ export class UserController {
       
       const thisUser = await this.userService.findByEmail(req.user.email);
       
-      console.log(`::::::This user (logged):::::::`);
-      console.log(thisUser);
-      
       const check = await this.userService.authorizationCheck(
         req.headers.authorization,
         );

@@ -71,6 +71,8 @@ export class TopicsService {
       if (!page || page <= 0) {
         page = 1;
       } else page = parseInt(page);
+
+      const [result, total] = await this.topicRepository.findAndCount();
       
       const skip = 10 * (page - 1);
       const take = 10;
@@ -113,6 +115,7 @@ export class TopicsService {
         perPage: take,
         prevPage: page > 1 ? page - 1 : null,
         nextPage: take >= skip + take ? page + 1 : null,
+        totalRegisters:total
       };
     }
     

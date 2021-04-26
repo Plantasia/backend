@@ -40,6 +40,8 @@ export class CategoryService {
 
     console.log('____START____');
 
+    const [result,total]= await this.categoryRepository.findAndCount();
+
     const entityManager = getManager();
     const query = await entityManager.query(`
 
@@ -64,6 +66,7 @@ export class CategoryService {
       prevPage: page > 1 ? page - 1 : null,
       nextPage: take >= skip + take ? page + 1 : null,
       perPage: query.length,
+      totalRegisters:total
     };
   }
 
