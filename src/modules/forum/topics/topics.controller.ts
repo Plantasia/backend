@@ -55,6 +55,16 @@ export class TopicsController {
     return this.topicsService.findAll(page);
   }
 
+  @ApiOkResponse({ description: 'topic succesfully returned' })
+  @ApiForbiddenResponse({ description: 'Forbidden' })
+  @Get('admin/list')
+  async adminFindAll(@Query() query:QueryPage) {
+    const page = query.page;
+    console.log(page)
+    return this.topicsService.adminFindAll(page);
+
+  }
+
   @UseGuards(JwtAuthGuard)
   @ApiOkResponse({ description: 'topic succesfully updated' })
   @ApiForbiddenResponse({ description: 'Forbidden' })
