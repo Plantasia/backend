@@ -6,24 +6,25 @@ import {
   Get,
   Param,
   Post,
-  Put,
+  Patch,
   UseGuards,
   UsePipes,
   Request,
   UnauthorizedException,
   NotFoundException,
   ForbiddenException,
-  ParseIntPipe,
+  HttpException,
   Query,
-  Header
+  HttpStatus
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDTO } from './create-user.dto';
+import { DeletedItenUserDTO } from './delete-user.dto';
 import { User } from '@entities/user.entity';
 import { JwtAuthGuard } from '../../../auth/jwt-auth.guard'  //' ' auth/jwt-auth.guard';
 import { ValidationPipe } from '@nestjs/common/pipes/validation.pipe';
 import {
-  ApiForbiddenResponse,
+  ApiBadRequestResponse,
   ApiHeader,
   ApiOkResponse,
   ApiTags,
@@ -36,24 +37,17 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard)
   @ApiOkResponse({ description: 'The users has been succesfull returned' })
-  @ApiForbiddenResponse({ description: 'Forbidden' })
+  @ApiBadRequestResponse({ description: 'Bad request' })
   @ApiHeader({
     name: 'JWT',
     description: 'JWT token must to be passed to do this request',
   })
   @Get()
   async findAllIfLogged(@Request() req, @Query('page') page: number) {
-    console.log(req.headers.authorization);
-
-    const thisUser = await this.userService.findByEmail(req.user.email);
-
-    console.log(`\n\n\n:::::::This user (logged)::::::: \n`);
-    console.log(thisUser);
-
+    const token = req.headers.authorization
     const check = await this.userService.authorizationCheck(
-      req.headers.authorization,
+      token,
     );
-
     const paginatedUsers = await this.userService.findAll(page); //passamos a variavel page como parametro do metodo FindAll
     const {
       users,
@@ -83,18 +77,12 @@ export class UserController {
   
  }
 
+ //Porque dois findall? 
   @Get()
   async findAll(@Request() req, @Query() query:QueryPage) {
-    console.log(req.headers.authorization);
-
-   
-    const thisUser = await this.userService.findByEmail(req.user.email);
-
-    console.log(`::::::This user (logged):::::::`);
-    console.log(thisUser);
-
+    const token = req.headers.authorization
     const check = await this.userService.authorizationCheck(
-      req.headers.authorization,
+      token,
     );
     
     const page = query.page;
@@ -120,7 +108,7 @@ export class UserController {
 
   @UsePipes(ValidationPipe)
   @ApiOkResponse({ description: 'The user has been succesfull created' })
-  @ApiForbiddenResponse({ description: 'Forbidden' })
+  @ApiBadRequestResponse({ description: 'Bad request' })
   @ApiHeader({
     name: 'JWT',
     description: 'JWT token must to be passed to do this request',
@@ -130,8 +118,6 @@ export class UserController {
     const userAlreadyExists = await this.userService.checkIfAlreadyExists(
       createUserDTO.email,
     );
-    console.log('****User already exists?****\n');
-    console.log(userAlreadyExists);
     if (userAlreadyExists === undefined || !userAlreadyExists) {
       const createdUser = await this.userService.create(createUserDTO);
 
@@ -153,7 +139,7 @@ export class UserController {
   @Get(':id')
   @UseGuards(JwtAuthGuard)
   @ApiOkResponse({ description: 'The user has been succesfull returned' })
-  @ApiForbiddenResponse({ description: 'Forbidden' })
+  @ApiBadRequestResponse({ description: 'Bad request' })
   @ApiHeader({
     name: 'JWT',
     description: 'JWT token must to be passed to do this request',
@@ -179,37 +165,41 @@ export class UserController {
   @Delete(':id')
   @UseGuards(JwtAuthGuard)
   @ApiOkResponse({ description: 'The user has been succesfull deleted' })
-  @ApiForbiddenResponse({ description: 'Forbidden' })
+  @ApiBadRequestResponse({ description: 'Bad request' })
   @ApiHeader({
     name: 'JWT',
     description: 'JWT token must to be passed to do this request',
   })
-  async remove(@Request() req, @Param('id') id: string): Promise<void> {
-    const thisUser = await this.userService.findByEmail(req.user.email);
-    console.log('thisUser\n\n');
-    console.log(thisUser);
+  async remove(@Request() req, @Param('id') id: string): Promise<DeletedItenUserDTO> {
+    const token =  req.headers.authorization
     const check = await this.userService.authorizationCheck(
-      req.headers.authorization,
+     token,
     );
-
-    console.log(req.user.email);
-    console.log(req.user.id);
-
-    /**
-     * For authentication we 'll receive data for request
-     * and confirm user's identity for allow deleting
-     **/
+    const requesterUser =  await this.findOneByToken(token)
     const userRequestedToDelete = await this.userService.findById(id);
 
     console.log(userRequestedToDelete);
 
     if (
-      userRequestedToDelete.id === req.user.id &&
-      userRequestedToDelete.email === req.user.email
+      userRequestedToDelete.id === requesterUser.id &&
+      userRequestedToDelete.email === requesterUser.email ||
+      requesterUser.isAdmin === true
     ) {
-      /**Soft delete applied */
-      const now = new Date();
-      userRequestedToDelete.deleted_at = now;
+      const deletedIten = this.userService.delete(id)
+      if (!deletedIten){
+        throw new HttpException(
+          {
+            status: HttpStatus.BAD_REQUEST,
+            error: 'Error to delete comment, please check data!',
+          },
+          HttpStatus.BAD_REQUEST,
+        );
+      }else{
+        const mesage = 'Iten '+ id +' deleted'
+        return {
+          mesage: mesage
+        };
+      }
     } else {
       throw new UnauthorizedException({
         error: 'You are not permitted to remove this user!',
@@ -217,10 +207,10 @@ export class UserController {
     }
   }
 
-  @Put(':id')
+  @Patch(':id')
   @UseGuards(JwtAuthGuard)
   @ApiOkResponse({ description: 'The user has been succesfull deleted' })
-  @ApiForbiddenResponse({ description: 'Forbidden' })
+  @ApiBadRequestResponse({ description: 'Bad request' })
   @ApiHeader({
     name: 'JWT',
     description: 'JWT token must to be passed to do this request',
@@ -230,19 +220,11 @@ export class UserController {
     @Body() createUserDTO: CreateUserDTO,
     @Request() req,
   ): Promise<Partial<User>> {
-    const thisUser = await this.userService.findByEmail(req.user.email);
+    const token = req.headers.authorization
     const check = await this.userService.authorizationCheck(
-      req.headers.authorization,
+      token,
     );
-
-    console.log('\n\n\n****This User\n\n');
-    console.log(thisUser);
-
-    console.log('\n\n\n*****req.user.email*****\n');
-    console.log(req.user.email);
-    console.log('\n\n\n*****req.user.id*****\n');
-    console.log(req.user.id);
-
+    const requesterUser = await this.findOneByToken(token)
     const userRequestedToUpdate = await this.userService.findById(idUser);
 
     if (!userRequestedToUpdate || userRequestedToUpdate === undefined) {
@@ -250,16 +232,14 @@ export class UserController {
     }
 
     if (
-      userRequestedToUpdate.id === req.user.id &&
-      userRequestedToUpdate.email === req.user.email
+      userRequestedToUpdate.id === requesterUser.id &&
+      userRequestedToUpdate.email === requesterUser.email ||
+      requesterUser.isAdmin === true
     ) {
       /**NOTE: Only these values below 'll be updated */
       userRequestedToUpdate.name = createUserDTO.name;
       userRequestedToUpdate.bio = createUserDTO.bio;
       userRequestedToUpdate.password = createUserDTO.password;
-
-      console.log(userRequestedToUpdate);
-
       const { name, email, bio, id } = userRequestedToUpdate;
 
       return {
