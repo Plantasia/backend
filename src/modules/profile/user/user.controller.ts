@@ -43,7 +43,7 @@ export class UserController {
     description: 'JWT token must to be passed to do this request',
   })
   @Get()
-  async findAllIfLogged(@Request() req, @Query('page') page: number) {
+  async findAll(@Request() req, @Query('page') page: number) {
     const token = req.headers.authorization
     const check = await this.userService.authorizationCheck(
       token,
@@ -77,35 +77,7 @@ export class UserController {
   
  }
 
- //Porque dois findall? 
-  @Get()
-  async findAll(@Request() req, @Query() query:QueryPage) {
-    const token = req.headers.authorization
-    const check = await this.userService.authorizationCheck(
-      token,
-    );
-    
-    const page = query.page;
-    const paginatedUsers = await this.userService.findAll(page); //passamos a variavel page como parametro do metodo FindAll
-    const {
-      users,
-      currentPage,
-      prevPage,
-      nextPage,
-      perPage,
-      totalRegisters,
-    } = paginatedUsers;
-
-    return {
-      users,
-      currentPage,
-      prevPage,
-      nextPage,
-      perPage,
-      totalRegisters,
-    };
-  }
-
+ 
   @UsePipes(ValidationPipe)
   @ApiOkResponse({ description: 'The user has been succesfull created' })
   @ApiBadRequestResponse({ description: 'Bad request' })
