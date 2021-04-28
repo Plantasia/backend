@@ -47,14 +47,10 @@ export class UserService {
   }
 
   async findAll(page): Promise<PaginatedUsersDTO> {
-    //preparamos  o metodo para receber o parametro passado pela url na controller
-
+    
     const take = 10;
-    /* used to limit registers*/
-
     const skip = 10 * (page - 1);
-    /* used to skip the already
-     *  catched up registers */
+
 
     if (!page) {
       page = 1;
@@ -88,8 +84,22 @@ export class UserService {
     };
   }
 
+
   async delete(id: string): Promise<void> {
     await this.userRepository.softDelete(id);
+
+  async adminFindAll(){
+   return this.userRepository.find(
+    { select: ["name","id","avatar",
+    "bio","isAdmin","created_at",
+    "updated_at","deleted_at"] }
+   );
+   
+  }
+
+  async remove(id: string): Promise<void> {
+    await this.userRepository.delete(id);
+
   }
 
   async create(createUserDTO: CreateUserDTO): Promise<Partial<User>> {

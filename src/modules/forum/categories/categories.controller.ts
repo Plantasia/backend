@@ -93,6 +93,16 @@ export class CategoryController {
     return this.categoryService.findAll(page);
   }
 
+  @Get('admin')
+  @ApiOkResponse({ description: 'The categories has been succesfful returned' })
+  @ApiForbiddenResponse({ description: 'Forbidden' })
+  async adminFindAll(@Query() query: QueryPage) {
+  
+    const page = query.page;
+    console.log(page)
+    return this.categoryService.adminFindAll(page);
+  }
+
   @Get(':id')
   @ApiOkResponse({ description: 'The category has been successful deleted' })
   @ApiBadRequestResponse({ description: 'Bad request' })

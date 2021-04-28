@@ -6,6 +6,7 @@ import { Comment } from '../../../entities/comments.entity';
 import { Topic } from '../../../entities/topic.entity';
 import { TopicsService } from '../topics/topics.service';
 import { UserService } from '../../profile/user/user.service';
+import PaginatedCommentsModel from './paginated-comments-dtio';
 
 
 @Injectable()
@@ -29,16 +30,42 @@ export class CommentService {
     });
   }
 
-  async findAll(page): Promise<Comment[]> {
+  async adminFindAll(page): Promise<Comment[]> {
     
     if (!page || page <= 0) {
       page = 1;
     } else page = parseInt(page);
 
     return this.commentsRepository.find({
-      take:10 ,
-      skip: 10 * (page-1)
+      //take:10 ,
+     // skip: 10 * (page-1)
     });
+  }
+
+  async findAll(page) {
+    
+    if (!page || page <= 0) {
+      page = 1;
+    } else page = parseInt(page);
+      const take=10 
+      const skip= 10 * (page-1)
+
+
+    const[result, total]= await this.commentsRepository.findAndCount();
+
+    const comments =await  this.commentsRepository.find({
+      take,
+      skip
+    });
+
+     return{
+        comments,
+        currentPage: page,
+        perPage: take,
+        prevPage: page > 1 ? page - 1 : null,
+        nextPage: take >= skip + take ? page + 1 : null,
+        totalRegisters:total
+     }
   }
 
   async delete(id: string): Promise<void> {
