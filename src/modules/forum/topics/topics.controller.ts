@@ -22,7 +22,7 @@ import { DeletedItenTopicDTO } from './delete-topic.dto';
 import { JwtAuthGuard } from '../../../auth/jwt-auth.guard';
 import {
   ApiCreatedResponse,
-  ApiForbiddenResponse,
+  ApiBadRequestResponse,
   ApiHeader,
   ApiOkResponse,
   ApiTags,
@@ -49,7 +49,7 @@ export class TopicsController {
   }
 
   @ApiOkResponse({ description: 'topic succesfully returned' })
-  @ApiForbiddenResponse({ description: 'Forbidden' })
+  @ApiBadRequestResponse({ description: 'Bad request' })
   @Get()
   async findAll(@Query() query:QueryPage) {
 
@@ -60,7 +60,7 @@ export class TopicsController {
 
   @UseGuards(JwtAuthGuard)
   @ApiOkResponse({ description: 'topic succesfully updated' })
-  @ApiForbiddenResponse({ description: 'Forbidden' })
+  @ApiBadRequestResponse({ description: 'Bad request' })
   @ApiHeader({
     name: 'JWT',
     description: 'JWT token must to be passed to do this request',
@@ -75,14 +75,17 @@ export class TopicsController {
     const check = await this.userService.authorizationCheck(
       token,
     );
-    const authorId = (await this.topicsService.findById(id)).user.id;
-    const userIsAuthorized = this.userService.findById(authorId);
-    if (!userIsAuthorized) {
+    const author = this.topicsService.findOne(id)
+    const requesterUser = this.userService.findByToken(token)
+    if ((await author).user.id === (await requesterUser).id ||
+    (await requesterUser).isAdmin === true
+    ){
+      return this.topicsService.update(id, createTopicDTO);
+    }else{
       throw new UnauthorizedException({
-        error: 'You are not authorized to update this topic!',
+        error: 'You are not permitted to update this Topic!',
       });
     }
-    return this.topicsService.update(id, createTopicDTO);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -92,7 +95,7 @@ export class TopicsController {
     description: 'JWT token must to be passed to do this request',
   })
   @ApiCreatedResponse({ description: 'topic succesfully created' })
-  @ApiForbiddenResponse({ description: 'Forbidden' })
+  @ApiBadRequestResponse({ description: 'Bad request' })
   @Post()
   async create(
     @Body() createTopicDTO: CreateTopicDTO,
@@ -125,7 +128,7 @@ export class TopicsController {
 
   @UseGuards(JwtAuthGuard)
   @ApiOkResponse({ description: 'topic succesfully deleted' })
-  @ApiForbiddenResponse({ description: 'Forbidden' })
+  @ApiBadRequestResponse({ description: 'Bad request' })
   @ApiHeader({
     name: 'JWT',
     description: 'JWT token must to be passed to do this request',
@@ -136,20 +139,30 @@ export class TopicsController {
     const check = await this.userService.authorizationCheck(
       token,
     );
-    const deletedIten = this.topicsService.findOne(id);
-    if (!deletedIten){
-      throw new HttpException(
-        {
-          status: HttpStatus.BAD_REQUEST,
-          error: 'Error to delete topic, please check data!',
-        },
-        HttpStatus.BAD_REQUEST,
-      );
+    const author = this.topicsService.findOne(id)
+    const requesterUser = this.userService.findByToken(token)
+    if ((await author).user.id === (await requesterUser).id ||
+    (await requesterUser).isAdmin === true
+    ){
+      const deletedIten = this.topicsService.findOne(id);
+      if (!deletedIten){
+        throw new HttpException(
+          {
+            status: HttpStatus.BAD_REQUEST,
+            error: 'Error to delete topic, please check data!',
+          },
+          HttpStatus.BAD_REQUEST,
+        );
+      }else{
+        const mesage = 'Iten '+ id +' deleted'
+        return {
+          mesage: mesage
+        };
+      }
     }else{
-      const mesage = 'Iten '+ id +' deleted'
-      return {
-        mesage: mesage
-      };
+      throw new UnauthorizedException({
+        error: 'You are not permitted to update this Topic!',
+      });
     }
   }
 }

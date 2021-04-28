@@ -14,7 +14,7 @@ import {
   UsePipes,
   ValidationPipe,
   Query,
-  NotFoundException,
+  UnauthorizedException
 } from '@nestjs/common';
 import { CommentService } from './comments.service';
 import { CreateCommentDTO } from './create-comment.dto';
@@ -23,7 +23,7 @@ import { Comment } from '../../../entities/comments.entity';
 import { JwtAuthGuard } from '../../../auth/jwt-auth.guard';
 import {
   ApiCreatedResponse,
-  ApiForbiddenResponse,
+  ApiBadRequestResponse,
   ApiHeader,
   ApiOkResponse,
   ApiTags,
@@ -41,7 +41,7 @@ export class CommentController {
 
   @Get()
   @ApiCreatedResponse({ description: 'comment succesfully created' })
-  @ApiForbiddenResponse({ description: 'Forbidden' })
+  @ApiBadRequestResponse({ description: 'Bad request' })
   findAll(@Query() query: QueryPage ) {
   
     const page = query.page;
@@ -52,7 +52,7 @@ export class CommentController {
   @UseGuards(JwtAuthGuard)
   @UsePipes(ValidationPipe)
   @ApiCreatedResponse({ description: 'comment succesfully created' })
-  @ApiForbiddenResponse({ description: 'Forbidden' })
+  @ApiBadRequestResponse({ description: 'Bad request' })
   @UsePipes(ValidationPipe)
   async createComment(
     @Body() createCommentDTO: CreateCommentDTO,
@@ -90,7 +90,7 @@ export class CommentController {
   @Get(':id')
   @UseGuards(JwtAuthGuard)
   @ApiOkResponse({ description: 'The comments has been succesfful returned' })
-  @ApiForbiddenResponse({ description: 'Forbidden' })
+  @ApiBadRequestResponse({ description: 'Bad request' })
   @ApiHeader({
     name: 'JWT',
     description: 'JWT token must to be passed to do this request',
@@ -106,7 +106,7 @@ export class CommentController {
   @Delete(':id')
   @UseGuards(JwtAuthGuard)
   @ApiOkResponse({ description: 'The comment has been successful deleted' })
-  @ApiForbiddenResponse({ description: 'Forbidden' })
+  @ApiBadRequestResponse({ description: 'Bad request' })
   @ApiHeader({
     name: 'JWT',
     description: 'JWT token must to be passed to do this request',
@@ -116,40 +116,57 @@ export class CommentController {
     const check = await this.userService.authorizationCheck(
       token,
     );
-    const deletedIten = this.commentService.delete(id);
-    if (!deletedIten){
-      throw new HttpException(
-        {
-          status: HttpStatus.BAD_REQUEST,
-          error: 'Error to delete comment, please check data!',
-        },
-        HttpStatus.BAD_REQUEST,
-      );
-    }else{
-      const mesage = 'Iten '+ id +' deleted'
-      return {
-        mesage: mesage
-      };
-    }
+    const author = this.commentService.findOne(id)
+    const requesterUser = this.userService.findByToken(token)
+    if ((await author).user.id === (await requesterUser).id ||
+    (await requesterUser).isAdmin === true
+    ){
+        const deletedIten = this.commentService.delete(id);
+        if (!deletedIten){
+          throw new HttpException(
+            {
+              status: HttpStatus.BAD_REQUEST,
+              error: 'Error to delete comment, please check data!',
+            },
+            HttpStatus.BAD_REQUEST,
+          );
+        }else{
+          const mesage = 'Iten '+ id +' deleted'
+          return {
+            mesage: mesage
+          };
+        }
+      }else{
+        throw new UnauthorizedException({
+          error: 'You are not permitted to remove this comment!',
+        });
+      }
+    
   }
 
   @UseGuards(JwtAuthGuard)
   @Patch(':id')
   @ApiOkResponse({ description: 'The comment has beenn successful updated' })
-  @ApiForbiddenResponse({ description: 'Forbidden' })
+  @ApiBadRequestResponse({ description: 'Bad request' })
   async update(
     @Param('id') id: string,
     @Body() createCommentDTO: CreateCommentDTO,
     @Request() req: any,
   ): Promise<Comment> {
-    const categoryExists = await await this.commentService.findOne(id);
+    const token = req.headers.authorization
     const check = await this.userService.authorizationCheck(
-      req.headers.authorization,
+      token,
     );
-    if (!categoryExists) {
-      throw new NotFoundException({ error: 'This Comment does not exists' });
+    const author = this.commentService.findOne(id)
+    const requesterUser = this.userService.findByToken(token)
+    if ((await author).user.id === (await requesterUser).id ||
+    (await requesterUser).isAdmin === true
+    ){
+        return this.commentService.update(id, createCommentDTO);
+    }else{
+      throw new UnauthorizedException({
+        error: 'You are not permitted to update this comment!',
+      });
     }
-
-    return this.commentService.update(id, createCommentDTO);
   }
 }

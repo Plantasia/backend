@@ -23,7 +23,7 @@ import { DeletedItenCategoryDTO } from './delete-categories.dto';
 import { Category } from '../../../entities/category.entity';
 import {
   ApiCreatedResponse,
-  ApiForbiddenResponse,
+  ApiBadRequestResponse,
   ApiHeader,
   ApiOkResponse,
   ApiTags,
@@ -46,7 +46,7 @@ export class CategoryController {
   @UseGuards(JwtAuthGuard)
   @Post()
   @ApiCreatedResponse({ description: 'Category succesfully created' })
-  @ApiForbiddenResponse({ description: 'Forbidden' })
+  @ApiBadRequestResponse({ description: 'Bad request' })
   @UsePipes(ValidationPipe)
   async create(
     @Body() createCategoryDTO: CreateCategoryDTO,
@@ -61,25 +61,31 @@ export class CategoryController {
     createCategoryDTO.authorId = author.id;
     const requestedName = createCategoryDTO.name;
     const exists = await this.categoryService.findByName(requestedName);
-    if (!exists) {
-      const newCategory = await this.categoryService.create(createCategoryDTO);
-      const { id, name, imageStorage } = newCategory;
-      return {
-        id,
-        name,
-        imageStorage,
-      };
-    } else {
-      throw new HttpException(
-        `There is a category with this name, please choose another`,
-        HttpStatus.BAD_REQUEST,
-      );
+    if (author.isAdmin === true){
+      if (!exists) {
+        const newCategory = await this.categoryService.create(createCategoryDTO);
+        const { id, name, imageStorage } = newCategory;
+        return {
+          id,
+          name,
+          imageStorage,
+        };
+      } else {
+        throw new HttpException(
+          `There is a category with this name, please choose another`,
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+    }else{
+      throw new UnauthorizedException({
+        error: 'You are not permitted to update this comment!',
+      });
     }
   }
 
   @Get()
   @ApiOkResponse({ description: 'The categories has been succesfful returned' })
-  @ApiForbiddenResponse({ description: 'Forbidden' })
+  @ApiBadRequestResponse({ description: 'Bad request' })
   async findAll(@Query() query: QueryPage) {
   
     const page = query.page;
@@ -89,7 +95,7 @@ export class CategoryController {
 
   @Get(':id')
   @ApiOkResponse({ description: 'The category has been successful deleted' })
-  @ApiForbiddenResponse({ description: 'Forbidden' })
+  @ApiBadRequestResponse({ description: 'Bad request' })
   async findOne(
     @Param('id') categoryId: string,
     @Request() req,
@@ -113,15 +119,15 @@ export class CategoryController {
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
   @ApiOkResponse({ description: 'The category has been successful deleted' })
-  @ApiForbiddenResponse({ description: 'Forbidden' })
+  @ApiBadRequestResponse({ description: 'Bad request' })
   async remove(@Param('id') id: string, @Request() req): Promise<DeletedItenCategoryDTO> {
     //NOTE: Verifying if this user is authorized
     const token = req.headers.authorization
     const check = await this.userService.authorizationCheck(
       token,
     );
-
-    if (check) {
+    const author = (await this.userService.findByToken(token));
+    if (author.isAdmin === true) {
       const itenDeletedCategory = this.categoryService.delete(id);
       if (!itenDeletedCategory){
       throw new HttpException(
@@ -137,7 +143,7 @@ export class CategoryController {
     }
     } else {
       throw new UnauthorizedException(
-        'You are not authorized to delete this category!',
+        'You are not permitted to delete this category!',
       );
     }
   }
@@ -145,7 +151,7 @@ export class CategoryController {
   @UseGuards(JwtAuthGuard)
   @Patch(':id')
   @ApiOkResponse({ description: 'The category has beenn successful updated' })
-  @ApiForbiddenResponse({ description: 'Forbidden' })
+  @ApiBadRequestResponse({ description: 'Bad request' })
   async update(
     @Param('id') id: string,
     @Body() createCategoryDTO: CreateCategoryDTO,
@@ -159,15 +165,14 @@ export class CategoryController {
     if (!categoryExists) {
       throw new NotFoundException({ error: 'This category does not exists' });
     }
-    const authorId = (await this.categoryService.findById(id)).authorId;
-    const userIsAuthorized = this.userService.findById(authorId);
-
-    if (!userIsAuthorized) {
-      throw new UnauthorizedException({
-        error: 'You are not authorized to update this category!',
-      });
+    const author = (await this.userService.findByToken(token));
+    if (author.isAdmin === true) {
+      return this.categoryService.update(id, createCategoryDTO);
+    }else {
+      throw new UnauthorizedException(
+        'You are not permitted to delete this category!',
+      );
     }
-
-    return this.categoryService.update(id, createCategoryDTO);
+    
   }
 }

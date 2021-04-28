@@ -7,7 +7,6 @@ import { Topic } from '../../../entities/topic.entity';
 import { TopicsService } from '../topics/topics.service';
 import { UserService } from '../../profile/user/user.service';
 
-//import  User  from '../user/user.entity';
 
 @Injectable()
 export class CommentService {
@@ -50,9 +49,6 @@ export class CommentService {
     
     const comment = new Comment();
     const topic = new Topic();
-    
-
-  
     comment.textBody = data.textBody
     const topic_id = data.topic_id;
     const token = req;

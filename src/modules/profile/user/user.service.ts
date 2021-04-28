@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserDTO } from './create-user.dto';
 import { User } from '@entities/user.entity';
-import * as bcrypt from 'bcrypt';
 import { TopicsService } from '../../forum/topics/topics.service';
 import { PaginatedUsersDTO } from '../paginated-users.dto';
 
@@ -156,9 +155,6 @@ export class UserService {
         tokenLogout: token,
       },
     });
-    console.log("###############")
-    console.log(userToCheck)
-
 
     if (!userToCheck) {
       throw new UnauthorizedException({ error: 'Unauthorized' });
