@@ -44,26 +44,28 @@ export class TopicsService {
       return this.topicRepository.save(t);
     }
     
-    async adminFindAll(page){
+    async adminFindAll(){  
+      return this.topicRepository.find({withDeleted:true}); 
       
-      if (!page || page <= 0) {
-        page = 1;
-      } else page = parseInt(page);
-      
-      const skip = 10 * (page - 1);
-      const take = 10;
-      
-      const topics = await this.topicRepository.find({
-        //skip,
-        //take
-      })
+    }
+    
+    async adminFindOne(topicId:string){
 
-      return topics
-       // currentPage: page,
-       // perPage: take,
-       // prevPage: page > 1 ? page - 1 : null,
-      //  nextPage: take >= skip + take ? page + 1 : null,
+      const {
+        id,name,
+        textBody,imageStorage,
+        isActive, created_at,
+        updated_at, deleted_at
+      }  = await  this.topicRepository.findOne(
+        topicId,
+        {withDeleted:true})
       
+      return{ 
+        id,name,
+        textBody,imageStorage,
+        isActive, created_at,
+        updated_at, deleted_at
+      }
       
     }
     
@@ -71,7 +73,7 @@ export class TopicsService {
       if (!page || page <= 0) {
         page = 1;
       } else page = parseInt(page);
-
+      
       const [result, total] = await this.topicRepository.findAndCount();
       
       const skip = 10 * (page - 1);
@@ -119,11 +121,11 @@ export class TopicsService {
       };
     }
     
-    async findOne(userId: string): Promise<Topic> {
+    async findOne(topicId: string): Promise<Topic> {
       return this.topicRepository.findOne({
         where: {
-          id: userId,
-        },
+          id: topicId,
+        },withDeleted:true
       });
     }
     

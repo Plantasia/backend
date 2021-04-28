@@ -1,3 +1,4 @@
+import { LocalAuthGuard } from './../../../auth/local-auth.guard';
 import { QueryPage } from './../../../utils/page';
 import {
   Body,
@@ -42,40 +43,9 @@ export class UserController {
     description: 'JWT token must to be passed to do this request',
   })
   
-  @Get()
-  async findAllIfLogged(@Request() req, @Query('page') page: number) {
-    console.log(req.headers.authorization);
-    
-    const thisUser = await this.userService.findByEmail(req.user.email);
-    
-    console.log(`\n\n\n:::::::This user (logged)::::::: \n`);
-    console.log(thisUser);
-    
-    const check = await this.userService.authorizationCheck(
-      req.headers.authorization,
-      );
-      
-      const paginatedUsers = await this.userService.findAll(page); //passamos a variavel page como parametro do metodo FindAll
-      const {
-        users,
-        currentPage,
-        prevPage,
-        nextPage,
-        perPage,
-        totalRegisters,
-      } = paginatedUsers;
-      
-      return {
-        users,
-        currentPage,
-        prevPage,
-        nextPage,
-        perPage,
-        totalRegisters,
-      };
-    }
     
     @UseGuards(JwtAuthGuard)
+    @UseGuards(LocalAuthGuard)
     @Get("findme")
     async findOneByToken(@Request() req){
       
@@ -84,11 +54,13 @@ export class UserController {
       
     }
     
+    
+    @UseGuards(JwtAuthGuard)
+    @UseGuards(LocalAuthGuard)
     @Get()
     async findAll(@Request() req, @Query() query:QueryPage) {
       console.log(req.headers.authorization);
-      
-      
+    
       const thisUser = await this.userService.findByEmail(req.user.email);
       
       const check = await this.userService.authorizationCheck(
@@ -119,8 +91,7 @@ export class UserController {
       
       @Get('admin')
       async adminFindAll(@Request() req, @Query() query:QueryPage) {
-        
-        
+      
         const page = query.page;
         return this.userService.adminFindAll(); //passamos a variavel page como parametro do metodo FindAll
         
@@ -138,8 +109,7 @@ export class UserController {
         const userAlreadyExists = await this.userService.checkIfAlreadyExists(
           createUserDTO.email,
           );
-          console.log('****User already exists?****\n');
-          console.log(userAlreadyExists);
+        
           if (userAlreadyExists === undefined || !userAlreadyExists) {
             const createdUser = await this.userService.create(createUserDTO);
             

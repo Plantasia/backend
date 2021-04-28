@@ -40,6 +40,7 @@ export class AuthController {
   @Get('logout')
   async logout(@Request() req: any) {
     //Colocar o metodo de validar o token
+    console.log("aoba")
     const userToken = req.headers.authorization;
 
     const userIsLogged = await this.authService.checkToken(userToken);
