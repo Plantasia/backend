@@ -90,7 +90,9 @@ export class CategoryService {
     const take = 10;
     const skip = 10 * (page - 1);
 
-    const categories = await this.categoryRepository.find();
+    const categories = await this.categoryRepository.find({
+      withDeleted:true
+    })
     return categories;
   }
 
@@ -121,6 +123,15 @@ export class CategoryService {
         id,
       },
     });
+  }
+
+  async adminFindOne(id: string): Promise<Category> {
+    return this.categoryRepository.find({
+      where: {
+        id,
+      },
+      withDeleted:true,
+    })[0];
   }
 
   async findByName(name: string): Promise<Category> {

@@ -44,28 +44,35 @@ export class TopicsController {
     return this.topicsService.findByCategory(categoryId);
   }
 
+  /*@Get('admin/:topicId')
+  async adminGetTopicById(@Param('topicId') topicId: string) {
+    return this.topicsService.adminFindOne(topicId)
+  } */
+
+
   @Get(':topicId')
   async getTopicById(@Param('topicId') topicId: string) {
-    return this.topicsService.takeTopicData(topicId);
+    console.log("sadsafdv")
+    return this.topicsService.findOne(topicId)
   }
 
   @ApiOkResponse({ description: 'topic succesfully returned' })
   @ApiBadRequestResponse({ description: 'Bad request' })
   @Get()
-  async findAll(@Query() query: QueryPage) {
+  async findAll(@Query() query:QueryPage) {
     const page = query.page;
     return this.topicsService.findAll(page);
   }
 
+
   @ApiOkResponse({ description: 'topic succesfully returned' })
   @ApiForbiddenResponse({ description: 'Forbidden' })
   @Get('admin/list')
-  async adminFindAll(@Query() query:QueryPage) {
-    const page = query.page;
-    console.log(page)
-    return this.topicsService.adminFindAll(page);
-
+  async adminFindAll() {
+    return this.topicsService.adminFindAll();
   }
+
+  
 
   @UseGuards(JwtAuthGuard)
   @ApiOkResponse({ description: 'topic succesfully updated' })

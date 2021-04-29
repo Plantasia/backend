@@ -44,25 +44,35 @@ export class TopicsService {
       return this.topicRepository.save(t);
     }
     
-    async adminFindAll(page){
-      
-      if (!page || page <= 0) {
-        page = 1;
-      } else page = parseInt(page);
-      
-      const skip = 10 * (page - 1);
-      const take = 10;
-      
-      const topics = await this.topicRepository.find()
+    async adminFindAll(){  
+      return this.topicRepository.find({withDeleted:true})
+    }
+    
+    async adminFindOne(topicId:string){
 
-      return topics
+      const {
+        id,name,
+        textBody,imageStorage,
+        isActive, created_at,
+        updated_at, deleted_at
+      }  = await  this.topicRepository.findOne(
+        topicId,
+        {withDeleted:true})
+      
+      return{ 
+        id,name,
+        textBody,imageStorage,
+        isActive, created_at,
+        updated_at, deleted_at
+      }
+      
     }
     
     async findAll(page): Promise<PaginatedTopicsDTO> {
       if (!page || page <= 0) {
         page = 1;
       } else page = parseInt(page);
-
+      
       const [result, total] = await this.topicRepository.findAndCount();
       
       const skip = 10 * (page - 1);
@@ -110,11 +120,11 @@ export class TopicsService {
       };
     }
     
-    async findOne(userId: string): Promise<Topic> {
+    async findOne(topicId: string): Promise<Topic> {
       return this.topicRepository.findOne({
         where: {
-          id: userId,
-        },
+          id: topicId,
+        },withDeleted:true
       });
     }
     
