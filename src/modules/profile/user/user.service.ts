@@ -87,19 +87,23 @@ export class UserService {
 
   async delete(id: string): Promise<void> {
     await this.userRepository.softDelete(id);
+  }
 
   async adminFindAll(){
    return this.userRepository.find(
-    { select: ["name","id","avatar",
+    {
+
+    select: ["name","id","avatar",
     "bio","isAdmin","created_at",
-    "updated_at","deleted_at"] }
+    "updated_at","deleted_at"] 
+
+    }
    );
-   
   }
 
+  
   async remove(id: string): Promise<void> {
     await this.userRepository.delete(id);
-
   }
 
   async create(createUserDTO: CreateUserDTO): Promise<Partial<User>> {
@@ -128,7 +132,7 @@ export class UserService {
     };
   }
 
-  async update(id: string, data: CreateUserDTO): Promise<User> {
+  async update(id: string, data: any): Promise<User> {
     await this.userRepository.update(id, data);
 
     return this.userRepository.findOne(id);

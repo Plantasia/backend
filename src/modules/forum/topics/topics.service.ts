@@ -53,18 +53,9 @@ export class TopicsService {
       const skip = 10 * (page - 1);
       const take = 10;
       
-      const topics = await this.topicRepository.find({
-        //skip,
-        //take
-      })
+      const topics = await this.topicRepository.find()
 
       return topics
-       // currentPage: page,
-       // perPage: take,
-       // prevPage: page > 1 ? page - 1 : null,
-      //  nextPage: take >= skip + take ? page + 1 : null,
-      
-      
     }
     
     async findAll(page): Promise<PaginatedTopicsDTO> {

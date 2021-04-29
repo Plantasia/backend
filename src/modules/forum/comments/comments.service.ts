@@ -36,10 +36,7 @@ export class CommentService {
       page = 1;
     } else page = parseInt(page);
 
-    return this.commentsRepository.find({
-      //take:10 ,
-     // skip: 10 * (page-1)
-    });
+    return this.commentsRepository.find();
   }
 
   async findAll(page) {

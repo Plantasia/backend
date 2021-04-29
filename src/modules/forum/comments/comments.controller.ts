@@ -18,7 +18,7 @@ import {
 } from '@nestjs/common';
 import { CommentService } from './comments.service';
 import { CreateCommentDTO } from './create-comment.dto';
-import { DeletedItenCommentDTO } from './delete-comment.dto';
+import { DeletedItemCommentDTO } from './delete-comment.dto';
 import { Comment } from '../../../entities/comments.entity';
 import { JwtAuthGuard } from '../../../auth/jwt-auth.guard';
 import {
@@ -27,6 +27,7 @@ import {
   ApiHeader,
   ApiOkResponse,
   ApiTags,
+  ApiForbiddenResponse,
 } from '@nestjs/swagger';
 import { UserService } from 'src/modules/profile/user/user.service';
 import { TopicsService } from '../topics/topics.service';
@@ -120,7 +121,7 @@ export class CommentController {
     name: 'JWT',
     description: 'JWT token must to be passed to do this request',
   })
-  async remove(@Param('id') id: string, @Request() req): Promise<DeletedItenCommentDTO> {
+  async remove(@Param('id') id: string, @Request() req): Promise<DeletedItemCommentDTO> {
     const token = req.headers.authorization
     const check = await this.userService.authorizationCheck(
       token,
@@ -140,10 +141,10 @@ export class CommentController {
             HttpStatus.BAD_REQUEST,
           );
         }else{
-          const mesage = 'Iten '+ id +' deleted'
-          return {
-            mesage: mesage
-          };
+          const message = 'Iten '+ id +' deleted'
+
+          return {message};
+      
         }
       }else{
         throw new UnauthorizedException({

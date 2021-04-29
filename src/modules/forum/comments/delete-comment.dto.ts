@@ -1,5 +1,5 @@
 import { Comment } from '@entities/comments.entity';
 
-export class DeletedItenCommentDTO {
-  public mesage: string;
+export class DeletedItemCommentDTO {
+  public message: string;
 }

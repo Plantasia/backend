@@ -1,4 +1,4 @@
-import { QueryPage } from './../../../utils/page';
+import { QueryPage } from '@utils/page';
 import {
   Body,
   Controller,
@@ -19,7 +19,7 @@ import {
 } from '@nestjs/common';
 import { CategoryService } from './categories.service';
 import { CreateCategoryDTO } from './create-category.dto';
-import { DeletedItenCategoryDTO } from './delete-categories.dto';
+import { DeletedItemCategoryDTO } from './delete-categories.dto';
 import { Category } from '../../../entities/category.entity';
 import {
   ApiCreatedResponse,
@@ -27,6 +27,7 @@ import {
   ApiHeader,
   ApiOkResponse,
   ApiTags,
+  ApiForbiddenResponse,
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../../auth/jwt-auth.guard';
 import { UserService } from 'src/modules/profile/user/user.service';
@@ -53,9 +54,11 @@ export class CategoryController {
     @Request() req,
   ): Promise<Partial<Category>> {
     const token = req.headers.authorization
+
     const check = await this.userService.authorizationCheck(
       token,
     );
+    
     const author = (await this.userService.findByToken(token));
     createCategoryDTO.authorEmail = author.email;
     createCategoryDTO.authorId = author.id;
@@ -130,7 +133,7 @@ export class CategoryController {
   @Delete(':id')
   @ApiOkResponse({ description: 'The category has been successful deleted' })
   @ApiBadRequestResponse({ description: 'Bad request' })
-  async remove(@Param('id') id: string, @Request() req): Promise<DeletedItenCategoryDTO> {
+  async remove(@Param('id') id: string, @Request() req): Promise<DeletedItemCategoryDTO> {
     //NOTE: Verifying if this user is authorized
     const token = req.headers.authorization
     const check = await this.userService.authorizationCheck(
@@ -148,8 +151,8 @@ export class CategoryController {
         HttpStatus.BAD_REQUEST,
       );
     }else{
-      const mesage = 'Iten '+ id +' deleted'
-      return {mesage} 
+      const message = 'Iten '+ id +' deleted'
+      return {message} 
     }
     } else {
       throw new UnauthorizedException(

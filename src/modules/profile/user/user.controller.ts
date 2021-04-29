@@ -15,16 +15,18 @@ import {
   ForbiddenException,
   HttpException,
   Query,
-  HttpStatus
+  HttpStatus,
+  Put
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDTO } from './create-user.dto';
-import { DeletedItenUserDTO } from './delete-user.dto';
+import {  DeletedItemUserDTO } from './delete-user.dto';
 import { User } from '@entities/user.entity';
 import { JwtAuthGuard } from '../../../auth/jwt-auth.guard'  //' ' auth/jwt-auth.guard';
 import { ValidationPipe } from '@nestjs/common/pipes/validation.pipe';
 import {
   ApiBadRequestResponse,
+  ApiForbiddenResponse,
   ApiHeader,
   ApiOkResponse,
   ApiTags,
@@ -42,182 +44,28 @@ export class UserController {
     name: 'JWT',
     description: 'JWT token must to be passed to do this request',
   })
-  
   @Get()
-
-  async findAll(@Request() req, @Query('page') page: number) {
-    const token = req.headers.authorization
+  async findAll(@Request() req, @Query() query:QueryPage) {
+    console.log(req.headers.authorization);
+    
+    
+    const thisUser = await this.userService.findByEmail(req.user.email);
+    
     const check = await this.userService.authorizationCheck(
-      token,
-    );
-    const paginatedUsers = await this.userService.findAll(page); //passamos a variavel page como parametro do metodo FindAll
-    const {
-      users,
-      currentPage,
-      prevPage,
-      nextPage,
-      perPage,
-      totalRegisters,
-    } = paginatedUsers;
-
-    return {
-      users,
-      currentPage,
-      prevPage,
-      nextPage,
-      perPage,
-      totalRegisters,
-    };
-  }
- 
- @UseGuards(JwtAuthGuard)
- @Get("/findme")
- async findOneByToken(@Request() req){
-
-  const token =  req.headers.authorization;
-  return this.userService.findByToken(token);
-  
- }
-
- 
-  @UsePipes(ValidationPipe)
-  @ApiOkResponse({ description: 'The user has been succesfull created' })
-  @ApiBadRequestResponse({ description: 'Bad request' })
-  @ApiHeader({
-    name: 'JWT',
-    description: 'JWT token must to be passed to do this request',
-  })
-  @Post()
-  async create(@Body() createUserDTO: CreateUserDTO): Promise<Partial<User>> {
-    const userAlreadyExists = await this.userService.checkIfAlreadyExists(
-      createUserDTO.email,
-    );
-    if (userAlreadyExists === undefined || !userAlreadyExists) {
-      const createdUser = await this.userService.create(createUserDTO);
-
-      const { name, email, bio, id } = createdUser;
-
-      return {
-        name,
-        email,
-        bio,
-        id,
-      };
-    } else {
-      throw new ForbiddenException({
-        error: `The email : ${createUserDTO.email}    is already used!`,
-      });
-    }
-  }
-
-  @Get(':id')
-  @UseGuards(JwtAuthGuard)
-  @ApiOkResponse({ description: 'The user has been succesfull returned' })
-  @ApiBadRequestResponse({ description: 'Bad request' })
-  @ApiHeader({
-    name: 'JWT',
-    description: 'JWT token must to be passed to do this request',
-  })
-  async findOne(@Param('id') idUser: string): Promise<Partial<User>> {
-    const foundUser = await this.userService.findById(idUser);
-
-    if (!foundUser) {
-      throw new NotFoundException(`Error: user with ID: ${idUser} not exists`);
-    }
-
-    const selectedUser = await this.userService.findOne(idUser);
-    const { name, email, bio, id } = selectedUser;
-
-    return {
-      name,
-      email,
-      bio,
-      id,
-    };
-  }
-
-  @Delete(':id')
-  @UseGuards(JwtAuthGuard)
-  @ApiOkResponse({ description: 'The user has been succesfull deleted' })
-  @ApiBadRequestResponse({ description: 'Bad request' })
-  @ApiHeader({
-    name: 'JWT',
-    description: 'JWT token must to be passed to do this request',
-  })
-  async remove(@Request() req, @Param('id') id: string): Promise<DeletedItenUserDTO> {
-    const token =  req.headers.authorization
-    const check = await this.userService.authorizationCheck(
-     token,
-    );
-    const requesterUser =  await this.findOneByToken(token)
-    const userRequestedToDelete = await this.userService.findById(id);
-
-    console.log(userRequestedToDelete);
-
-    if (
-      userRequestedToDelete.id === requesterUser.id &&
-      userRequestedToDelete.email === requesterUser.email ||
-      requesterUser.isAdmin === true
-    ) {
-      const deletedIten = this.userService.delete(id)
-      if (!deletedIten){
-        throw new HttpException(
-          {
-            status: HttpStatus.BAD_REQUEST,
-            error: 'Error to delete comment, please check data!',
-          },
-          HttpStatus.BAD_REQUEST,
-        );
-      }else{
-        const mesage = 'Iten '+ id +' deleted'
-        return {
-          mesage: mesage
-        };
-      }
-    } else {
-      throw new UnauthorizedException({
-        error: 'You are not permitted to remove this user!',
-      });
-    }
-  }
-
-  @Patch(':id')
-  @UseGuards(JwtAuthGuard)
-  @ApiOkResponse({ description: 'The user has been succesfull deleted' })
-  @ApiBadRequestResponse({ description: 'Bad request' })
-  @ApiHeader({
-    name: 'JWT',
-    description: 'JWT token must to be passed to do this request',
-  })
-  async update(
-    @Param('id') idUser: string,
-    @Body() createUserDTO: CreateUserDTO,
-    @Request() req,
-  ): Promise<Partial<User>> {
-    const token = req.headers.authorization
-    const check = await this.userService.authorizationCheck(
-      token,
-    );
-    const requesterUser = await this.findOneByToken(token)
-    const userRequestedToUpdate = await this.userService.findById(idUser);
-
-    if (!userRequestedToUpdate || userRequestedToUpdate === undefined) {
-      throw new NotFoundException({ error: 'This user does not exists' });
-    }
-
-    if (
-      userRequestedToUpdate.id === requesterUser.id &&
-      userRequestedToUpdate.email === requesterUser.email ||
-      requesterUser.isAdmin === true
-    ) {
-      /**NOTE: Only these values below 'll be updated */
-      userRequestedToUpdate.name = createUserDTO.name;
-      userRequestedToUpdate.bio = createUserDTO.bio;
-      userRequestedToUpdate.password = createUserDTO.password;
-      const { name, email, bio, id } = userRequestedToUpdate;
-
-
- 
+      req.headers.authorization,
+      );
+      
+      const page = query.page;
+      const paginatedUsers = await this.userService.findAll(page); //passamos a variavel page como parametro do metodo FindAll
+      const {
+        users,
+        currentPage,
+        prevPage,
+        nextPage,
+        perPage,
+        totalRegisters,
+      } = paginatedUsers;
+      
       return {
         users,
         currentPage,
@@ -228,8 +76,9 @@ export class UserController {
       };
     }
     
+    
     @UseGuards(JwtAuthGuard)
-    @Get("findme")
+    @Get("/findme")
     async findOneByToken(@Request() req){
       
       const token =  req.headers.authorization;
@@ -237,97 +86,23 @@ export class UserController {
       
     }
     
-    @Get()
-    async findAll(@Request() req, @Query() query:QueryPage) {
-      console.log(req.headers.authorization);
-      
-      
-      const thisUser = await this.userService.findByEmail(req.user.email);
-      
-      const check = await this.userService.authorizationCheck(
-        req.headers.authorization,
+    
+    @UsePipes(ValidationPipe)
+    @ApiOkResponse({ description: 'The user has been succesfull created' })
+    @ApiBadRequestResponse({ description: 'Bad request' })
+    @ApiHeader({
+      name: 'JWT',
+      description: 'JWT token must to be passed to do this request',
+    })
+    @Post()
+    async create(@Body() createUserDTO: CreateUserDTO): Promise<Partial<User>> {
+      const userAlreadyExists = await this.userService.checkIfAlreadyExists(
+        createUserDTO.email,
         );
-        
-        const page = query.page;
-        const paginatedUsers = await this.userService.findAll(page); //passamos a variavel page como parametro do metodo FindAll
-        const {
-          users,
-          currentPage,
-          prevPage,
-          nextPage,
-          perPage,
-          totalRegisters,
-        } = paginatedUsers;
-        
-        return {
-          users,
-          currentPage,
-          prevPage,
-          nextPage,
-          perPage,
-          totalRegisters,
-        };
-      }
-      
-      
-      @Get('admin')
-      async adminFindAll(@Request() req, @Query() query:QueryPage) {
-        
-        
-        const page = query.page;
-        return this.userService.adminFindAll(); //passamos a variavel page como parametro do metodo FindAll
-        
-      }
-      
-      @UsePipes(ValidationPipe)
-      @ApiOkResponse({ description: 'The user has been succesfull created' })
-      @ApiForbiddenResponse({ description: 'Forbidden' })
-      @ApiHeader({
-        name: 'JWT',
-        description: 'JWT token must to be passed to do this request',
-      })
-      @Post()
-      async create(@Body() createUserDTO: CreateUserDTO): Promise<Partial<User>> {
-        const userAlreadyExists = await this.userService.checkIfAlreadyExists(
-          createUserDTO.email,
-          );
-          console.log('****User already exists?****\n');
-          console.log(userAlreadyExists);
-          if (userAlreadyExists === undefined || !userAlreadyExists) {
-            const createdUser = await this.userService.create(createUserDTO);
-            
-            const { name, email, bio, id } = createdUser;
-            
-            return {
-              name,
-              email,
-              bio,
-              id,
-            };
-          } else {
-            throw new ForbiddenException({
-              error: `The email : ${createUserDTO.email}    is already used!`,
-            });
-          }
-        }
-        
-        @Get(':id')
-        @UseGuards(JwtAuthGuard)
-        @ApiOkResponse({ description: 'The user has been succesfull returned' })
-        @ApiForbiddenResponse({ description: 'Forbidden' })
-        @ApiHeader({
-          name: 'JWT',
-          description: 'JWT token must to be passed to do this request',
-        })
-        async findOne(@Param('id') idUser: string): Promise<Partial<User>> {
-          const foundUser = await this.userService.findById(idUser);
+        if (userAlreadyExists === undefined || !userAlreadyExists) {
+          const createdUser = await this.userService.create(createUserDTO);
           
-          if (!foundUser) {
-            throw new NotFoundException(`Error: user with ID: ${idUser} not exists`);
-          }
-          
-          const selectedUser = await this.userService.findOne(idUser);
-          const { name, email, bio, id } = selectedUser;
+          const { name, email, bio, id } = createdUser;
           
           return {
             name,
@@ -335,53 +110,90 @@ export class UserController {
             bio,
             id,
           };
+        } else {
+          throw new ForbiddenException({
+            error: `The email : ${createUserDTO.email}    is already used!`,
+          });
+        }
+      }
+      
+      @Get(':id')
+      @UseGuards(JwtAuthGuard)
+      @ApiOkResponse({ description: 'The user has been succesfull returned' })
+      @ApiBadRequestResponse({ description: 'Bad request' })
+      @ApiHeader({
+        name: 'JWT',
+        description: 'JWT token must to be passed to do this request',
+      })
+      async findOne(@Param('id') idUser: string): Promise<Partial<User>> {
+        const foundUser = await this.userService.findById(idUser);
+        
+        if (!foundUser) {
+          throw new NotFoundException(`Error: user with ID: ${idUser} not exists`);
         }
         
-        @Delete(':id')
-        @UseGuards(JwtAuthGuard)
-        @ApiOkResponse({ description: 'The user has been succesfull deleted' })
-        @ApiForbiddenResponse({ description: 'Forbidden' })
-        @ApiHeader({
-          name: 'JWT',
-          description: 'JWT token must to be passed to do this request',
-        })
-        async remove(@Request() req, @Param('id') id: string): Promise<void> {
-          const thisUser = await this.userService.findByEmail(req.user.email);
-          console.log('thisUser\n\n');
-          console.log(thisUser);
-          const check = await this.userService.authorizationCheck(
-            req.headers.authorization,
-            );
-            
-            console.log(req.user.email);
-            console.log(req.user.id);
-            
-            /**
-            * For authentication we 'll receive data for request
-            * and confirm user's identity for allow deleting
-            **/
-            const userRequestedToDelete = await this.userService.findById(id);
-            
-            console.log(userRequestedToDelete);
-            
-            if (
-              userRequestedToDelete.id === req.user.id &&
-              userRequestedToDelete.email === req.user.email
-              ) {
-                /**Soft delete applied */
-                const now = new Date();
-                userRequestedToDelete.deleted_at = now;
-              } else {
+        const selectedUser = await this.userService.findOne(idUser);
+        const { name, email, bio, id } = selectedUser;
+        
+        return {
+          name,
+          email,
+          bio,
+          id,
+        };
+      }
+      
+      @Delete(':id')
+      @UseGuards(JwtAuthGuard)
+      @ApiOkResponse({ description: 'The user has been succesfull deleted' })
+      @ApiBadRequestResponse({ description: 'Bad request' })
+      @ApiHeader({
+        name: 'JWT',
+        description: 'JWT token must to be passed to do this request',
+      })
+      async remove(@Request() req, @Param('id') id: string): Promise<DeletedItemUserDTO> {
+        const token =  req.headers.authorization
+        const check = await this.userService.authorizationCheck(
+          token,
+          );
+          const requestedUser =  await this.findOneByToken(token)
+          const userRequestedToDelete = await this.userService.findById(id);
+          
+          console.log(userRequestedToDelete);
+          
+          if (
+            userRequestedToDelete.id === requestedUser.id &&
+            userRequestedToDelete.email === requestedUser.email ||
+            requestedUser.isAdmin === true) {
+              const deletedItem = this.userService.delete(id)
+
+              if (!deletedItem){
+                throw new HttpException({
+
+                    status: HttpStatus.BAD_REQUEST,
+                    error: 'Error when deleting comment, please check data!',
+                    
+                  },
+                  HttpStatus.BAD_REQUEST);
+
+                }else{
+                  const message = 'Item '+ id +' deleted'
+                  return {
+                    message
+                  };
+                }
+
+            } else {
                 throw new UnauthorizedException({
                   error: 'You are not permitted to remove this user!',
                 });
-              }
             }
+          }
             
-            @Put(':id')
+            @Patch(':id')
             @UseGuards(JwtAuthGuard)
             @ApiOkResponse({ description: 'The user has been succesfull deleted' })
-            @ApiForbiddenResponse({ description: 'Forbidden' })
+            @ApiBadRequestResponse({ description: 'Bad request' })
             @ApiHeader({
               name: 'JWT',
               description: 'JWT token must to be passed to do this request',
@@ -391,49 +203,43 @@ export class UserController {
               @Body() createUserDTO: CreateUserDTO,
               @Request() req,
               ): Promise<Partial<User>> {
-                const thisUser = await this.userService.findByEmail(req.user.email);
+                const token = req.headers.authorization
                 const check = await this.userService.authorizationCheck(
-                  req.headers.authorization,
+                  token,
                   );
-                  
-                  console.log('\n\n\n****This User\n\n');
-                  console.log(thisUser);
-                  
-                  console.log('\n\n\n*****req.user.email*****\n');
-                  console.log(req.user.email);
-                  console.log('\n\n\n*****req.user.id*****\n');
-                  console.log(req.user.id);
-                  
+                  const requestedUser = await this.findOneByToken(token)
                   const userRequestedToUpdate = await this.userService.findById(idUser);
                   
-                  if (!userRequestedToUpdate || userRequestedToUpdate === undefined) {
+                if (!userRequestedToUpdate || userRequestedToUpdate === undefined) {
                     throw new NotFoundException({ error: 'This user does not exists' });
                   }
                   
-                  if (
-                    userRequestedToUpdate.id === req.user.id &&
-                    userRequestedToUpdate.email === req.user.email
-                    ) {
-                      /**NOTE: Only these values below 'll be updated */
+                if (userRequestedToUpdate.id === requestedUser.id &&
+                    userRequestedToUpdate.email === requestedUser.email ||
+                    requestedUser.isAdmin === true) {
+                     
                       userRequestedToUpdate.name = createUserDTO.name;
                       userRequestedToUpdate.bio = createUserDTO.bio;
                       userRequestedToUpdate.password = createUserDTO.password;
-                      
-                      console.log(userRequestedToUpdate);
-                      
                       const { name, email, bio, id } = userRequestedToUpdate;
                       
-                      return {
-                        name,
-                        email,
-                        bio,
-                        id,
-                      };
-                    } else {
-                      throw new UnauthorizedException({
-                        error: 'You are not permitted to update this user!',
-                      });
+                      return this.userService.update(id,userRequestedToUpdate)
+                      
                     }
                   }
+                  
+                  @Get('admin')
+                  async adminFindAll(@Request() req, @Query() query:QueryPage) {
+                    const page = query.page;
+                    return this.userService.adminFindAll(); //passamos a variavel page como parametro do metodo FindAll
+                    
+                  }
+                  
+                  
+                  
+                  
+                  
+                  
+                  
                 }
                 

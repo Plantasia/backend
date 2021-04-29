@@ -1,4 +1,4 @@
-export class DeletedItenTopicDTO {
-    public mesage: string;
+export class DeletedItemTopicDTO {
+    public message: string;
   }
   

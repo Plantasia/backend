@@ -18,7 +18,7 @@ import {
 import { TopicsService } from './topics.service';
 import { Topic } from '../../../entities/topic.entity';
 import { CreateTopicDTO } from './create-topic.dto';
-import { DeletedItenTopicDTO } from './delete-topic.dto';
+import { DeletedItemTopicDTO } from './delete-topic.dto';
 import { JwtAuthGuard } from '../../../auth/jwt-auth.guard';
 import {
   ApiCreatedResponse,
@@ -26,6 +26,7 @@ import {
   ApiHeader,
   ApiOkResponse,
   ApiTags,
+  ApiForbiddenResponse,
 } from '@nestjs/swagger';
 import { HttpException } from '@nestjs/common/exceptions/http.exception';
 import { UserService } from '../../profile/user/user.service';
@@ -144,7 +145,7 @@ export class TopicsController {
     description: 'JWT token must to be passed to do this request',
   })
   @Delete(':id')
-  async delete(@Param('id') id: string, @Request() req): Promise<DeletedItenTopicDTO> {
+  async delete(@Param('id') id: string, @Request() req): Promise<DeletedItemTopicDTO> {
     const token = req.headers.authorization
     const check = await this.userService.authorizationCheck(
       token,
@@ -164,9 +165,9 @@ export class TopicsController {
           HttpStatus.BAD_REQUEST,
         );
       }else{
-        const mesage = 'Iten '+ id +' deleted'
+        const message = 'Iten '+ id +' deleted'
         return {
-          mesage: mesage
+          message
         };
       }
     }else{
