@@ -8,7 +8,6 @@ module.exports = {
   host: 'database',
   synchronize: false,
   port: 3306,
-
   logging: true,
   entities: [path.resolve(__dirname, 'build', 'entities', '*')],
   migrations: [path.resolve(__dirname, 'build', 'database', 'migrations', '*')],

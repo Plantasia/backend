@@ -32,7 +32,7 @@ import { HttpException } from '@nestjs/common/exceptions/http.exception';
 import { UserService } from '../../profile/user/user.service';
 
 @ApiTags('topics')
-@Controller('/forum/topics')
+@Controller('forum/topics')
 export class TopicsController {
   constructor(
     private readonly topicsService: TopicsService,
@@ -52,11 +52,9 @@ export class TopicsController {
   @ApiOkResponse({ description: 'topic succesfully returned' })
   @ApiBadRequestResponse({ description: 'Bad request' })
   @Get()
-  async findAll(@Query() query:QueryPage) {
-
+  async findAll(@Query() query: QueryPage) {
     const page = query.page;
     return this.topicsService.findAll(page);
-
   }
 
   @ApiOkResponse({ description: 'topic succesfully returned' })
