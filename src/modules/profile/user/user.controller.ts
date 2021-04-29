@@ -1,5 +1,5 @@
-import { LocalAuthGuard } from './../../../auth/local-auth.guard';
-import { QueryPage } from './../../../utils/page';
+import { LocalAuthGuard } from '@auth/local-auth.guard';
+import { QueryPage } from '@utils/page';
 import {
   Body,
   Controller,
