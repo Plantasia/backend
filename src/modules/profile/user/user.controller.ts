@@ -76,7 +76,15 @@ export class UserController {
         };
       }
       
- 
+      @UseGuards(JwtAuthGuard)
+      @Get("findme")
+      async findOneByToken(@Request() req){
+        console.log("entroi")
+        const token =  req.headers.authorization;
+        console.log("This token is:", token)
+        return this.userService.findByToken(token);
+        
+      }
  
   @UsePipes(ValidationPipe)
   @ApiOkResponse({ description: 'The user has been succesfull created' })
@@ -222,26 +230,18 @@ export class UserController {
       return user;
     }
   }
+    //find original local
+   
     
-    @UseGuards(JwtAuthGuard)
-    @Get("findme")
-    async findOneByToken(@Request() req){
       
-      const token =  req.headers.authorization;
-      return this.userService.findByToken(token);
+    @Get('admin')
+    async adminFindAll(@Request() req, @Query() query:QueryPage) {
+      
+      
+      const page = query.page;
+      return this.userService.adminFindAll(); //passamos a variavel page como parametro do metodo FindAll
       
     }
-    
-   
-      
-      @Get('admin')
-      async adminFindAll(@Request() req, @Query() query:QueryPage) {
-        
-        
-        const page = query.page;
-        return this.userService.adminFindAll(); //passamos a variavel page como parametro do metodo FindAll
-        
-      }
       
      
-  
+}
