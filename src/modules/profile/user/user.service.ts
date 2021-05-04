@@ -59,18 +59,14 @@ export class UserService {
       skip: skip,
     });
 
-    const allUsers = [];
-    for (let i = 0; i < result.length; i++) {
+    const allUsers = result.map(({ id, name, bio, avatar }) => {
       const user = new CreateUserDTO();
-
-      user.id = result[i].id;
-      user.name = result[i].name;
-      //user.email =result[i].email
-      user.bio = result[i].bio;
-      user.avatar = result[i].avatar;
-
-      allUsers.push(user);
-    }
+      user.id = id;
+      user.name = name;
+      user.bio = bio;
+      user.avatar = avatar;
+      return user;
+    });
 
     return {
       users: allUsers,
