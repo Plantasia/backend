@@ -16,13 +16,13 @@ import {
   HttpException,
   Query,
   HttpStatus,
-  Put
+  Put,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDTO } from './create-user.dto';
 import { DeletedItemUserDTO } from './delete-user.dto';
 import { User } from '@entities/user.entity';
-import { JwtAuthGuard } from '../../../auth/jwt-auth.guard'  //' ' auth/jwt-auth.guard';
+import { JwtAuthGuard } from '../../../auth/jwt-auth.guard'; //' ' auth/jwt-auth.guard';
 import { ValidationPipe } from '@nestjs/common/pipes/validation.pipe';
 import {
   ApiBadRequestResponse,
@@ -36,8 +36,8 @@ import {
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
-  
-  @UseGuards(JwtAuthGuard)
+
+  // @UseGuards(JwtAuthGuard)
   @ApiOkResponse({ description: 'The users has been succesfull returned' })
   @ApiBadRequestResponse({ description: 'Bad request' })
   @ApiHeader({
@@ -45,47 +45,45 @@ export class UserController {
     description: 'JWT token must to be passed to do this request',
   })
   @Get()
-    async findAll(@Request() req, @Query() query:QueryPage) {
-      console.log(req.headers.authorization);
-      
-      
-      const thisUser = await this.userService.findByEmail(req.user.email);
-      
-      const check = await this.userService.authorizationCheck(
-        req.headers.authorization,
-        );
-        
-        const page = query.page;
-        const paginatedUsers = await this.userService.findAll(page); //passamos a variavel page como parametro do metodo FindAll
-        const {
-          users,
-          currentPage,
-          prevPage,
-          nextPage,
-          perPage,
-          totalRegisters,
-        } = paginatedUsers;
-        
-        return {
-          users,
-          currentPage,
-          prevPage,
-          nextPage,
-          perPage,
-          totalRegisters,
-        };
-      }
-      
-      @UseGuards(JwtAuthGuard)
-      @Get("findme")
-      async findOneByToken(@Request() req){
-        console.log("entroi")
-        const token =  req.headers.authorization;
-        console.log("This token is:", token)
-        return this.userService.findByToken(token);
-        
-      }
- 
+  async findAll(@Request() req, @Query() query: QueryPage) {
+    console.log(req.headers.authorization);
+
+    // const thisUser = await this.userService.findByEmail(req.user.email);
+
+    // const check = await this.userService.authorizationCheck(
+    //   req.headers.authorization,
+    //   );
+
+    const page = query.page;
+    const paginatedUsers = await this.userService.findAll(page); //passamos a variavel page como parametro do metodo FindAll
+    const {
+      users,
+      currentPage,
+      prevPage,
+      nextPage,
+      perPage,
+      totalRegisters,
+    } = paginatedUsers;
+
+    return {
+      users,
+      currentPage,
+      prevPage,
+      nextPage,
+      perPage,
+      totalRegisters,
+    };
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('findme')
+  async findOneByToken(@Request() req) {
+    console.log('entroi');
+    const token = req.headers.authorization;
+    console.log('This token is:', token);
+    return this.userService.findByToken(token);
+  }
+
   @UsePipes(ValidationPipe)
   @ApiOkResponse({ description: 'The user has been succesfull created' })
   @ApiBadRequestResponse({ description: 'Bad request' })
@@ -150,23 +148,24 @@ export class UserController {
     name: 'JWT',
     description: 'JWT token must to be passed to do this request',
   })
-  async remove(@Request() req, @Param('id') id: string): Promise<DeletedItemUserDTO> {
-    const token =  req.headers.authorization
-    const check = await this.userService.authorizationCheck(
-     token,
-    );
-    const requestedUser =  await this.findOneByToken(token)
+  async remove(
+    @Request() req,
+    @Param('id') id: string,
+  ): Promise<DeletedItemUserDTO> {
+    const token = req.headers.authorization;
+    const check = await this.userService.authorizationCheck(token);
+    const requestedUser = await this.findOneByToken(token);
     const userRequestedToDelete = await this.userService.findById(id);
 
     console.log(userRequestedToDelete);
 
     if (
-      userRequestedToDelete.id === requestedUser.id &&
-      userRequestedToDelete.email === requestedUser.email ||
+      (userRequestedToDelete.id === requestedUser.id &&
+        userRequestedToDelete.email === requestedUser.email) ||
       requestedUser.isAdmin === true
     ) {
-      const deletedIten = this.userService.delete(id)
-      if (!deletedIten){
+      const deletedIten = this.userService.delete(id);
+      if (!deletedIten) {
         throw new HttpException(
           {
             status: HttpStatus.BAD_REQUEST,
@@ -174,10 +173,10 @@ export class UserController {
           },
           HttpStatus.BAD_REQUEST,
         );
-      }else{
-        const message = 'Iten '+ id +' deleted'
+      } else {
+        const message = 'Iten ' + id + ' deleted';
         return {
-          message
+          message,
         };
       }
     } else {
@@ -200,11 +199,9 @@ export class UserController {
     @Body() createUserDTO: CreateUserDTO,
     @Request() req,
   ): Promise<Partial<User>> {
-    const token = req.headers.authorization
-    const check = await this.userService.authorizationCheck(
-      token,
-    );
-    const requestedUser = await this.findOneByToken(token)
+    const token = req.headers.authorization;
+    const check = await this.userService.authorizationCheck(token);
+    const requestedUser = await this.findOneByToken(token);
     const userRequestedToUpdate = await this.userService.findById(idUser);
 
     if (!userRequestedToUpdate || userRequestedToUpdate === undefined) {
@@ -212,8 +209,8 @@ export class UserController {
     }
 
     if (
-      userRequestedToUpdate.id === requestedUser.id &&
-      userRequestedToUpdate.email === requestedUser.email ||
+      (userRequestedToUpdate.id === requestedUser.id &&
+        userRequestedToUpdate.email === requestedUser.email) ||
       requestedUser.isAdmin === true
     ) {
       /**NOTE: Only these values below 'll be updated */
@@ -221,27 +218,21 @@ export class UserController {
       userRequestedToUpdate.bio = createUserDTO.bio;
       userRequestedToUpdate.password = createUserDTO.password;
 
-      const user = await this.userService.update(userRequestedToUpdate.id,userRequestedToUpdate)
+      const user = await this.userService.update(
+        userRequestedToUpdate.id,
+        userRequestedToUpdate,
+      );
 
       const { name, email, bio, id } = user;
 
-
- 
       return user;
     }
   }
-    //find original local
-   
-    
-      
-    @Get('admin')
-    async adminFindAll(@Request() req, @Query() query:QueryPage) {
-      
-      
-      const page = query.page;
-      return this.userService.adminFindAll(); //passamos a variavel page como parametro do metodo FindAll
-      
-    }
-      
-     
+  //find original local
+
+  @Get('admin')
+  async adminFindAll(@Request() req, @Query() query: QueryPage) {
+    const page = query.page;
+    return this.userService.adminFindAll(); //passamos a variavel page como parametro do metodo FindAll
+  }
 }

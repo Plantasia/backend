@@ -47,10 +47,8 @@ export class UserService {
   }
 
   async findAll(page): Promise<PaginatedUsersDTO> {
-    
     const take = 10;
     const skip = 10 * (page - 1);
-
 
     if (!page) {
       page = 1;
@@ -84,24 +82,25 @@ export class UserService {
     };
   }
 
-
   async delete(id: string): Promise<void> {
     await this.userRepository.softDelete(id);
   }
 
-  async adminFindAll(){
-   return this.userRepository.find(
-    {
-
-    select: ["name","id","avatar",
-    "bio","isAdmin","created_at",
-    "updated_at","deleted_at"] 
-
-    }
-   );
+  async adminFindAll() {
+    return this.userRepository.find({
+      select: [
+        'name',
+        'id',
+        'avatar',
+        'bio',
+        'isAdmin',
+        'created_at',
+        'updated_at',
+        'deleted_at',
+      ],
+    });
   }
 
-  
   async remove(id: string): Promise<void> {
     await this.userRepository.delete(id);
   }
@@ -173,7 +172,7 @@ export class UserService {
     if (!userToCheck) {
       throw new UnauthorizedException({ error: 'Unauthorized' });
     }
-   
+
     return userToCheck;
   }
 
