@@ -1,3 +1,6 @@
+
+import { FindAllModel } from './use-cases/find-all.model';
+import { CreateModel } from './use-cases/create-model';
 import { QueryPage } from '@utils/page';
 import { LocalAuthGuard } from './../../../auth/local-auth.guard';
 import {
@@ -20,7 +23,6 @@ import {
 } from '@nestjs/common';
 import { CategoryService } from './categories.service';
 import { CreateCategoryDTO } from './create-category.dto';
-import { DeletedItemCategoryDTO } from './delete-categories.dto';
 import { Category } from '../../../entities/category.entity';
 import {
   ApiCreatedResponse,
@@ -32,6 +34,9 @@ import {
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../../auth/jwt-auth.guard';
 import { UserService } from 'src/modules/profile/user/user.service';
+import FindOneModel from './use-cases/find-one-model';
+import { DeleteModel } from './delete-model.dto';
+import UpdateModel from './use-cases/update-model';
 
 @ApiTags('categories')
 @Controller('forum/categories')
@@ -47,13 +52,13 @@ export class CategoryController {
     })
     @UseGuards(JwtAuthGuard)
     @Post()
-    @ApiCreatedResponse({ description: 'Category succesfully created' })
-    @ApiForbiddenResponse({ description: 'Forbidden' })
+    @ApiCreatedResponse({ description: 'Categoria criada com sucesso!' })
+    @ApiForbiddenResponse({ description: 'Ação não autorizada: Somente um admin pode criar uma categoria' })
     @UsePipes(ValidationPipe)
     async create(
       @Body() createCategoryDTO: CreateCategoryDTO,
       @Request() req,
-      ): Promise<Partial<Category>> {
+      ): Promise<CreateModel> {
         const token = req.headers.authorization
         
         const check = await this.userService.authorizationCheck(
@@ -66,32 +71,36 @@ export class CategoryController {
           const requestedName = createCategoryDTO.name;
           const exists = await this.categoryService.findByName(requestedName);
           if (author.isAdmin === true){
+
             if (!exists) {
               const newCategory = await this.categoryService.create(createCategoryDTO);
               const { id, name, imageStorage } = newCategory;
+
               return {
                 id,
                 name,
-                imageStorage,
+                imageStorage
               };
+
             } else {
               throw new HttpException(
-                `There is a category with this name, please choose another`,
+                `Já existe uma categoria cadastrada com esse nome!`,
                 HttpStatus.BAD_REQUEST,
                 );
               }
+
             }else{
               throw new UnauthorizedException({
-                error: 'You are not permitted to update this comment!',
+                error: 'Somente um administrador pode criar categorias!',
               });
             }
           }
           
           
           @Get()
-          @ApiOkResponse({ description: 'The categories has been succesfful returned' })
+          @ApiOkResponse({ description: 'Categp' })
           @ApiBadRequestResponse({ description: 'Bad request' })
-          async findAll(@Query() query: QueryPage) {
+          async findAll(@Query() query: QueryPage): Promise <FindAllModel>{
             
             const page = query.page;
             console.log(page)
@@ -101,7 +110,7 @@ export class CategoryController {
           @Get('admin')
           @ApiOkResponse({ description: 'The categories has been succesfful returned' })
           @ApiForbiddenResponse({ description: 'Forbidden' })
-          async adminFindAll(@Query() query: QueryPage) {
+          async adminFindAll(@Query() query: QueryPage): Promise<Category[]> {
             
             const page = query.page;
             console.log(page)
@@ -114,11 +123,11 @@ export class CategoryController {
           async findOne(
             @Param('id') categoryId: string,
             @Request() req,
-            ): Promise<Partial<Category>> {
+            ): Promise<FindOneModel> {
               const check = await this.userService.authorizationCheck(
                 req.headers.authorization,
                 );
-                const selectedCategory = await this.categoryService.findOne(categoryId);
+                
                 const {
                   id,
                   name,
@@ -126,16 +135,16 @@ export class CategoryController {
                   description,
                   authorId,
                   authorEmail,
-                } = selectedCategory;
+                } = await this.categoryService.findOne(categoryId);
                 
-                return { id, name, imageStorage, description };
+                return { id, name, imageStorage, description, authorEmail, authorId };
               }
               
               @UseGuards(JwtAuthGuard)
               @Delete(':id')
               @ApiOkResponse({ description: 'The category has been successful deleted' })
               @ApiBadRequestResponse({ description: 'Bad request' })
-              async remove(@Param('id') id: string, @Request() req): Promise<DeletedItemCategoryDTO> {
+              async remove(@Param('id') id: string, @Request() req): Promise<DeleteModel> {
                 //NOTE: Verifying if this user is authorized
                 const token = req.headers.authorization
                 const check = await this.userService.authorizationCheck(
@@ -143,22 +152,22 @@ export class CategoryController {
                   );
                   const author = (await this.userService.findByToken(token));
                   if (author.isAdmin === true) {
-                    const itenDeletedCategory = this.categoryService.delete(id);
-                    if (!itenDeletedCategory){
+                    const deletedItem = this.categoryService.delete(id);
+                    if (!deletedItem){
                       throw new HttpException(
                         {
                           status: HttpStatus.BAD_REQUEST,
-                          error: 'Error to delete comment, please check data!',
+                          error: 'Erro ao deletar categoria',
                         },
                         HttpStatus.BAD_REQUEST,
                         );
                       }else{
-                        const message = 'Iten '+ id +' deleted'
+                        const message = 'Categoria '+ id +' foi  deletada'
                         return {message} 
                       }
                     } else {
                       throw new UnauthorizedException(
-                        'You are not permitted to delete this category!',
+                        'Você não está autorizado a deletar essa categoria',
                         );
                       }
                     }
@@ -170,11 +179,8 @@ export class CategoryController {
                     async adminFindOne(
                       @Param('id') categoryId: string,
                       @Request() req,
-                      ): Promise<Partial<Category>> {
+                      ): Promise<Category> {
                         
-                        /*const check = await this.userService.authorizationCheck(
-                          req.headers.authorization,
-                          ); */
                           return this.categoryService.findOne(categoryId);
                           
                         }
@@ -187,7 +193,7 @@ export class CategoryController {
                               @Param('id') id: string,
                               @Body() createCategoryDTO: CreateCategoryDTO,
                               @Request() req: any,
-                              ): Promise<Category> {
+                              ): Promise<UpdateModel> {
                                 const categoryExists = await await this.categoryService.findById(id);
                                 const token = req.headers.authorization
                                 const check = await this.userService.authorizationCheck(

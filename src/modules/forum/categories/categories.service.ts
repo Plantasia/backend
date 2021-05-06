@@ -10,9 +10,10 @@ import {
   getManager,
   getConnectionManager,
 } from 'typeorm';
-import { PaginatedCategoriesResultDTO } from './paginated-categories.dto';
+import {FindAllModel} from './apiModels/find-all.model'
 import { Topic } from '@entities/topic.entity';
 import { Comment } from '@entities/comments.entity';
+import UpdateModel from './use-cases/update-model';
 
 @Injectable()
 export class CategoryService {
@@ -24,7 +25,7 @@ export class CategoryService {
     private topicRepository: Repository<Topic>,
   ) {}
 
-  async findAll(page): Promise<PaginatedCategoriesResultDTO> {
+  async findAll(page): Promise<FindAllModel> {
     console.log('PAGE:\n');
     console.log(page);
 
@@ -165,9 +166,16 @@ export class CategoryService {
     return this.categoryRepository.save(cat);
   }
 
-  async update(id: string, data: CreateCategoryDTO): Promise<Category> {
-    await this.categoryRepository.update(id, data);
-    return this.categoryRepository.findOne(id);
+  async update(categoryId: string, data: CreateCategoryDTO): Promise<UpdateModel> {
+    await this.categoryRepository.update(categoryId, data);
+
+    const {name,id,updated_at,description,created_at,imageStorage,authorEmail}= 
+     await this.categoryRepository.findOne(categoryId);
+
+     return{
+      name,id,updated_at,
+      description,created_at
+     }
   }
 }
 
