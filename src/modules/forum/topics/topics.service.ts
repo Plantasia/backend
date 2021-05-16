@@ -178,13 +178,13 @@ export class TopicsService {
           'com.updated_at',
         ])
         .orderBy({
-          'com.created_at': 'DESC', // Getting the last comment
+          'com.created_at': 'ASC', // Getting the last comment
         })
-        .getMany();
+        .getOne();
         
         console.log('__________end_______________');
         
-        return { topic };
+        return topic ;
       }
       
       async findWithOrderBy() {

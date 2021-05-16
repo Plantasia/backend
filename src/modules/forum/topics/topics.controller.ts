@@ -53,7 +53,7 @@ export class TopicsController {
   @Get(':topicId')
   async getTopicById(@Param('topicId') topicId: string) {
     console.log("sadsafdv")
-    return this.topicsService.findOne(topicId)
+    return this.topicsService.takeTopicData(topicId)
   }
 
   @ApiOkResponse({ description: 'topic succesfully returned' })
