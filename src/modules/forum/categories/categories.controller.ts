@@ -1,8 +1,8 @@
 
-import { FindAllModel } from './use-cases/find-all.model';
-import { CreateModel } from './use-cases/create-model';
+import { FindAllModel } from './api-model/find-all.model';
+import { CreateModel } from './api-model/create-model';
 import { QueryPage } from '@utils/page';
-import { LocalAuthGuard } from './../../../auth/local-auth.guard';
+import { LocalAuthGuard } from '@auth/local-auth.guard';
 import {
   Body,
   Controller,
@@ -22,7 +22,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { CategoryService } from './categories.service';
-import { CreateCategoryDTO } from './create-category.dto';
+import { CreateCategoryDTO } from './dto/create-category.dto';
 import { Category } from '../../../entities/category.entity';
 import {
   ApiCreatedResponse,
@@ -34,9 +34,9 @@ import {
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../../auth/jwt-auth.guard';
 import { UserService } from 'src/modules/profile/user/user.service';
-import FindOneModel from './use-cases/find-one-model';
-import { DeleteModel } from './delete-model.dto';
-import UpdateModel from './use-cases/update-model';
+import FindOneModel from './api-model/find-one-model';
+import { DeleteModel } from './dto/delete-model.dto';
+import UpdateModel from './api-model/update-model';
 
 @ApiTags('categories')
 @Controller('forum/categories')

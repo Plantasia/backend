@@ -54,7 +54,7 @@ export class CommentController {
   @Get('admin')
   @ApiCreatedResponse({ description: 'comment succesfully created' })
   @ApiForbiddenResponse({ description: 'Forbidden' })
-  adminFindAll(@Query() query: QueryPage ) {
+  adminFindAll(@Query() query: QueryPage ):Promise<Comment[]> {
   
     const page = query.page;
     return this.commentService.adminFindAll(page);
@@ -123,7 +123,7 @@ export class CommentController {
     name: 'JWT',
     description: 'JWT token must to be passed to do this request',
   })
-  async remove(@Param('id') id: string, @Request() req): Promise<DeletedItemCommentDTO> {
+  async deleteComment(@Param('id') id: string, @Request() req): Promise<DeletedItemCommentDTO> {
     const token = req.headers.authorization
     const check = await this.userService.authorizationCheck(
       token,

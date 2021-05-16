@@ -1,6 +1,6 @@
  import {Comment} from '@entities/comments.entity'
  
- export default class FindAllCommentsModel{
+ export  class FindAllModel{
   comments: Comment[];
   currentPage: string;
   perPage: number;

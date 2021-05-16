@@ -10,10 +10,10 @@ import {
   getManager,
   getConnectionManager,
 } from 'typeorm';
-import {FindAllModel} from './apiModels/find-all.model'
+import {FindAllModel} from './api-model/find-all.model'
 import { Topic } from '@entities/topic.entity';
 import { Comment } from '@entities/comments.entity';
-import UpdateModel from './use-cases/update-model';
+import UpdateModel from './api-model/update-model';
 
 @Injectable()
 export class CategoryService {

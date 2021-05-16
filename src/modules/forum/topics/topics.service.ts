@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { getRepository, Repository } from 'typeorm';
-import { Topic } from '../../../entities/topic.entity';
+import { Topic } from '@entities/topic.entity';
 import { User } from '@entities/user.entity';
-import { CreateTopicDTO } from './create-topic.dto';
-import { Category } from '../../../entities/category.entity';
-import { PaginatedTopicsDTO } from './paginated-topics.dto';
+import { CreateTopicDTO } from './dto/create-topic.dto';
+import { Category } from '@entities/category.entity';
+import { PaginatedTopicsDTO } from './dto/paginated-topics.dto';
 
 @Injectable()
 export class TopicsService {
@@ -34,17 +34,13 @@ export class TopicsService {
     const category_id = createTopicDTO.category_id;
 
     topic.user = await this.UserRepository.findOne(user_id);
-
     topic.category = await this.CategoryRepository.findOne(category_id);
-
-    /** this creates an entity instance */
     const t = await this.topicRepository.create(topic);
 
-    /**now, we're  saving into DB */
     return this.topicRepository.save(t);
   }
 
-  async adminFindAll() {
+  async adminFindAll():Promise<Topic[]> {
     return this.topicRepository.find({ withDeleted: true });
   }
 
@@ -133,7 +129,7 @@ export class TopicsService {
     });
   }
 
-  async takeTopicData(topicId: string) {
+  async takeTopicData(topicId: string):Promise<Topic> {
     console.log('__________start_____________');
 
     const topic = await getRepository(Topic)
@@ -184,7 +180,7 @@ export class TopicsService {
         'com.updated_at',
       ])
       .orderBy({
-        'com.created_at': 'DESC', // Getting the last comment
+        'com.created_at': 'ASC', // Getting the last comment
       })
       .getOne();
 
@@ -193,21 +189,21 @@ export class TopicsService {
     return topic;
   }
 
-  async findWithOrderBy() {
+  async findWithOrderBy():Promise<Topic[]> {
     const qb = this.topicRepository.createQueryBuilder('Topic');
     qb.orderBy('Topic.created_at', 'DESC');
     console.log(qb.getQuery());
-    return await qb.getMany();
+    return qb.getMany();
   }
 
-  async findNoResponse(id: string) {
+  async findNoResponse(id: string):Promise<Topic[]> {
     const qb = this.topicRepository.createQueryBuilder('Topic');
     qb.where('Topic.response = 0');
     console.log(qb.getQuery());
-    return await qb.getMany();
+    return  qb.getMany();
   }
 
-  async findByCategory(categoryId: string) {
+  async findByCategory(categoryId: string):Promise<Topic[]> {
     const qb = this.topicRepository.createQueryBuilder('topic');
     qb.where('topic.categoryId = :categoryId', { categoryId });
 
@@ -223,7 +219,7 @@ export class TopicsService {
     console.log(qb.getQuery());
     const topic = await qb.getMany();
 
-    return { topic };
+    return  topic ;
   }
 
   async findById(id: string): Promise<Topic> {

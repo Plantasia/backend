@@ -1,4 +1,4 @@
-import { QueryPage } from './../../../utils/page';
+import { QueryPage } from '@utils/page';
 import {
   Body,
   Controller,
@@ -16,9 +16,9 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { TopicsService } from './topics.service';
-import { Topic } from '../../../entities/topic.entity';
-import { CreateTopicDTO } from './create-topic.dto';
-import { DeletedItemTopicDTO } from './delete-topic.dto';
+import { Topic } from '@entities/topic.entity';
+import { CreateTopicDTO } from './dto/create-topic.dto';
+import { DeletedItemTopicDTO } from './dto/delete-topic.dto';
 import { JwtAuthGuard } from '../../../auth/jwt-auth.guard';
 import {
   ApiCreatedResponse,
@@ -40,7 +40,7 @@ export class TopicsController {
   ) {}
 
   @Get('byCategory/:categoryId')
-  async getTopicsByCategory(@Param('categoryId') categoryId: string) {
+  async getTopicsByCategory(@Param('categoryId') categoryId: string):Promise<Topic[]> {
     return this.topicsService.findByCategory(categoryId);
   }
 
@@ -50,14 +50,14 @@ export class TopicsController {
   } */
 
   @Get(':topicId')
-  async getTopicById(@Param('topicId') topicId: string) {
+  async getTopicById(@Param('topicId') topicId: string): Promise<Topic> {
     return this.topicsService.takeTopicData(topicId);
   }
 
   @ApiOkResponse({ description: 'topic succesfully returned' })
   @ApiBadRequestResponse({ description: 'Bad request' })
   @Get()
-  async findAll(@Query() query: QueryPage) {
+  async findAll(@Query() query: QueryPage):Promise<Topic[]> {
     const page = query.page;
     return this.topicsService.findAll(page);
   }
@@ -65,7 +65,7 @@ export class TopicsController {
   @ApiOkResponse({ description: 'topic succesfully returned' })
   @ApiForbiddenResponse({ description: 'Forbidden' })
   @Get('admin/list')
-  async adminFindAll() {
+  async adminFindAll():Promise<Topic[]> {
     return this.topicsService.adminFindAll();
   }
 
