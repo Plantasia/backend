@@ -1,3 +1,4 @@
+import { FindAllModel } from './use-cases/find-all-model';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -39,7 +40,7 @@ export class CommentService {
     return this.commentsRepository.find();
   }
 
-  async findAll(page) {
+  async findAll(page): Promise<FindAllModel> {
     
     if (!page || page <= 0) {
       page = 1;

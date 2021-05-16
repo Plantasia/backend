@@ -1,4 +1,5 @@
-import { QueryPage } from './../../../utils/page';
+
+import { QueryPage } from '@utils/page';
 import {
   Body,
   Controller,
@@ -18,6 +19,7 @@ import {
 } from '@nestjs/common';
 import { CommentService } from './comments.service';
 import { CreateCommentDTO } from './create-comment.dto';
+import { UpdateCommentDTO } from './update-comment.dto'
 import { DeletedItemCommentDTO } from './delete-comment.dto';
 import { Comment } from '../../../entities/comments.entity';
 import { JwtAuthGuard } from '../../../auth/jwt-auth.guard';
@@ -65,14 +67,14 @@ export class CommentController {
   @ApiBadRequestResponse({ description: 'Bad request' })
   @UsePipes(ValidationPipe)
   async createComment(
-    @Body() createCommentDTO: CreateCommentDTO,
+    @Body() data: CreateCommentDTO,
     @Request() req,
   ): Promise<Comment> {
     const token =  req.headers.authorization
     const userAlreadyExists = await this.userService.authorizationCheck(
       token,
     );
-    const topic_id = createCommentDTO.topic_id;
+    const topic_id = data.topic_id;
     const topicAlreadyExists = await this.topicsService.findById(topic_id);
     //We do not use the userID, but the token, is this   if (!userAlreadyExists) necessary?
     if (!userAlreadyExists) {
@@ -93,7 +95,7 @@ export class CommentController {
         HttpStatus.FORBIDDEN,
       );
     } else {
-      return this.commentService.create(createCommentDTO, token);
+      return this.commentService.create(data, token);
     }
   }
 
@@ -141,7 +143,7 @@ export class CommentController {
             HttpStatus.BAD_REQUEST,
           );
         }else{
-          const message = 'Iten '+ id +' deleted'
+          const message = 'Item '+ id +' deleted'
 
           return {message};
       
@@ -160,7 +162,7 @@ export class CommentController {
   @ApiBadRequestResponse({ description: 'Bad request' })
   async update(
     @Param('id') id: string,
-    @Body() createCommentDTO: CreateCommentDTO,
+    @Body() data: UpdateCommentDTO,
     @Request() req: any,
   ): Promise<Comment> {
     const token = req.headers.authorization
@@ -172,7 +174,7 @@ export class CommentController {
     if ((await author).user.id === (await requesterUser).id ||
     (await requesterUser).isAdmin === true
     ){
-        return this.commentService.update(id, createCommentDTO);
+        return this.commentService.update(id, data);
     }else{
       throw new UnauthorizedException({
         error: 'You are not permitted to update this comment!',
