@@ -51,7 +51,7 @@ export class TopicsController {
 
   @Get(':topicId')
   async getTopicById(@Param('topicId') topicId: string) {
-    return this.topicsService.takeTopicData(topicId);
+    return this.topicsService.takeTopicData(topicId)
   }
 
   @ApiOkResponse({ description: 'topic succesfully returned' })

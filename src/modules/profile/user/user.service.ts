@@ -3,15 +3,18 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserDTO } from './create-user.dto';
 import { User } from '@entities/user.entity';
-import { TopicsService } from '../../forum/topics/topics.service';
+import { FilesService } from '../../image/imageS3.service';
 import { PaginatedUsersDTO } from '../paginated-users.dto';
+import { String } from 'aws-sdk/clients/appstream';
+
+
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
-    private topicService: TopicsService,
+    private filesService: FilesService,
   ) {}
 
   async findOne(id: string): Promise<User> {
@@ -200,5 +203,15 @@ export class UserService {
       },
     });
     return idUser;
+  }
+
+  async addAvatar(userId:String, imageBuffer: Buffer, filename: string) {
+    const avatarS3 = await this.filesService.uploadPublicFile(imageBuffer, filename);
+    const user = await this.findById(userId);
+    await this.userRepository.update(userId, {
+      ...user,
+      avatarS3
+    });
+    return avatarS3;
   }
 }

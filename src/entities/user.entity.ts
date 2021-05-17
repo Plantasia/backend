@@ -8,9 +8,12 @@ import {
   BaseEntity,
   DeleteDateColumn,
   Generated,
+  JoinColumn,
+  OneToOne
 } from 'typeorm';
 import { Topic } from './topic.entity';
 import { Comment } from './comments.entity';
+import Image from './image.entity'
 
 @Entity('users')
 export class User extends BaseEntity{
@@ -29,6 +32,16 @@ export class User extends BaseEntity{
 
   @Column({ default: '' })
   avatar: string;
+
+  @JoinColumn()
+  @OneToOne(
+    () => Image,
+    {
+      eager: true,
+      nullable: true
+    }
+  )
+  public avatarS3?: Image
 
   @Column()
   email: string;
