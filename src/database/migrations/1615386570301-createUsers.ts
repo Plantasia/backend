@@ -1,5 +1,5 @@
 import { User } from '../../entities/user.entity';
-import { getConnection, MigrationInterface, QueryRunner, Table } from 'typeorm';
+import { getConnection, MigrationInterface, QueryRunner, Table, TableForeignKey } from 'typeorm';
 
 export class createUsers1615386570301 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
@@ -38,8 +38,8 @@ export class createUsers1615386570301 implements MigrationInterface {
           },
 
           {
-            name: 'avatar',
-            type: 'text',
+            name: 'avatarId',
+            type: 'varchar',
             isNullable: true,
           },
 
@@ -106,6 +106,15 @@ export class createUsers1615386570301 implements MigrationInterface {
         ],
       }),
     );
+   /* await queryRunner.createForeignKey(
+      'users',
+      new TableForeignKey({
+        columnNames: ['avatarId'],
+        referencedColumnNames: ['id'],
+        referencedTableName: 'Image',
+        onDelete: 'CASCADE',
+      }),
+    );*/
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
@@ -117,4 +126,5 @@ export class createUsers1615386570301 implements MigrationInterface {
 
     await queryRunner.dropTable('users');
   }
+  
 }

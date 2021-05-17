@@ -9,6 +9,7 @@ import { String } from 'aws-sdk/clients/appstream';
 
 
 
+
 @Injectable()
 export class UserService {
   constructor(
@@ -206,12 +207,12 @@ export class UserService {
   }
 
   async addAvatar(userId:String, imageBuffer: Buffer, filename: string) {
-    const avatarS3 = await this.filesService.uploadPublicFile(imageBuffer, filename);
+    const avatar = await this.filesService.uploadPublicFile(imageBuffer, filename);
     const user = await this.findById(userId);
     await this.userRepository.update(userId, {
       ...user,
-      avatarS3
+      avatar
     });
-    return avatarS3;
+    return avatar;
   }
 }

@@ -30,18 +30,18 @@ export class User extends BaseEntity{
   @Column({ default: 'USER' })
   role: string;
 
-  @Column({ default: '' })
-  avatar: string;
+  //@Column({ default: '' })
+  //avatar: string;
 
   @JoinColumn()
   @OneToOne(
     () => Image,
     {
-      eager: true,
+      lazy: true,
       nullable: true
     }
   )
-  public avatarS3?: Image
+  public avatar?: Image
 
   @Column()
   email: string;
