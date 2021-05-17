@@ -9,10 +9,10 @@ module.exports = {
   synchronize: false,
   port: 3306,
   logging: true,
-  entities: [path.resolve( 'build', 'entities', '*')],
-  migrations: [path.resolve( 'build', 'database', 'migrations', '*')],
+  entities: [path.resolve('build', 'entities', '*')],
+  migrations: [path.resolve('build', 'database', 'migrations', '*')],
   cli: {
-    entitiesDir: ["./src/entities"],
-    migrationsDir:["./src/database/migrations"]
+    entitiesDir: "./src/entities",
+    migrationsDir:"./src/database/migrations"
   },
 };
