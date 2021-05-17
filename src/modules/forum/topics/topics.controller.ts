@@ -49,21 +49,18 @@ export class TopicsController {
     return this.topicsService.adminFindOne(topicId)
   } */
 
-
   @Get(':topicId')
   async getTopicById(@Param('topicId') topicId: string) {
-    console.log("sadsafdv")
     return this.topicsService.takeTopicData(topicId)
   }
 
   @ApiOkResponse({ description: 'topic succesfully returned' })
   @ApiBadRequestResponse({ description: 'Bad request' })
   @Get()
-  async findAll(@Query() query:QueryPage) {
+  async findAll(@Query() query: QueryPage) {
     const page = query.page;
     return this.topicsService.findAll(page);
   }
-
 
   @ApiOkResponse({ description: 'topic succesfully returned' })
   @ApiForbiddenResponse({ description: 'Forbidden' })
@@ -71,8 +68,6 @@ export class TopicsController {
   async adminFindAll() {
     return this.topicsService.adminFindAll();
   }
-
-  
 
   @UseGuards(JwtAuthGuard)
   @ApiOkResponse({ description: 'topic succesfully updated' })
@@ -87,17 +82,16 @@ export class TopicsController {
     @Body() createTopicDTO: CreateTopicDTO,
     @Request() req,
   ): Promise<Topic> {
-    const token = req.headers.authorization
-    const check = await this.userService.authorizationCheck(
-      token,
-    );
-    const author = this.topicsService.findOne(id)
-    const requesterUser = this.userService.findByToken(token)
-    if ((await author).user.id === (await requesterUser).id ||
-    (await requesterUser).isAdmin === true
-    ){
+    const token = req.headers.authorization;
+    const check = await this.userService.authorizationCheck(token);
+    const author = this.topicsService.findOne(id);
+    const requesterUser = this.userService.findByToken(token);
+    if (
+      (await author).user.id === (await requesterUser).id ||
+      (await requesterUser).isAdmin === true
+    ) {
       return this.topicsService.update(id, createTopicDTO);
-    }else{
+    } else {
       throw new UnauthorizedException({
         error: 'You are not permitted to update this Topic!',
       });
@@ -117,10 +111,8 @@ export class TopicsController {
     @Body() createTopicDTO: CreateTopicDTO,
     @Request() req,
   ): Promise<Topic> {
-    const token =req.headers.authorization
-    const userAlreadyExists = await this.userService.authorizationCheck(
-      token ,
-    );
+    const token = req.headers.authorization;
+    const userAlreadyExists = await this.userService.authorizationCheck(token);
     if (!userAlreadyExists) {
       throw new HttpException(
         {
@@ -129,7 +121,7 @@ export class TopicsController {
         },
         HttpStatus.BAD_REQUEST,
       );
-    }else{
+    } else {
       const response = this.topicsService.create(createTopicDTO);
       const category = this.topicsService.findOne(createTopicDTO.category_id);
       const user = this.topicsService.findOne(createTopicDTO.user_id);
@@ -150,18 +142,20 @@ export class TopicsController {
     description: 'JWT token must to be passed to do this request',
   })
   @Delete(':id')
-  async delete(@Param('id') id: string, @Request() req): Promise<DeletedItemTopicDTO> {
-    const token = req.headers.authorization
-    const check = await this.userService.authorizationCheck(
-      token,
-    );
-    const author = this.topicsService.findOne(id)
-    const requesterUser = this.userService.findByToken(token)
-    if ((await author).user.id === (await requesterUser).id ||
-    (await requesterUser).isAdmin === true
-    ){
+  async delete(
+    @Param('id') id: string,
+    @Request() req,
+  ): Promise<DeletedItemTopicDTO> {
+    const token = req.headers.authorization;
+    const check = await this.userService.authorizationCheck(token);
+    const author = this.topicsService.findOne(id);
+    const requesterUser = this.userService.findByToken(token);
+    if (
+      (await author).user.id === (await requesterUser).id ||
+      (await requesterUser).isAdmin === true
+    ) {
       const deletedIten = this.topicsService.findOne(id);
-      if (!deletedIten){
+      if (!deletedIten) {
         throw new HttpException(
           {
             status: HttpStatus.BAD_REQUEST,
@@ -169,13 +163,13 @@ export class TopicsController {
           },
           HttpStatus.BAD_REQUEST,
         );
-      }else{
-        const message = 'Iten '+ id +' deleted'
+      } else {
+        const message = 'Iten ' + id + ' deleted';
         return {
-          message
+          message,
         };
       }
-    }else{
+    } else {
       throw new UnauthorizedException({
         error: 'You are not permitted to update this Topic!',
       });

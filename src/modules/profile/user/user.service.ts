@@ -3,15 +3,18 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserDTO } from './create-user.dto';
 import { User } from '@entities/user.entity';
-import { TopicsService } from '../../forum/topics/topics.service';
+import { FilesService } from '../../image/imageS3.service';
 import { PaginatedUsersDTO } from '../paginated-users.dto';
+import { String } from 'aws-sdk/clients/appstream';
+
+
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
-    private topicService: TopicsService,
+    private filesService: FilesService,
   ) {}
 
   async findOne(id: string): Promise<User> {
@@ -47,10 +50,8 @@ export class UserService {
   }
 
   async findAll(page): Promise<PaginatedUsersDTO> {
-    
     const take = 10;
     const skip = 10 * (page - 1);
-
 
     if (!page) {
       page = 1;
@@ -61,18 +62,14 @@ export class UserService {
       skip: skip,
     });
 
-    const allUsers = [];
-    for (let i = 0; i < result.length; i++) {
+    const allUsers = result.map(({ id, name, bio, avatar }) => {
       const user = new CreateUserDTO();
-
-      user.id = result[i].id;
-      user.name = result[i].name;
-      //user.email =result[i].email
-      user.bio = result[i].bio;
-      user.avatar = result[i].avatar;
-
-      allUsers.push(user);
-    }
+      user.id = id;
+      user.name = name;
+      user.bio = bio;
+      user.avatar = avatar;
+      return user;
+    });
 
     return {
       users: allUsers,
@@ -84,24 +81,25 @@ export class UserService {
     };
   }
 
-
   async delete(id: string): Promise<void> {
     await this.userRepository.softDelete(id);
   }
 
-  async adminFindAll(){
-   return this.userRepository.find(
-    {
-
-    select: ["name","id","avatar",
-    "bio","isAdmin","created_at",
-    "updated_at","deleted_at"] 
-
-    }
-   );
+  async adminFindAll() {
+    return this.userRepository.find({
+      select: [
+        'name',
+        'id',
+        'avatar',
+        'bio',
+        'isAdmin',
+        'created_at',
+        'updated_at',
+        'deleted_at',
+      ],
+    });
   }
 
-  
   async remove(id: string): Promise<void> {
     await this.userRepository.delete(id);
   }
@@ -173,7 +171,7 @@ export class UserService {
     if (!userToCheck) {
       throw new UnauthorizedException({ error: 'Unauthorized' });
     }
-   
+
     return userToCheck;
   }
 
@@ -205,5 +203,15 @@ export class UserService {
       },
     });
     return idUser;
+  }
+
+  async addAvatar(userId:String, imageBuffer: Buffer, filename: string) {
+    const avatarS3 = await this.filesService.uploadPublicFile(imageBuffer, filename);
+    const user = await this.findById(userId);
+    await this.userRepository.update(userId, {
+      ...user,
+      avatarS3
+    });
+    return avatarS3;
   }
 }

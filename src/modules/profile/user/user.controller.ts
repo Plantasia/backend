@@ -16,7 +16,8 @@ import {
   HttpException,
   Query,
   HttpStatus,
-  Put
+  UseInterceptors,
+  UploadedFile 
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDTO } from './create-user.dto';
@@ -31,6 +32,9 @@ import {
   ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { FileInterceptor } from '@nestjs/platform-express';
+
+
 
 @ApiTags('users')
 @Controller('users')
@@ -204,7 +208,7 @@ export class UserController {
     const check = await this.userService.authorizationCheck(
       token,
     );
-    const requestedUser = await this.findOneByToken(token)
+    const requestedUser = await await this.userService.findByToken(token)
     const userRequestedToUpdate = await this.userService.findById(idUser);
 
     if (!userRequestedToUpdate || userRequestedToUpdate === undefined) {
@@ -242,6 +246,13 @@ export class UserController {
       return this.userService.adminFindAll(); //passamos a variavel page como parametro do metodo FindAll
       
     }
-      
+
+    @Post('avatar')
+    @UseGuards(JwtAuthGuard)
+    @UseInterceptors(FileInterceptor('file'))
+    async addAvatar(@Request() request, @UploadedFile() file: Express.Multer.File) {
+      return this.userService.addAvatar(request.user.id, file.buffer, file.originalname);
+    }
+  
      
 }
