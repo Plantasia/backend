@@ -110,7 +110,6 @@ export class UserService {
     user.name = createUserDTO.name;
     user.bio = createUserDTO.bio;
     user.role = createUserDTO.role;
-    user.avatar = createUserDTO.avatar;
     user.email = createUserDTO.email;
     user.password = createUserDTO.password;
     user.isAdmin = createUserDTO.isAdmin;

@@ -63,7 +63,7 @@ export class Topic extends BaseEntity{
   deleted_at: Date;
 
   @Column()
-  @Generated('increment')
+  //@Generated('increment')
   seedingId: number;
 
 

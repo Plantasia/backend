@@ -1,7 +1,7 @@
-import { User } from '@entities/user.entity';
-import { getConnection, MigrationInterface, QueryRunner, Table } from 'typeorm';
+import { User } from '../../entities/user.entity';
+import { getConnection, MigrationInterface, QueryRunner, Table, TableForeignKey, TableColumn } from 'typeorm';
 
-export class createUser1605879828481 implements MigrationInterface {
+export class createUsers1615386570301 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
@@ -37,36 +37,41 @@ export class createUser1605879828481 implements MigrationInterface {
             isNullable: false,
           },
 
-          {
-            name: 'avatar',
-            type: 'text',
+          /*{
+            name: 'avatarId',
+            type: 'varchar',
             isNullable: true,
-          },
-         
+          },*/
+
           {
             name: 'password',
             type: 'text',
             isNullable: false,
+          },
+          {
+            name: 'recoverToken',
+            type: 'text',
+            isNullable: true,
           },
 
           {
             name: 'isActive',
             type: 'boolean',
             isNullable: false,
-            default:true
+            default: true,
           },
-      
+
           {
             name: 'quarentineNum',
             type: 'int',
             isNullable: false,
-            default:0
+            default: 0,
           },
           {
             name: 'isAdmin',
             type: 'boolean',
             isNullable: false,
-            default:0
+            default: 0,
           },
           {
             name: 'tokenLogout',
@@ -77,36 +82,59 @@ export class createUser1605879828481 implements MigrationInterface {
             name: 'created_at',
             type: 'datetime',
             isNullable: true,
-              
-
+            default: 'now()',
           },
           {
             name: 'updated_at',
             type: 'datetime',
             isNullable: true,
-              
+            default: 'now()',
           },
           {
             name: 'deleted_at',
             type: 'datetime',
             isNullable: true,
-              
           },
-
-
-       
+          {
+            name: 'seedingId',
+            generationStrategy: 'increment',
+            isGenerated: true,
+            isUnique: true,
+            type: 'int',
+            isNullable: false,
+          },
         ],
+      }),
+    );
+
+    await queryRunner.addColumn(
+      'users',
+      new TableColumn({
+        name: 'avatarId',
+        type: 'varchar',
+        isNullable: false,
+      }),
+    );
+
+    await queryRunner.createForeignKey(
+      'users',
+      new TableForeignKey({
+        columnNames: ['avatarId'],
+        referencedColumnNames: ['id'],
+        referencedTableName: 'images',
+        onDelete: 'CASCADE',
       }),
     );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     await getConnection()
-    .createQueryBuilder()
-    .delete()
-    .from(User)
-    .execute();
+      .createQueryBuilder()
+      .delete()
+      .from(User)
+      .execute();
 
-    await queryRunner.dropTable("users")
+    await queryRunner.dropTable('users');
   }
+  
 }

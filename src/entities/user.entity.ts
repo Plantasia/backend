@@ -47,9 +47,9 @@ export class User extends BaseEntity{
   email: string;
 
 
-  @Generated('increment')
-  @Column()
-  seedingId:number
+ // @Generated('increment')
+ @Column({default: null})
+ seedingId:number
 
   @Column()
   password: string;

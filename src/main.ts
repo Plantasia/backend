@@ -15,7 +15,7 @@ async function bootstrap() {
       process.env.FRONT_END_CORS, 
       process.env.ADMIN_FRONT_END_CORS,
     ]});
-  CallingSeeders();
+  //CallingSeeders();
   try {
     const swaggerConfig = new DocumentBuilder()
       .setTitle('Plantasia Docs')
