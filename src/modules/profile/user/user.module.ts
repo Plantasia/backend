@@ -7,9 +7,6 @@ import { User } from '@entities/user.entity';
 import { Topic } from '@entities/topic.entity';
 import { Category } from '@entities/category.entity';
 import { UserController } from './user.controller';
-import { FilesService } from 'src/modules/image/imageS3.service';
-import Image from '@entities/image.entity';
-import { ImageModule } from 'src/modules/image/image.module';
 import { SharedModule } from 'src/modules/shared/shared.module';
 
 

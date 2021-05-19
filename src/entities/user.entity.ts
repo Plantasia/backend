@@ -30,9 +30,6 @@ export class User extends BaseEntity{
   @Column({ default: 'USER' })
   role: string;
 
-  //@Column({ default: '' })
-  //avatar: string;
-
   @JoinColumn()
   @OneToOne(
     () => Image,
@@ -47,7 +44,6 @@ export class User extends BaseEntity{
   email: string;
 
 
- // @Generated('increment')
  @Column({default: null})
  seedingId:number
 

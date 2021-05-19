@@ -1,7 +1,7 @@
 import { Category } from '../../entities/category.entity';
 import { getConnection, MigrationInterface, QueryRunner, Table } from 'typeorm';
 
-export class createCategories1615383757064 implements MigrationInterface {
+export class createCategories1621383670928  implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
