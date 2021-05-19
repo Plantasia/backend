@@ -13,6 +13,8 @@ import {
 } from 'typeorm';
 import { Topic } from './topic.entity';
 import {Comment} from './comments.entity'
+import Image from './image.entity'
+
 
 @Entity('categories')
 export class Category extends BaseEntity{
@@ -30,9 +32,15 @@ export class Category extends BaseEntity{
 
   @Column()
   description: string;
-
-  @Column({ default: "" })
-  imageStorage: string;
+  @JoinColumn()
+  @OneToOne(
+    () => Image,
+    {
+      lazy: true,
+      nullable: true
+    }
+  )
+  imageStorage: Image;
 
   @Column({ default: true })
   isActive: boolean;

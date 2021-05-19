@@ -1,5 +1,5 @@
 import { QueryPage } from '@utils/page';
-import { LocalAuthGuard } from './../../../auth/local-auth.guard';
+import { FileInterceptor } from '@nestjs/platform-express';
 import {
   Body,
   Controller,
@@ -17,6 +17,8 @@ import {
   UnauthorizedException,
   NotFoundException,
   Query,
+  UseInterceptors,
+  UploadedFile 
 } from '@nestjs/common';
 import { CategoryService } from './categories.service';
 import { CreateCategoryDTO } from './create-category.dto';
@@ -206,6 +208,23 @@ export class CategoryController {
                                   }
                                   
                                   return this.categoryService.update(id, createCategoryDTO);
+                                }
+                                @Post('image/:id')
+                                @UseGuards(JwtAuthGuard)
+                                @UseInterceptors(FileInterceptor('file'))
+                                async addAvatar(@Request() req, @Param('id') id: string, @UploadedFile() file: Express.Multer.File) {
+                                  const token = req.headers.authorization;
+                                  const check = await this.userService.authorizationCheck(token);
+                                  const requesterUser = this.userService.findByToken(token);
+                                  if (
+                                    (await requesterUser).isAdmin === true
+                                  ) {
+                                    return this.categoryService.addImage(id,file.buffer, file.originalname);
+                                  } else {
+                                    throw new UnauthorizedException({
+                                      error: 'You are not permitted to update this Topic!',
+                                    });
+                                  }
                                 }
                               }
                               

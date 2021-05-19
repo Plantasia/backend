@@ -12,7 +12,7 @@ import {
 } from 'typeorm';
 import { PaginatedCategoriesResultDTO } from './paginated-categories.dto';
 import { Topic } from '@entities/topic.entity';
-import { Comment } from '@entities/comments.entity';
+import { FilesService } from '../../image/imageS3.service';
 
 @Injectable()
 export class CategoryService {
@@ -22,6 +22,9 @@ export class CategoryService {
 
     @InjectRepository(Topic)
     private topicRepository: Repository<Topic>,
+
+    private filesService: FilesService,
+
   ) {}
 
   async findAll(page): Promise<PaginatedCategoriesResultDTO> {
@@ -159,15 +162,24 @@ export class CategoryService {
     category.name = createCategoryDTO.name;
     category.authorEmail = createCategoryDTO.authorEmail;
     category.description = createCategoryDTO.description;
-    category.imageStorage = createCategoryDTO.imageStorage;
     const cat = await this.categoryRepository.create(category);
 
     return this.categoryRepository.save(cat);
   }
 
-  async update(id: string, data: CreateCategoryDTO): Promise<Category> {
+  async update(id: string, data): Promise<Category> {
     await this.categoryRepository.update(id, data);
     return this.categoryRepository.findOne(id);
+  }
+
+  async addImage(categoryId: string , imageBuffer: Buffer, filename: string) {
+    const imageStorage = await this.filesService.uploadPublicFile(imageBuffer, filename);
+    const category = await this.findById(categoryId);
+    await this.topicRepository.update(categoryId, {
+      ...category,
+      imageStorage
+    });
+    return imageStorage;
   }
 }
 
