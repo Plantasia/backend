@@ -6,7 +6,7 @@ module.exports = {
   password: process.env.ORM_PASSWORD,
   database: process.env.ORM_DB,
   host: 'database',
-  synchronize: false,
+  synchronize: true,
   port: 3306,
   logging: true,
   entities: [path.resolve('build', 'entities', '*')],

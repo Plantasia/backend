@@ -1,3 +1,4 @@
+import Image from '@entities/image.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEmpty, IsNotEmpty } from 'class-validator';
 
@@ -28,7 +29,7 @@ export class CreateUserDTO {
     description: 'Avatar URL',
     default: '',
   })
-  public avatar: string;
+  public avatar: Image;
 
   @IsNotEmpty()
   @ApiProperty({

@@ -9,10 +9,11 @@ import { User } from '@entities/user.entity';
 import { UserModule } from 'src/modules/profile/user/user.module';
 import { TopicsService } from '../topics/topics.service';
 import { Topic } from '@entities/topic.entity';
+import { SharedModule } from 'src/modules/shared/shared.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Category, Topic]),
+    TypeOrmModule.forFeature([Category, Topic]),SharedModule,
     TopicModule,
     UserModule,
   ],

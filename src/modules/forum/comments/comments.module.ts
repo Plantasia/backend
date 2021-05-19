@@ -10,10 +10,11 @@ import { UserService } from '../../profile/user/user.service';
 import { Category } from '../../../entities/category.entity';
 import { CategoryModule } from '../categories/categories.module';
 import { CategoryService } from '../categories/categories.service';
+import { SharedModule } from 'src/modules/shared/shared.module';
 
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Comment, Topic, User, Category])],
+  imports: [TypeOrmModule.forFeature([Comment, Topic, User, Category]), SharedModule],
   providers: [CommentService, TopicsService, UserService, CategoryService],
   controllers: [CommentController],
   exports: [],

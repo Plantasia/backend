@@ -2,7 +2,7 @@ import { Category } from '../../entities/category.entity';
 import { getConnection, MigrationInterface, QueryRunner, Table } from 'typeorm';
 
 export class createCategories1615383757064 implements MigrationInterface {
-  public async up(queryRunner: QueryRunner): Promise<void> {
+  public async up(queryRunner: QueryRunner): Promise<void> {/*
     await queryRunner.createTable(
       new Table({
         name: 'categories',
@@ -72,16 +72,16 @@ export class createCategories1615383757064 implements MigrationInterface {
       }),
     );
 
-    await queryRunner.clearSqlMemory();
+    await queryRunner.clearSqlMemory();*/
   }
 
-  public async down(queryRunner: QueryRunner): Promise<void> {
+  public async down(queryRunner: QueryRunner): Promise<void> {/*
     await getConnection()
       .createQueryBuilder()
       .delete()
       .from(Category)
       .execute();
 
-    await queryRunner.dropTable('categories');
+    await queryRunner.dropTable('categories');*/
   }
 }

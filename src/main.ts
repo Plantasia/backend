@@ -3,6 +3,8 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { CallingSeeders } from '@seeders/calling-seeders';
+import { ConfigService } from '@nestjs/config';
+import { config } from 'aws-sdk';
 
 async function bootstrap() {
   const PORT = process.env.PORT || 3333;
@@ -13,7 +15,7 @@ async function bootstrap() {
       process.env.FRONT_END_CORS, 
       process.env.ADMIN_FRONT_END_CORS,
     ]});
-  CallingSeeders();
+  //CallingSeeders();
   try {
     const swaggerConfig = new DocumentBuilder()
       .setTitle('Plantasia Docs')
@@ -29,5 +31,11 @@ async function bootstrap() {
   } catch (err) {
     console.log(err);
   }
+  const configService = app.get(ConfigService);
+  config.update({
+    accessKeyId: configService.get('AWS_ACCESS_KEY_ID'),
+    secretAccessKey: configService.get('AWS_SECRET_ACCESS_KEY'),
+    region: configService.get('AWS_REGION'),
+  });
 }
 bootstrap();

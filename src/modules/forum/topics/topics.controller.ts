@@ -14,6 +14,8 @@ import {
   Query,
   UnauthorizedException,
   HttpStatus,
+  UseInterceptors,
+  UploadedFile 
 } from '@nestjs/common';
 import { TopicsService } from './topics.service';
 import { Topic } from '../../../entities/topic.entity';
@@ -30,6 +32,8 @@ import {
 } from '@nestjs/swagger';
 import { HttpException } from '@nestjs/common/exceptions/http.exception';
 import { UserService } from '../../profile/user/user.service';
+import { FileInterceptor } from '@nestjs/platform-express';
+
 
 @ApiTags('topics')
 @Controller('forum/topics')
@@ -174,5 +178,27 @@ export class TopicsController {
         error: 'You are not permitted to update this Topic!',
       });
     }
+  }
+
+  @Post('image/:id')
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(FileInterceptor('file'))
+  async addAvatar(@Request() req, @Param('id') id: string, @UploadedFile() file: Express.Multer.File) {
+    const token = req.headers.authorization;
+    const check = await this.userService.authorizationCheck(token);
+    const author = this.topicsService.findOne(id);
+    const requesterUser = this.userService.findByToken(token);
+    if (
+      (await author).user.id === (await requesterUser).id ||
+      (await requesterUser).isAdmin === true
+    ) {
+      return this.userService.addAvatar(id,file.buffer, file.originalname);
+    } else {
+      throw new UnauthorizedException({
+        error: 'You are not permitted to update this Topic!',
+      });
+    }
+
+   
   }
 }

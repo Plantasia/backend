@@ -6,6 +6,8 @@ import { User } from '@entities/user.entity';
 import { CreateTopicDTO } from './create-topic.dto';
 import { Category } from '../../../entities/category.entity';
 import { PaginatedTopicsDTO } from './paginated-topics.dto';
+import { FilesService } from '../../image/imageS3.service';
+
 
 @Injectable()
 export class TopicsService {
@@ -18,6 +20,8 @@ export class TopicsService {
 
     @InjectRepository(Category)
     private readonly CategoryRepository: Repository<Category>,
+
+    private filesService: FilesService,
   ) {
     this.CategoryRepository = CategoryRepository;
     this.UserRepository = UserRepository;
@@ -26,22 +30,17 @@ export class TopicsService {
 
   async create(createTopicDTO: CreateTopicDTO): Promise<Topic> {
     const topic = new Topic();
-
+    
     topic.name = createTopicDTO.name;
     topic.textBody = createTopicDTO.textBody;
-    topic.imageStorage = createTopicDTO.imageStorage;
     const user_id = createTopicDTO.user_id;
     const category_id = createTopicDTO.category_id;
 
     topic.user = await this.UserRepository.findOne(user_id);
 
     topic.category = await this.CategoryRepository.findOne(category_id);
-
-    /** this creates an entity instance */
-    const t = await this.topicRepository.create(topic);
-
-    /**now, we're  saving into DB */
-    return this.topicRepository.save(t);
+    const newTopic = await this.topicRepository.create(topic);
+    return newTopic
   }
 
   async adminFindAll() {
