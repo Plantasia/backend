@@ -98,7 +98,7 @@ export class TopicsService {
         't.created_at',
         't.updated_at',
         'topicOwner.id',
-        'topicOwner.avatarId',
+        'topicOwner.avatarId as topicOnwerAvatar',
         'topicOwner.name',
 
         'com.id',
@@ -106,7 +106,7 @@ export class TopicsService {
         'com.created_at',
         'ownerComment.id',
         'ownerComment.name',
-        'ownerComment.avatarId',
+        'ownerComment.avatar',
       ])
       .orderBy({
         'com.created_at': 'ASC',
