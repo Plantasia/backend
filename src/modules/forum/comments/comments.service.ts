@@ -66,8 +66,8 @@ export class CommentService {
      }
   }
 
-  async delete(id: string): Promise<void> {
-    await this.commentsRepository.softDelete(id);
+  async delete(id: string){
+    return  (await this.commentsRepository.softDelete(id)).generatedMaps
   }
 
   async create(data: CreateCommentDTO, req: any): Promise<Comment> {
