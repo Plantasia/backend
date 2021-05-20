@@ -1,4 +1,3 @@
-import  Image  from '../../entities/image.entity';
 import {MigrationInterface, QueryRunner, Table, getConnection} from "typeorm";
 export class createImage1621383559463 implements MigrationInterface {
 

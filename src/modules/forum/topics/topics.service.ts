@@ -98,7 +98,7 @@ export class TopicsService {
         't.created_at',
         't.updated_at',
         'topicOwner.id',
-        'topicOwner.avatarId as topicOnwerAvatar',
+        'topicOwner.avatar',
         'topicOwner.name',
 
         'com.id',
@@ -249,7 +249,7 @@ export class TopicsService {
     await this.topicRepository.update(topicId, {
       ...topic,
       imageStorage
-    });
+    })
     return imageStorage;
   }
 }

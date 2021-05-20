@@ -2,7 +2,6 @@ import { User } from '../../entities/user.entity';
 import { internet, name, random } from 'faker';
 import { createConnection, getConnection, getRepository } from 'typeorm';
 import UserSeed from './user-seed';
-import Image from '@entities/image.entity';
 
 export default async function AdminSeed(verifyRun: boolean): Promise<boolean> {
   let resp = true;
@@ -16,8 +15,7 @@ export default async function AdminSeed(verifyRun: boolean): Promise<boolean> {
     const user = new User();
     const image = new Image();
     (user.name = name.firstName()),
-    image.url=random.image();
-      (user.avatar = image),
+      (user.avatar = random.image()),
       (user.isAdmin = true);
     (user.bio = "I'm a Admin"),
       (user.email = 'admin@admin.com'),

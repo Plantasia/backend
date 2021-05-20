@@ -14,7 +14,6 @@ import {
 import { Category } from './category.entity';
 import { User } from './user.entity';
 import { Comment } from './comments.entity';
-import Image from './image.entity'
 
 
 
@@ -29,16 +28,8 @@ export class Topic extends BaseEntity{
   @Column()
   textBody: string;
 
-  @JoinColumn()
-  @OneToOne(
-    () => Image,
-    {
-      lazy: true,
-      nullable: true
-    }
-  )
-  imageStorage: Image;
-
+  @Column()
+  imageStorage: string;
 
   @Column({ default: true })
   isActive: boolean;
