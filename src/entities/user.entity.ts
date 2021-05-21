@@ -29,7 +29,8 @@ export class User extends BaseEntity{
   @Column({ default: 'USER' })
   role: string;
 
-  @Column()
+
+  @Column({default: "https://plantasia.s3-sa-east-1.amazonaws.com/default-profile.png"})
   avatar: string;
 
   @Column()

@@ -144,105 +144,103 @@ export class TopicsService {
         'com.user',
         'userComment',
         'com.userId = userComment.id',
-      )
-      .where('t.id = :id', { id: topicId })
-
-      .select([
-        'userComment.id',
-        'userComment.name',
-        'userComment.avatar',
-        'userComment.email',
-        'userComment.created_at',
-        'userComment.bio',
-
-        'user.id',
-        'user.name',
-        'user.avatar',
-        'user.email',
-        'user.created_at',
-
-        't.id',
-        't.name',
-        't.textBody',
-        't.imageStorage',
-        't.created_at',
-        't.updated_at',
-
-        'cat.id',
-        'cat.name',
-        'cat.authorId',
-        'cat.description',
-        'cat.imageStorage',
-        'cat.created_at',
-        'cat.updated_at',
-
-        'com.id',
-        'com.userId',
-        'com.textBody',
-        'com.created_at',
-        'com.updated_at',
-      ])
-      .orderBy({
-        'com.created_at': 'DESC', // Getting the last comment
-      })
-      .getOne();
-
-    console.log('__________end_______________');
-
-    return topic;
-  }
-
-  async findWithOrderBy() {
-    const qb = this.topicRepository.createQueryBuilder('Topic');
-    qb.orderBy('Topic.created_at', 'DESC');
-    console.log(qb.getQuery());
-    return await qb.getMany();
-  }
-
-  async findNoResponse(id: string) {
-    const qb = this.topicRepository.createQueryBuilder('Topic');
-    qb.where('Topic.response = 0');
-    console.log(qb.getQuery());
-    return await qb.getMany();
-  }
-
-  async findByCategory(categoryId: string) {
-    const qb = this.topicRepository.createQueryBuilder('topic');
-    qb.where('topic.categoryId = :categoryId', { categoryId });
-
-    qb.select([
-      'topic.id',
-      'topic.name',
-      'topic.textBody',
-      'topic.imageStorage',
-      'topic.created_at',
-      'topic.updated_at',
-    ]);
-
-    console.log(qb.getQuery());
-    const topic = await qb.getMany();
-
-    return { topic };
-  }
-
-  async findById(id: string): Promise<Topic> {
-    return this.topicRepository.findOne({
-      where: {
-        id: id,
-      },
-    });
-  }
-
-  async update(id: string, data): Promise<Topic> {
-    await this.topicRepository.update(id, data);
-
-    return await this.topicRepository.findOne(id);
-  }
-
-  async delete(id: string): Promise<void> {
-    await this.topicRepository.softDelete(id);
-  }
-
+        )
+        .where('t.id = :id', { id: topicId })
+        
+        .select([
+          'userComment.id',
+          'userComment.name',
+          'userComment.avatar',
+          'userComment.email',
+          'userComment.created_at',
+          
+          'user.id',
+          'user.name',
+          'user.avatar',
+          'user.email',
+          'user.created_at',
+          
+          't.id',
+          't.name',
+          't.textBody',
+          't.imageStorage',
+          't.created_at',
+          't.updated_at',
+          
+          'cat.id',
+          'cat.name',
+          'cat.authorId',
+          'cat.description',
+          'cat.imageStorage',
+          'cat.created_at',
+          'cat.updated_at',
+          
+          'com.id',
+          'com.userId',
+          'com.textBody',
+          'com.created_at',
+          'com.updated_at',
+        ])
+        .orderBy({
+          'com.created_at': 'ASC', // Getting the last comment
+        })
+        .getOne();
+        
+        console.log('__________end_______________');
+        
+        return topic ;
+      }
+      
+      async findWithOrderBy() {
+        const qb = this.topicRepository.createQueryBuilder('Topic');
+        qb.orderBy('Topic.created_at', 'DESC');
+        console.log(qb.getQuery());
+        return await qb.getMany();
+      }
+      
+      async findNoResponse(id: string) {
+        const qb = this.topicRepository.createQueryBuilder('Topic');
+        qb.where('Topic.response = 0');
+        console.log(qb.getQuery());
+        return await qb.getMany();
+      }
+      
+      async findByCategory(categoryId: string) {
+        const qb = this.topicRepository.createQueryBuilder('topic');
+        qb.where('topic.categoryId = :categoryId', { categoryId });
+        
+        qb.select([
+          'topic.id',
+          'topic.name',
+          'topic.textBody',
+          'topic.imageStorage',
+          'topic.created_at',
+          'topic.updated_at',
+        ]);
+        
+        console.log(qb.getQuery());
+        const topic = await qb.getMany();
+        
+        return { topic };
+      }
+      
+      async findById(id: string): Promise<Topic> {
+        return this.topicRepository.findOne({
+          where: {
+            id: id,
+          },
+        });
+      }
+      
+      async update(id: string, data): Promise<Topic> {
+        await this.topicRepository.update(id, data);
+        
+        return await this.topicRepository.findOne(id);
+      }
+      
+      async delete(id: string): Promise<void> {
+        await this.topicRepository.softDelete(id);
+      }
   async addImage(topicId: string , imageBuffer: Buffer, filename: string) {
     const imageStorage = await this.filesService.uploadPublicFile(imageBuffer, filename);
     const topic = await this.findById(topicId);
@@ -252,4 +250,5 @@ export class TopicsService {
     })
     return imageStorage;
   }
-}
+    }
+    
