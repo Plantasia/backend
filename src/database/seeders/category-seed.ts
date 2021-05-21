@@ -1,5 +1,5 @@
 import { Category } from '../../entities/category.entity';
-import { internet } from 'faker';
+import { internet, image } from 'faker';
 import { getRepository } from 'typeorm';
 
 export default async function CategorySeed(verifyRun: boolean) {
@@ -8,13 +8,14 @@ export default async function CategorySeed(verifyRun: boolean) {
 
   if (!resp) return resp;
 
+
   const category1 = new Category();
   category1.name = 'Suculentas';
   category1.description = ` Essa categoria é destinada às plantas
   suculentas de todas espécie`;
   category1.authorId = '237eec28-d2a9-4d0d-8d0b-6d0105475f33';
   category1.authorEmail = 'admin@admin.com';
-  category1.imageStorage = internet.avatar();
+  category1.imageStorage = image.nature()
 
   const category2 = new Category();
   category2.name = 'Cactáceas';
@@ -22,7 +23,7 @@ export default async function CategorySeed(verifyRun: boolean) {
   cactáceas de todas espécie`;
   category2.authorId = '4fb69684-5126-4b3f-9d29-d65cb7fbf2e2';
   category2.authorEmail = 'admin@admin.com';
-  category2.imageStorage = internet.avatar();
+  category2.imageStorage = image.nature()
 
   const category3 = new Category();
   category3.name = 'Gramíneas';
@@ -30,7 +31,7 @@ export default async function CategorySeed(verifyRun: boolean) {
   gramíneas de todas espécie`;
   category3.authorId = '875723a6-3a66-402f-b6fa-5f609772c873';
   category3.authorEmail = 'admin@admin.com';
-  category3.imageStorage = internet.avatar();
+  category3.imageStorage = image.nature()
 
   const category4 = new Category();
   category4.name = 'Briófitas';
@@ -38,7 +39,7 @@ export default async function CategorySeed(verifyRun: boolean) {
   briófitas de todas espécie`;
   category4.authorId = '875723a6-3a66-402f-b6fa-5f609772c873';
   category4.authorEmail = 'admin@admin.com';
-  category4.imageStorage = internet.avatar();
+  category4.imageStorage = image.nature()
 
   const category5 = new Category();
   category5.name = 'Angiospermas';
@@ -46,7 +47,7 @@ export default async function CategorySeed(verifyRun: boolean) {
   angiospermas de todas espécie`;
   category5.authorId = '875723a6-3a66-402f-b6fa-5f609772c873';
   category5.authorEmail = 'admin@admin.com';
-  category5.imageStorage = internet.avatar();
+  category5.imageStorage = image.nature()
 
   const category6 = new Category();
   category6.name = 'Flores';
@@ -54,7 +55,7 @@ export default async function CategorySeed(verifyRun: boolean) {
   de todas espécie`;
   category6.authorId = '4fb69684-5126-4b3f-9d29-d65cb7fbf2e2';
   category6.authorEmail = 'admin@admin.com';
-  category6.imageStorage = internet.avatar();
+  category6.imageStorage = image.nature()
 
   const category7 = new Category();
   category7.name = 'Algas';
@@ -62,7 +63,7 @@ export default async function CategorySeed(verifyRun: boolean) {
   todas espécie`;
   category7.authorId = '237eec28-d2a9-4d0d-8d0b-6d0105475f33';
   category7.authorEmail = 'admin@admin.com';
-  category7.imageStorage = internet.avatar();
+  category7.imageStorage = image.nature()
 
   const category8 = new Category();
   category8.name = 'Exóticas';
@@ -70,7 +71,7 @@ export default async function CategorySeed(verifyRun: boolean) {
   exóticas de todas espécie`;
   category8.authorId = '4fb69684-5126-4b3f-9d29-d65cb7fbf2e2';
   category8.authorEmail = 'admin@admin.com';
-  category8.imageStorage = internet.avatar();
+  category8.imageStorage = image.nature()
 
   const category9 = new Category();
   category9.name = 'Ornamentais';
@@ -78,7 +79,7 @@ export default async function CategorySeed(verifyRun: boolean) {
   ornamentais de todas espécie`;
   category9.authorId = '237eec28-d2a9-4d0d-8d0b-6d0105475f33';
   category9.authorEmail = 'admin@admin.com';
-  category9.imageStorage = internet.avatar();
+  category9.imageStorage = image.nature()
 
   const category10 = new Category();
   category10.name = 'Carnívoras';
@@ -86,7 +87,7 @@ export default async function CategorySeed(verifyRun: boolean) {
   carnívoras de todas espécie`;
   category10.authorId = '237eec28-d2a9-4d0d-8d0b-6d0105475f33';
   category10.authorEmail = 'admin@admin.com';
-  category10.imageStorage = internet.avatar();
+  category10.imageStorage = image.nature()
 
   const categories = [
     category1,
