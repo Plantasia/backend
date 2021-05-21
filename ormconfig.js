@@ -1,5 +1,3 @@
-const path = require('path');
-
 module.exports = {
   type: 'mysql',
   username: process.env.ORM_USER,
@@ -9,10 +7,10 @@ module.exports = {
   synchronize: true,
   port: 3306,
   logging: true,
-  entities: [path.resolve('build', 'entities', '*')],
-  migrations: [path.resolve('build', 'database', 'migrations', '*')],
+  entities: ["./src/entities/*.ts"],
+  migrations: ["./src/database/migations/*.ts"],
   cli: {
-    entitiesDir: "./src/entities",
-    migrationsDir:"./src/database/migrations"
+    entitiesDir: "src/entities",
+    migrationsDir:"src/database/migrations"
   },
 };
