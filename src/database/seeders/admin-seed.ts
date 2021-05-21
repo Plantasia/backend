@@ -13,7 +13,6 @@ export default async function AdminSeed(verifyRun: boolean): Promise<boolean> {
   const userRepository = await getRepository(User);
   for (let i = 0; i <= 10; i++) {
     const user = new User();
-    const image = new Image();
     (user.name = name.firstName()),
       (user.avatar = random.image()),
       (user.isAdmin = true);
