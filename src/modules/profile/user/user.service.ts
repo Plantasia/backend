@@ -211,7 +211,7 @@ export class UserService {
     await this.userRepository.update(userId, {
       ...user,
       avatar
-    });
+    })
     return avatar;
   }
 }

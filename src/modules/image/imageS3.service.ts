@@ -1,16 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import Image from '../../entities/image.entity';
 import { S3 } from 'aws-sdk';
 import { v4 as uuid } from 'uuid';
  
 @Injectable()
 export class FilesService {
   constructor(
-    @InjectRepository(Image)
-    private publicFilesRepository: Repository<Image>,
-   
+
   ) {}
  
   async uploadPublicFile(dataBuffer: Buffer, filename: string) {
@@ -23,11 +18,6 @@ export class FilesService {
     })
       .promise();
  
-    const newFile = this.publicFilesRepository.create({
-      key: uploadResult.Key,
-      url: uploadResult.Location
-    });
-    await this.publicFilesRepository.save(newFile);
-    return newFile;
+    return uploadResult.Location;
   }
 }

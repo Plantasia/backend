@@ -241,5 +241,14 @@ export class TopicsService {
       async delete(id: string): Promise<void> {
         await this.topicRepository.softDelete(id);
       }
+  async addImage(topicId: string , imageBuffer: Buffer, filename: string) {
+    const imageStorage = await this.filesService.uploadPublicFile(imageBuffer, filename);
+    const topic = await this.findById(topicId);
+    await this.topicRepository.update(topicId, {
+      ...topic,
+      imageStorage
+    });
+    return imageStorage;
+  }
     }
     

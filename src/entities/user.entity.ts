@@ -13,7 +13,6 @@ import {
 } from 'typeorm';
 import { Topic } from './topic.entity';
 import { Comment } from './comments.entity';
-import Image from './image.entity'
 
 @Entity('users')
 export class User extends BaseEntity{
@@ -30,15 +29,8 @@ export class User extends BaseEntity{
   @Column({ default: 'USER' })
   role: string;
 
-  @JoinColumn()
-  @OneToOne(
-    () => Image,
-    {
-      lazy: true,
-      nullable: true
-    }
-  )
-  public avatar?: Image
+  @Column()
+  avatar: string;
 
   @Column()
   email: string;

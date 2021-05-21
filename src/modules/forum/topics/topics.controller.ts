@@ -183,7 +183,7 @@ export class TopicsController {
   @Post('image/:id')
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileInterceptor('file'))
-  async addAvatar(@Request() req, @Param('id') id: string, @UploadedFile() file: Express.Multer.File) {
+  async addImage(@Request() req, @Param('id') id: string, @UploadedFile() file: Express.Multer.File) {
     const token = req.headers.authorization;
     const check = await this.userService.authorizationCheck(token);
     const author = this.topicsService.findOne(id);
@@ -192,13 +192,11 @@ export class TopicsController {
       (await author).user.id === (await requesterUser).id ||
       (await requesterUser).isAdmin === true
     ) {
-      return this.userService.addAvatar(id,file.buffer, file.originalname);
+      return this.topicsService.addImage(id,file.buffer, file.originalname);
     } else {
       throw new UnauthorizedException({
         error: 'You are not permitted to update this Topic!',
       });
     }
-
-   
   }
 }

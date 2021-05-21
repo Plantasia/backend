@@ -1,7 +1,6 @@
 import { User } from '../../entities/user.entity';
 import { internet, name, random } from 'faker';
 import { getRepository } from 'typeorm';
-import Image from '@entities/image.entity';
 
 export default async function UserSeed(): Promise<boolean> {
   const users = [];
@@ -11,8 +10,7 @@ export default async function UserSeed(): Promise<boolean> {
     const now = new Date();
     const image = new Image();
     (user.name = name.firstName()),
-    image.url=random.image();
-      (user.avatar = image),
+      (user.avatar = random.image()),
       (user.bio = random.words()),
       (user.email = internet.email()),
       (user.password = '123');
