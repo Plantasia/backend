@@ -1,10 +1,7 @@
 import { IsEmpty, IsNotEmpty } from 'class-validator';
-import { Topic } from '../../../entities/topic.entity';
-import { User } from '@entities/user.entity';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateCommentDTO {
-
   @IsNotEmpty()
   @ApiProperty({
     type: String,
@@ -12,8 +9,6 @@ export class CreateCommentDTO {
     default: '',
   })
   public readonly textBody: string;
-
-
 
   @ApiProperty({
     type: String,
@@ -23,21 +18,17 @@ export class CreateCommentDTO {
   @IsEmpty()
   public readonly reaction: string;
 
-
   @IsEmpty()
   public readonly disable: boolean;
 
   @IsEmpty()
   public readonly hasParenteComment: boolean;
 
-
   @IsEmpty()
   public readonly idParentComment: string;
-  
 
   @IsEmpty()
   public readonly indexOrder: number;
-
 
   @IsNotEmpty()
   @ApiProperty({
@@ -46,5 +37,4 @@ export class CreateCommentDTO {
     default: '',
   })
   public topic_id: string;
-
 }
