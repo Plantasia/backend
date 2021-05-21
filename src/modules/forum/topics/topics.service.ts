@@ -247,7 +247,7 @@ export class TopicsService {
     await this.topicRepository.update(topicId, {
       ...topic,
       imageStorage
-    });
+    })
     return imageStorage;
   }
     }
