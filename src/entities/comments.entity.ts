@@ -43,7 +43,7 @@ export class Comment {
   category: Category
 
   @UpdateDateColumn()
-  updated_at: boolean;
+  updated_at: Date;
 
   @CreateDateColumn()
   created_at: Date;

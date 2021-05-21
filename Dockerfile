@@ -8,8 +8,6 @@ COPY . .
 # Expose API port
 EXPOSE 3333
 
-RUN yarn
-
-RUN yarn build
+RUN yarn && rm -rf ./build && yarn build
 
 CMD [ "yarn", "start:dev" ]

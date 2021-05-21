@@ -1,4 +1,4 @@
-import { QueryPage } from './../../../utils/page';
+import { QueryPage } from '@utils/page';
 import {
   Body,
   Controller,
@@ -14,11 +14,13 @@ import {
   Query,
   UnauthorizedException,
   HttpStatus,
+  UseInterceptors,
+  UploadedFile 
 } from '@nestjs/common';
 import { TopicsService } from './topics.service';
-import { Topic } from '../../../entities/topic.entity';
-import { CreateTopicDTO } from './create-topic.dto';
-import { DeletedItemTopicDTO } from './delete-topic.dto';
+import { Topic } from '@entities/topic.entity';
+import { CreateTopicDTO } from './dto/create-topic.dto';
+import { DeletedItemTopicDTO } from './dto/delete-topic.dto';
 import { JwtAuthGuard } from '../../../auth/jwt-auth.guard';
 import {
   ApiCreatedResponse,
@@ -30,6 +32,9 @@ import {
 } from '@nestjs/swagger';
 import { HttpException } from '@nestjs/common/exceptions/http.exception';
 import { UserService } from '../../profile/user/user.service';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { PaginatedTopicsDTO } from './dto/paginated-topics.dto';
+
 
 @ApiTags('topics')
 @Controller('forum/topics')
@@ -39,10 +44,10 @@ export class TopicsController {
     private readonly userService: UserService,
   ) {}
 
-  @Get('byCategory/:categoryId')
-  async getTopicsByCategory(@Param('categoryId') categoryId: string) {
-    return this.topicsService.findByCategory(categoryId);
-  }
+  // @Get('byCategory/:categoryId')
+  // async getTopicsByCategory(@Param('categoryId') categoryId: string):Promise<Topic[]> {
+  //   return this.topicsService.findByCategory(categoryId);
+  // }
 
   /*@Get('admin/:topicId')
   async adminGetTopicById(@Param('topicId') topicId: string) {
@@ -50,14 +55,14 @@ export class TopicsController {
   } */
 
   @Get(':topicId')
-  async getTopicById(@Param('topicId') topicId: string) {
+  async getTopicById(@Param('topicId') topicId: string): Promise<Topic> {
     return this.topicsService.takeTopicData(topicId);
   }
 
   @ApiOkResponse({ description: 'topic succesfully returned' })
   @ApiBadRequestResponse({ description: 'Bad request' })
   @Get()
-  async findAll(@Query() query: QueryPage) {
+  async findAll(@Query() query: QueryPage):Promise<PaginatedTopicsDTO> {
     const page = query.page;
     return this.topicsService.findAll(page);
   }
@@ -65,7 +70,7 @@ export class TopicsController {
   @ApiOkResponse({ description: 'topic succesfully returned' })
   @ApiForbiddenResponse({ description: 'Forbidden' })
   @Get('admin/list')
-  async adminFindAll() {
+  async adminFindAll():Promise<Topic[]> {
     return this.topicsService.adminFindAll();
   }
 
@@ -169,6 +174,26 @@ export class TopicsController {
           message,
         };
       }
+    } else {
+      throw new UnauthorizedException({
+        error: 'You are not permitted to update this Topic!',
+      });
+    }
+  }
+
+  @Post('image/:id')
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(FileInterceptor('file'))
+  async addImage(@Request() req, @Param('id') id: string, @UploadedFile() file: Express.Multer.File) {
+    const token = req.headers.authorization;
+    const check = await this.userService.authorizationCheck(token);
+    const author = this.topicsService.findOne(id);
+    const requesterUser = this.userService.findByToken(token);
+    if (
+      (await author).user.id === (await requesterUser).id ||
+      (await requesterUser).isAdmin === true
+    ) {
+      return this.topicsService.addImage(id,file.buffer, file.originalname);
     } else {
       throw new UnauthorizedException({
         error: 'You are not permitted to update this Topic!',

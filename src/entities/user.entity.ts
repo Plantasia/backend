@@ -13,7 +13,6 @@ import {
 } from 'typeorm';
 import { Topic } from './topic.entity';
 import { Comment } from './comments.entity';
-import Image from './image.entity'
 
 @Entity('users')
 export class User extends BaseEntity{
@@ -30,26 +29,16 @@ export class User extends BaseEntity{
   @Column({ default: 'USER' })
   role: string;
 
-  @Column({ default: '' })
-  avatar: string;
 
-  @JoinColumn()
-  @OneToOne(
-    () => Image,
-    {
-      eager: true,
-      nullable: true
-    }
-  )
-  public avatarS3?: Image
+  @Column({default: "https://plantasia.s3-sa-east-1.amazonaws.com/default-profile.png"})
+  avatar: string;
 
   @Column()
   email: string;
 
 
-  @Generated('increment')
-  @Column()
-  seedingId:number
+ @Column({default: null})
+ seedingId:number
 
   @Column()
   password: string;

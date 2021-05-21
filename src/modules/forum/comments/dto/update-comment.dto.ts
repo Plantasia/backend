@@ -1,9 +1,7 @@
 import { IsEmpty, IsNotEmpty } from 'class-validator';
-import { Topic } from '../../../entities/topic.entity';
-import { User } from '@entities/user.entity';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class CreateCommentDTO {
+export class UpdateCommentDTO {
 
   @IsNotEmpty()
   @ApiProperty({
@@ -12,7 +10,6 @@ export class CreateCommentDTO {
     default: '',
   })
   public readonly textBody: string;
-
 
 
   @ApiProperty({
