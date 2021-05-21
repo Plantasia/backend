@@ -1,12 +1,13 @@
+import {  FindAllModel } from './api-model/find-all-model';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateCommentDTO } from './create-comment.dto';
+import { CreateCommentDTO } from './dto/create-comment.dto';
 import { Comment } from '../../../entities/comments.entity';
 import { Topic } from '../../../entities/topic.entity';
 import { TopicsService } from '../topics/topics.service';
 import { UserService } from '../../profile/user/user.service';
-import PaginatedCommentsModel from './paginated-comments-dtio';
+import PaginatedCommentsModel from './dto/paginated-comments-dtio';
 
 
 @Injectable()
@@ -39,7 +40,7 @@ export class CommentService {
     return this.commentsRepository.find();
   }
 
-  async findAll(page) {
+  async findAll(page): Promise<FindAllModel> {
     
     if (!page || page <= 0) {
       page = 1;
@@ -65,8 +66,8 @@ export class CommentService {
      }
   }
 
-  async delete(id: string): Promise<void> {
-    await this.commentsRepository.softDelete(id);
+  async delete(id: string){
+    return  (await this.commentsRepository.softDelete(id)).generatedMaps
   }
 
   async create(data: CreateCommentDTO, req: any): Promise<Comment> {

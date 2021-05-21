@@ -1,4 +1,6 @@
-import { QueryPage } from './../../../utils/page';
+import { FindAllModel } from './api-model/find-all-model';
+
+import { QueryPage } from '@utils/page';
 import {
   Body,
   Controller,
@@ -17,10 +19,10 @@ import {
   UnauthorizedException
 } from '@nestjs/common';
 import { CommentService } from './comments.service';
-import { CreateCommentDTO } from './create-comment.dto';
-import { DeletedItemCommentDTO } from './delete-comment.dto';
-import { Comment } from '../../../entities/comments.entity';
-import { JwtAuthGuard } from '../../../auth/jwt-auth.guard';
+import { CreateCommentDTO } from './dto/create-comment.dto';
+import { UpdateCommentDTO } from './dto/update-comment.dto'
+import { Comment } from '@entities/comments.entity';
+import { JwtAuthGuard } from '@auth/jwt-auth.guard';
 import {
   ApiCreatedResponse,
   ApiBadRequestResponse,
@@ -31,6 +33,7 @@ import {
 } from '@nestjs/swagger';
 import { UserService } from 'src/modules/profile/user/user.service';
 import { TopicsService } from '../topics/topics.service';
+import { CommentModel } from './dto/paginated-comments-dtio';
 @ApiTags('comments')
 @Controller('forum/comments')
 export class CommentController {
@@ -43,7 +46,7 @@ export class CommentController {
   @Get()
   @ApiCreatedResponse({ description: 'comment succesfully created' })
   @ApiBadRequestResponse({ description: 'Bad request' })
-  findAll(@Query() query: QueryPage ) {
+  findAll(@Query() query: QueryPage ):Promise<FindAllModel>{
   
     const page = query.page;
     return this.commentService.findAll(page);
@@ -52,7 +55,7 @@ export class CommentController {
   @Get('admin')
   @ApiCreatedResponse({ description: 'comment succesfully created' })
   @ApiForbiddenResponse({ description: 'Forbidden' })
-  adminFindAll(@Query() query: QueryPage ) {
+  adminFindAll(@Query() query: QueryPage ):Promise<Comment[]> {
   
     const page = query.page;
     return this.commentService.adminFindAll(page);
@@ -65,35 +68,42 @@ export class CommentController {
   @ApiBadRequestResponse({ description: 'Bad request' })
   @UsePipes(ValidationPipe)
   async createComment(
-    @Body() createCommentDTO: CreateCommentDTO,
+    @Body() data: CreateCommentDTO,
     @Request() req,
-  ): Promise<Comment> {
+  ): Promise<CommentModel> {
     const token =  req.headers.authorization
     const userAlreadyExists = await this.userService.authorizationCheck(
       token,
     );
-    const topic_id = createCommentDTO.topic_id;
+    const topic_id = data.topic_id;
     const topicAlreadyExists = await this.topicsService.findById(topic_id);
     //We do not use the userID, but the token, is this   if (!userAlreadyExists) necessary?
     if (!userAlreadyExists) {
       throw new HttpException(
         {
-          status: HttpStatus.FORBIDDEN,
-          error: 'User does not exists, please check data!',
+          status: HttpStatus.UNAUTHORIZED,
+          error: 'Usuário não autorizado ou inexistente!',
         },
-        HttpStatus.FORBIDDEN,
+        HttpStatus.UNAUTHORIZED,
       );
     }
     else if (!topicAlreadyExists) {
       throw new HttpException(
         {
-          status: HttpStatus.FORBIDDEN,
-          error: 'Topic does not exists, please check data!',
+          status: HttpStatus.UNPROCESSABLE_ENTITY,
+          error: 'Tópico não existe',
         },
         HttpStatus.FORBIDDEN,
       );
     } else {
-      return this.commentService.create(createCommentDTO, token);
+      
+      const{id,textBody,updated_at} = await this.commentService.create(data, token);
+      
+      return {
+        id,
+        textBody,
+        updated_at
+      }
     }
   }
 
@@ -105,11 +115,11 @@ export class CommentController {
     name: 'JWT',
     description: 'JWT token must to be passed to do this request',
   })
-  async findOne(@Param('id') id: string, @Request() req): Promise<Comment> {
+  async findOne(@Param('id') id: string, @Request() req): Promise<CommentModel> {
+    
     const token = req.headers.authorization
-    const check = await this.userService.authorizationCheck(
-      token,
-    );
+   this.userService.authorizationCheck(token);
+
     return this.commentService.findOne(id);
   }
 
@@ -121,34 +131,32 @@ export class CommentController {
     name: 'JWT',
     description: 'JWT token must to be passed to do this request',
   })
-  async remove(@Param('id') id: string, @Request() req): Promise<DeletedItemCommentDTO> {
+  async deleteComment(@Param('id') id: string, @Request() req): Promise<void> {
+    
     const token = req.headers.authorization
-    const check = await this.userService.authorizationCheck(
-      token,
-    );
-    const author = this.commentService.findOne(id)
-    const requesterUser = this.userService.findByToken(token)
-    if ((await author).user.id === (await requesterUser).id ||
-    (await requesterUser).isAdmin === true
-    ){
-        const deletedIten = this.commentService.delete(id);
-        if (!deletedIten){
+    await this.userService.authorizationCheck(token);
+
+    const author = await this.commentService.findOne(id)
+    const user = await this.userService.findByToken(token)
+
+    if (author.user.id ===  user.id ||
+      user.isAdmin === true){
+
+        const deleted = await this.commentService.delete(id);
+
+        if (!deleted){
           throw new HttpException(
             {
-              status: HttpStatus.BAD_REQUEST,
-              error: 'Error to delete comment, please check data!',
+              status: HttpStatus.EXPECTATION_FAILED,
+              error: 'Erro ao deletar comentário!',
             },
-            HttpStatus.BAD_REQUEST,
+            HttpStatus.EXPECTATION_FAILED,
           );
-        }else{
-          const message = 'Iten '+ id +' deleted'
-
-          return {message};
-      
         }
-      }else{
+      }
+      else{
         throw new UnauthorizedException({
-          error: 'You are not permitted to remove this comment!',
+          error: 'Você não está autorizado a deletar esse comentário',
         });
       }
     
@@ -160,23 +168,27 @@ export class CommentController {
   @ApiBadRequestResponse({ description: 'Bad request' })
   async update(
     @Param('id') id: string,
-    @Body() createCommentDTO: CreateCommentDTO,
+    @Body() data: UpdateCommentDTO,
     @Request() req: any,
-  ): Promise<Comment> {
+  ): Promise<CommentModel> {
+
     const token = req.headers.authorization
-    const check = await this.userService.authorizationCheck(
-      token,
-    );
-    const author = this.commentService.findOne(id)
-    const requesterUser = this.userService.findByToken(token)
-    if ((await author).user.id === (await requesterUser).id ||
-    (await requesterUser).isAdmin === true
-    ){
-        return this.commentService.update(id, createCommentDTO);
-    }else{
+    this.userService.authorizationCheck(token);
+
+    const author = await this.commentService.findOne(id)
+    const user = await this.userService.findByToken(token)
+
+    if (author.user.id ===  user.id ||
+        user.isAdmin === true){
+
+        return this.commentService.update(id, data);
+    }
+    else{
+     
       throw new UnauthorizedException({
         error: 'You are not permitted to update this comment!',
       });
+
     }
   }
 }

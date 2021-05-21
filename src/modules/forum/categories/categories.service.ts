@@ -1,17 +1,11 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CreateCategoryDTO } from './create-category.dto';
+import { CreateCategoryDTO } from './dto/create-category.dto';
 import { Category } from '../../../entities/category.entity';
-import {
-  getRepository,
-  Repository,
-  EntityManager,
-  createQueryBuilder,
-  getManager,
-  getConnectionManager,
-} from 'typeorm';
-import { PaginatedCategoriesResultDTO } from './paginated-categories.dto';
+import { Repository, getManager } from 'typeorm';
+import { FindAllModel } from './api-model/find-all.model';
 import { Topic } from '@entities/topic.entity';
+import UpdateModel from './api-model/update-model';
 import { FilesService } from '../../image/imageS3.service';
 
 @Injectable()
@@ -24,10 +18,9 @@ export class CategoryService {
     private topicRepository: Repository<Topic>,
 
     private filesService: FilesService,
-
   ) {}
 
-  async findAll(page): Promise<PaginatedCategoriesResultDTO> {
+  async findAll(page): Promise<FindAllModel> {
     console.log('PAGE:\n');
     console.log(page);
 
@@ -94,8 +87,8 @@ export class CategoryService {
     const skip = 10 * (page - 1);
 
     const categories = await this.categoryRepository.find({
-      withDeleted:true
-    })
+      withDeleted: true,
+    });
     return categories;
   }
 
@@ -133,7 +126,7 @@ export class CategoryService {
       where: {
         id,
       },
-      withDeleted:true,
+      withDeleted: true,
     })[0];
   }
 
@@ -167,17 +160,40 @@ export class CategoryService {
     return this.categoryRepository.save(cat);
   }
 
-  async update(id: string, data): Promise<Category> {
-    await this.categoryRepository.update(id, data);
-    return this.categoryRepository.findOne(id);
+  async update(
+    categoryId: string,
+    data: CreateCategoryDTO,
+  ): Promise<UpdateModel> {
+    await this.categoryRepository.update(categoryId, data);
+
+    const {
+      name,
+      id,
+      updated_at,
+      description,
+      created_at,
+      imageStorage,
+      authorEmail,
+    } = await this.categoryRepository.findOne(categoryId);
+
+    return {
+      name,
+      id,
+      updated_at,
+      description,
+      created_at,
+    };
   }
 
-  async addImage(categoryId: string , imageBuffer: Buffer, filename: string) {
-    const imageStorage = await this.filesService.uploadPublicFile(imageBuffer, filename);
+  async addImage(categoryId: string, imageBuffer: Buffer, filename: string) {
+    const imageStorage = await this.filesService.uploadPublicFile(
+      imageBuffer,
+      filename,
+    );
     const category = await this.findById(categoryId);
     await this.topicRepository.update(categoryId, {
       ...category,
-      imageStorage
+      imageStorage,
     });
     return imageStorage;
   }

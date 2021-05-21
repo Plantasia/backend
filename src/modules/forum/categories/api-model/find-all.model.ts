@@ -1,6 +1,6 @@
 import { Category } from '@entities/category.entity';
 
-export class PaginatedCategoriesResultDTO {
+export class FindAllModel{
   public categories: Category[];
   public currentPage: number;
   public prevPage: number;
