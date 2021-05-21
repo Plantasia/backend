@@ -16,7 +16,8 @@
       "@controllers/*": ["./src/controllers/*"],
       "@auth/*": ["./src/auth/*"],
       "@seeders/*":["./src/database/seeders/*"],
-      "@services/*": ["./src/services/*"]
+      "@services/*": ["./src/services/*"],
+      "@image/*": ["./src/modules/image/*"]
     }, 
   },
   "include": ["**/*.ts"],

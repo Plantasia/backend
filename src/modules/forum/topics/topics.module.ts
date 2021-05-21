@@ -8,8 +8,9 @@ import { CategoryService } from '../categories/categories.service';
 import { Category } from '@entities/category.entity';
 import { UserService } from '../../profile/user/user.service';
 import { User } from '@entities/user.entity';
+import { SharedModule } from 'src/modules/shared/shared.module';
 @Module({
-  imports: [User, TypeOrmModule.forFeature([Topic, User, Category])],
+  imports: [User, TypeOrmModule.forFeature([Topic, User, Category]),SharedModule],
   providers: [TopicsService, CategoryService, UserService],
   controllers: [TopicsController],
   exports: [TypeOrmModule.forFeature([Topic])],

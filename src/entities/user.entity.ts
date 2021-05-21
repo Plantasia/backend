@@ -8,6 +8,8 @@ import {
   BaseEntity,
   DeleteDateColumn,
   Generated,
+  JoinColumn,
+  OneToOne
 } from 'typeorm';
 import { Topic } from './topic.entity';
 import { Comment } from './comments.entity';
@@ -27,16 +29,16 @@ export class User extends BaseEntity{
   @Column({ default: 'USER' })
   role: string;
 
-  @Column({ default: '' })
+
+  @Column({default: "https://plantasia.s3-sa-east-1.amazonaws.com/default-profile.png"})
   avatar: string;
 
   @Column()
   email: string;
 
 
-  @Generated('increment')
-  @Column()
-  seedingId:number
+ @Column({default: null})
+ seedingId:number
 
   @Column()
   password: string;

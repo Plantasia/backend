@@ -8,7 +8,7 @@ export default async function UserSeed(): Promise<boolean> {
   for (let i = 0; i < 30; i++) {
     const user = new User();
     const now = new Date();
-
+    const image = new Image();
     (user.name = name.firstName()),
       (user.avatar = random.image()),
       (user.bio = random.words()),

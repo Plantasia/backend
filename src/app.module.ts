@@ -6,6 +6,9 @@ import { UserModule } from './modules/profile/user/user.module';
 import { ForumModule } from './modules/forum/forum.module';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { mailerConfig } from './mailer/mailer.config';
+import { SharedModule } from './modules/shared/shared.module';
+import { ConfigModule } from '@nestjs/config';
+import * as Joi from 'joi';
 
 @Module({
   imports: [
@@ -14,6 +17,13 @@ import { mailerConfig } from './mailer/mailer.config';
     ForumModule,
     TypeOrmModule.forRoot({}),
     MailerModule.forRoot(mailerConfig),
+    ConfigModule.forRoot({
+      validationSchema: Joi.object({
+        AWS_REGION: Joi.string().required(),
+        AWS_ACCESS_KEY_ID: Joi.string().required(),
+        AWS_SECRET_ACCESS_KEY: Joi.string().required(),
+      }),
+    })
   ],
 })
 export class AppModule {}

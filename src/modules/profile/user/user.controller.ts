@@ -16,7 +16,8 @@ import {
   HttpException,
   Query,
   HttpStatus,
-  Put,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDTO } from './create-user.dto';
@@ -31,13 +32,14 @@ import {
   ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('users')
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @ApiOkResponse({ description: 'The users has been succesfull returned' })
   @ApiBadRequestResponse({ description: 'Bad request' })
   @ApiHeader({
@@ -48,11 +50,11 @@ export class UserController {
   async findAll(@Request() req, @Query() query: QueryPage) {
     console.log(req.headers.authorization);
 
-    // const thisUser = await this.userService.findByEmail(req.user.email);
+    const thisUser = await this.userService.findByEmail(req.user.email);
 
-    // const check = await this.userService.authorizationCheck(
-    //   req.headers.authorization,
-    //   );
+    const check = await this.userService.authorizationCheck(
+      req.headers.authorization,
+    );
 
     const page = query.page;
     const paginatedUsers = await this.userService.findAll(page); //passamos a variavel page como parametro do metodo FindAll
@@ -201,7 +203,7 @@ export class UserController {
   ): Promise<Partial<User>> {
     const token = req.headers.authorization;
     const check = await this.userService.authorizationCheck(token);
-    const requestedUser = await this.findOneByToken(token);
+    const requestedUser = await await this.userService.findByToken(token);
     const userRequestedToUpdate = await this.userService.findById(idUser);
 
     if (!userRequestedToUpdate || userRequestedToUpdate === undefined) {
@@ -226,7 +228,7 @@ export class UserController {
       const { name, email, bio, id } = user;
 
       return user;
-    }
+    } //add else
   }
   //find original local
 
@@ -234,5 +236,19 @@ export class UserController {
   async adminFindAll(@Request() req, @Query() query: QueryPage) {
     const page = query.page;
     return this.userService.adminFindAll(); //passamos a variavel page como parametro do metodo FindAll
+  }
+
+  @Post('avatar')
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(FileInterceptor('file'))
+  async addAvatar(
+    @Request() request,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    return this.userService.addAvatar(
+      request.user.id,
+      file.buffer,
+      file.originalname,
+    );
   }
 }

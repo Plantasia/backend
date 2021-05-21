@@ -13,6 +13,7 @@ import { Comment } from '@entities/comments.entity';
 import { Topic } from '@entities/topic.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from 'src/modules/profile/user/user.module';
+import { SharedModule } from '../shared/shared.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { UserModule } from 'src/modules/profile/user/user.module';
     CommentsModule,
     TopicModule,
     UserModule,
+    SharedModule
   ],
   controllers: [CategoryController, CommentController, TopicsController],
   providers: [CategoryService, CommentService, TopicsService],

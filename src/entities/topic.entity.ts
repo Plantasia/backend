@@ -9,11 +9,12 @@ import {
   OneToMany,
   BaseEntity,
   DeleteDateColumn,
-  Generated,
+  JoinColumn,
 } from 'typeorm';
 import { Category } from './category.entity';
 import { User } from './user.entity';
 import { Comment } from './comments.entity';
+
 
 
 @Entity('topics')
@@ -27,9 +28,8 @@ export class Topic extends BaseEntity{
   @Column()
   textBody: string;
 
-  @Column({default:""})
+  @Column()
   imageStorage: string;
-
 
   @Column({ default: true })
   isActive: boolean;
@@ -62,8 +62,7 @@ export class Topic extends BaseEntity{
   @DeleteDateColumn()
   deleted_at: Date;
 
-  @Column()
-  @Generated('increment')
+  @Column({default: null})
   seedingId: number;
 
 

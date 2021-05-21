@@ -3,9 +3,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { getRepository, Repository } from 'typeorm';
 import { Topic } from '@entities/topic.entity';
 import { User } from '@entities/user.entity';
-import { CreateTopicDTO } from './dto/create-topic.dto';
 import { Category } from '@entities/category.entity';
-import { PaginatedTopicsDTO } from './dto/paginated-topics.dto';
+import { PaginatedTopicsDTO, CreateTopicDTO } from './dto';
+import { FilesService } from '@image/imageS3.service';
 
 @Injectable()
 export class TopicsService {
@@ -18,6 +18,8 @@ export class TopicsService {
 
     @InjectRepository(Category)
     private readonly CategoryRepository: Repository<Category>,
+
+    private filesService: FilesService,
   ) {
     this.CategoryRepository = CategoryRepository;
     this.UserRepository = UserRepository;
@@ -29,18 +31,16 @@ export class TopicsService {
 
     topic.name = createTopicDTO.name;
     topic.textBody = createTopicDTO.textBody;
-    topic.imageStorage = createTopicDTO.imageStorage;
     const user_id = createTopicDTO.user_id;
     const category_id = createTopicDTO.category_id;
 
     topic.user = await this.UserRepository.findOne(user_id);
     topic.category = await this.CategoryRepository.findOne(category_id);
-    const t = await this.topicRepository.create(topic);
-
-    return this.topicRepository.save(t);
+    const newTopic = await this.topicRepository.create(topic);
+    return newTopic;
   }
 
-  async adminFindAll():Promise<Topic[]> {
+  async adminFindAll(): Promise<Topic[]> {
     return this.topicRepository.find({ withDeleted: true });
   }
 
@@ -129,7 +129,7 @@ export class TopicsService {
     });
   }
 
-  async takeTopicData(topicId: string):Promise<Topic> {
+  async takeTopicData(topicId: string): Promise<Topic> {
     console.log('__________start_____________');
 
     const topic = await getRepository(Topic)
@@ -150,7 +150,6 @@ export class TopicsService {
         'userComment.avatar',
         'userComment.email',
         'userComment.created_at',
-        'userComment.bio',
 
         'user.id',
         'user.name',
@@ -189,21 +188,21 @@ export class TopicsService {
     return topic;
   }
 
-  async findWithOrderBy():Promise<Topic[]> {
+  async findWithOrderBy() {
     const qb = this.topicRepository.createQueryBuilder('Topic');
     qb.orderBy('Topic.created_at', 'DESC');
     console.log(qb.getQuery());
-    return qb.getMany();
+    return await qb.getMany();
   }
 
-  async findNoResponse(id: string):Promise<Topic[]> {
+  async findNoResponse(id: string) {
     const qb = this.topicRepository.createQueryBuilder('Topic');
     qb.where('Topic.response = 0');
     console.log(qb.getQuery());
-    return  qb.getMany();
+    return await qb.getMany();
   }
 
-  async findByCategory(categoryId: string):Promise<Topic[]> {
+  async findByCategory(categoryId: string) {
     const qb = this.topicRepository.createQueryBuilder('topic');
     qb.where('topic.categoryId = :categoryId', { categoryId });
 
@@ -219,7 +218,7 @@ export class TopicsService {
     console.log(qb.getQuery());
     const topic = await qb.getMany();
 
-    return  topic ;
+    return { topic };
   }
 
   async findById(id: string): Promise<Topic> {
@@ -238,5 +237,17 @@ export class TopicsService {
 
   async delete(id: string): Promise<void> {
     await this.topicRepository.softDelete(id);
+  }
+  async addImage(topicId: string, imageBuffer: Buffer, filename: string) {
+    const imageStorage = await this.filesService.uploadPublicFile(
+      imageBuffer,
+      filename,
+    );
+    const topic = await this.findById(topicId);
+    await this.topicRepository.update(topicId, {
+      ...topic,
+      imageStorage,
+    });
+    return imageStorage;
   }
 }

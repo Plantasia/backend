@@ -1,9 +1,8 @@
-import { Category } from '@entities/category.entity';
-import { getConnection, MigrationInterface, QueryRunner, Table, TableForeignKey } from 'typeorm';
+import { Category } from '../../entities/category.entity';
+import { getConnection, MigrationInterface, QueryRunner, Table } from 'typeorm';
 
-export class createCategory1605697433254 implements MigrationInterface {
+export class createCategories1621383670928  implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
-   
     await queryRunner.createTable(
       new Table({
         name: 'categories',
@@ -15,7 +14,7 @@ export class createCategory1605697433254 implements MigrationInterface {
             generationStrategy: 'uuid',
             isNullable: false,
           },
-          
+
           {
             name: 'name',
             type: 'text',
@@ -25,14 +24,12 @@ export class createCategory1605697433254 implements MigrationInterface {
             name: 'authorEmail',
             type: 'text',
             isNullable: true,
-        
           },
 
           {
             name: 'authorId',
             type: 'text',
             isNullable: true,
-         
           },
           {
             name: 'description',
@@ -44,7 +41,6 @@ export class createCategory1605697433254 implements MigrationInterface {
             name: 'imageStorage',
             type: 'text',
             isNullable: true,
-            
           },
 
           {
@@ -57,16 +53,14 @@ export class createCategory1605697433254 implements MigrationInterface {
             name: 'created_at',
             type: 'datetime',
             isNullable: false,
-            default:'now()'
-
+            default: 'now()',
           },
 
           {
             name: 'updated_at',
             type: 'datetime',
             isNullable: true,
-            default:'now()'
-  
+            default: 'now()',
           },
 
           {
@@ -74,23 +68,20 @@ export class createCategory1605697433254 implements MigrationInterface {
             type: 'datetime',
             isNullable: true,
           },
-  
         ],
       }),
-      
     );
-  
 
     await queryRunner.clearSqlMemory();
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     await getConnection()
-    .createQueryBuilder()
-    .delete()
-    .from(Category)
-    .execute();
+      .createQueryBuilder()
+      .delete()
+      .from(Category)
+      .execute();
 
-    await queryRunner.dropTable("categories")
+    await queryRunner.dropTable('categories');
   }
 }
