@@ -68,27 +68,25 @@ export class TopicsService {
     };
   }
 
-  async findAll(page): Promise<PaginatedTopicsDTO> {
+  async findAll(page, category = null ): Promise<PaginatedTopicsDTO> {
     if (!page || page <= 0) {
       page = 1;
     } else page = parseInt(page);
 
-    const [result, total] = await this.topicRepository.findAndCount();
+    const [ result, total] = await this.topicRepository.findAndCount();
 
     const skip = 10 * (page - 1);
     const take = 10;
 
     const topics = await getRepository(Topic)
       .createQueryBuilder('t')
-      .innerJoin('t.category', 'cat', 'cat.id = t.categoryId')
-      .innerJoin('t.comments', 'com', 'com.topicId = t.id')
-      .innerJoin('t.user', 'topicOwner', 't.userId = topicOwner.id')
-      .innerJoin('com.user', 'ownerComment', 'com.userId = ownerComment.id')
-      .take(take)
-      .skip(skip)
+      .leftJoin('t.category', 'cat', 'cat.id = t.categoryId')
+      .leftJoin('t.comments', 'com', 'com.topicId = t.id')
+      .leftJoin('t.user', 'topicOwner', 't.userId = topicOwner.id')
+      .leftJoin('com.user', 'ownerComment', 'com.userId = ownerComment.id')
       .addSelect('SUM(comments.id)', 'totalComments')
       .select([
-        't.id',
+        't.id', 
         't.name',
         't.textBody',
         't.imageStorage',
@@ -97,7 +95,7 @@ export class TopicsService {
         'topicOwner.id',
         'topicOwner.avatar',
         'topicOwner.name',
-
+        
         'com.id',
         'com.updated_at',
         'com.created_at',
@@ -108,7 +106,10 @@ export class TopicsService {
       .orderBy({
         'com.created_at': 'ASC',
       })
+      .take(take)
+      .skip(skip)
       .getMany();
+    
 
     return {
       topics,
@@ -134,10 +135,10 @@ export class TopicsService {
 
     const topic = await getRepository(Topic)
       .createQueryBuilder('t')
-      .innerJoin('t.category', 'cat', 'cat.id = t.categoryId')
-      .innerJoin('t.comments', 'com', 'com.topicId = t.id')
-      .innerJoinAndSelect('t.user', 'user', 't.userId = user.id')
-      .innerJoinAndSelect(
+      .leftJoin('t.category', 'cat', 'cat.id = t.categoryId')
+      .leftJoin('t.comments', 'com', 'com.topicId = t.id')
+      .leftJoinAndSelect('t.user', 'user', 't.userId = user.id')
+      .leftJoinAndSelect(
         'com.user',
         'userComment',
         'com.userId = userComment.id',
