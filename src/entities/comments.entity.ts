@@ -22,7 +22,6 @@ export class Comment {
   @Column()
   textBody: string;
 
-
   @ManyToOne(
     () => User,
     user => user.comments,
@@ -35,12 +34,11 @@ export class Comment {
   )
   topic: Topic;
 
-
   @ManyToOne(
-    ()=> Category,
-    category=>category.comments
+    () => Category,
+    category => category.comments,
   )
-  category: Category
+  category: Category;
 
   @UpdateDateColumn()
   updated_at: Date;

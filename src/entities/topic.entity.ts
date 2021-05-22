@@ -15,10 +15,8 @@ import { Category } from './category.entity';
 import { User } from './user.entity';
 import { Comment } from './comments.entity';
 
-
-
 @Entity('topics')
-export class Topic extends BaseEntity{
+export class Topic extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -52,7 +50,6 @@ export class Topic extends BaseEntity{
   )
   comments: Comment[];
 
-
   @CreateDateColumn()
   created_at: Date;
 
@@ -62,8 +59,6 @@ export class Topic extends BaseEntity{
   @DeleteDateColumn()
   deleted_at: Date;
 
-  @Column({default: null})
+  @Column({ default: null })
   seedingId: number;
-
-
 }
