@@ -1,7 +1,7 @@
 import { Category } from '@entities/category.entity';
 import { Topic } from '@entities/topic.entity';
 import { User } from '@entities/user.entity';
-import { internet, random } from 'faker';
+import { internet, random, lorem } from 'faker';
 import { getRepository } from 'typeorm';
 
 export default async function TopicsSeed(verifyRun: boolean) {
@@ -9,7 +9,7 @@ export default async function TopicsSeed(verifyRun: boolean) {
   verifyRun ? (resp = true) : (resp = false);
 
   if (!resp) return resp;
-
+  
   const topicRepository = await getRepository(Topic);
   const userRepository = await getRepository(User);
   const categoryRepository = await getRepository(Category);
@@ -22,7 +22,7 @@ export default async function TopicsSeed(verifyRun: boolean) {
   t1.imageStorage = 'http://lorempixel.com/640/480/';
   t1.name = 'Cactáceas, quanta água usar?';
   t1.user = await userRepository.findOne({ where: { seedingId } });
-  t1.textBody = random.words();
+  t1.textBody = lorem.paragraphs(5);
   seedingId++;
   const topic1 = await topicRepository.create(t1);
 
@@ -33,7 +33,7 @@ export default async function TopicsSeed(verifyRun: boolean) {
   t2.imageStorage = 'http://lorempixel.com/640/480/';
   t2.name = 'Grama, como evitar o amarelamento?';
   t2.user = await userRepository.findOne({ where: { seedingId } });
-  t2.textBody = random.words();
+  t2.textBody = lorem.paragraphs(5);
   seedingId++;
   const topic2 = await topicRepository.create(t2);
 
@@ -44,7 +44,7 @@ export default async function TopicsSeed(verifyRun: boolean) {
   t3.imageStorage = 'http://lorempixel.com/640/480/';
   t3.name = 'Tirando melhor proveito da cultura de gramínea';
   t3.user = await userRepository.findOne({ where: { seedingId } });
-  t3.textBody = random.words();
+  t3.textBody = lorem.paragraphs(5);
   seedingId++;
   const topic3 = await topicRepository.create(t3);
 
@@ -55,7 +55,7 @@ export default async function TopicsSeed(verifyRun: boolean) {
   t4.imageStorage = 'http://lorempixel.com/640/480/';
   t4.name = 'Plantas Carnívoras, dá pra ter uma muda?';
   t4.user = await userRepository.findOne({ where: { seedingId } });
-  t4.textBody = random.words();
+  t4.textBody = lorem.paragraphs(5);
   seedingId++;
   const topic4 = await topicRepository.create(t4);
 
@@ -66,7 +66,7 @@ export default async function TopicsSeed(verifyRun: boolean) {
   t5.imageStorage = 'http://lorempixel.com/640/480/';
   t5.name = 'Como cuidar das plantas ornamentais?';
   t5.user = await userRepository.findOne({ where: { seedingId } });
-  t5.textBody = random.words();
+  t5.textBody = lorem.paragraphs(5);
   seedingId++;
   const topic5 = await topicRepository.create(t5);
 
@@ -77,7 +77,7 @@ export default async function TopicsSeed(verifyRun: boolean) {
   t6.imageStorage = 'http://lorempixel.com/640/480/';
   t6.name = 'O que são plantas suculentas?';
   t6.user = await userRepository.findOne({ where: { seedingId } });
-  t6.textBody = random.words();
+  t6.textBody = lorem.paragraphs(5);
   seedingId++;
   const topic6 = await topicRepository.create(t6);
 
@@ -86,7 +86,7 @@ export default async function TopicsSeed(verifyRun: boolean) {
   t7.imageStorage = 'http://lorempixel.com/640/480/';
   t7.name = 'Como fortalecer suas rosas vermelhas';
   t7.user = await userRepository.findOne({ where: { seedingId } });
-  t7.textBody = random.words();
+  t7.textBody = lorem.paragraphs(5);
   seedingId++;
   const topic7 = await topicRepository.create(t7);
 
@@ -97,7 +97,7 @@ export default async function TopicsSeed(verifyRun: boolean) {
   t8.imageStorage = 'http://lorempixel.com/640/480/';
   t8.name = 'Begônia, como cuidar';
   t8.user = await userRepository.findOne({ where: { seedingId } });
-  t8.textBody = random.words();
+  t8.textBody = lorem.paragraphs(5);
   seedingId++;
   const topic8 = await topicRepository.create(t8);
 
@@ -108,7 +108,7 @@ export default async function TopicsSeed(verifyRun: boolean) {
   t9.imageStorage = 'http://lorempixel.com/640/480/';
   t9.name = 'Será que você tem angiospermas em casa?';
   t9.user = await userRepository.findOne({ where: { seedingId } });
-  t9.textBody = random.words();
+  t9.textBody = lorem.paragraphs(5);
   seedingId++;
   const topic9 = await topicRepository.create(t9);
 
@@ -119,7 +119,7 @@ export default async function TopicsSeed(verifyRun: boolean) {
   t10.imageStorage = 'http://lorempixel.com/640/480/';
   t10.name = 'Tirando melhor proveito da cultura de gramínea';
   t10.user = await userRepository.findOne({ where: { seedingId } });
-  t10.textBody = random.words();
+  t10.textBody = lorem.paragraphs(5);
   seedingId++;
   const topic10 = await topicRepository.create(t10);
 
@@ -130,7 +130,7 @@ export default async function TopicsSeed(verifyRun: boolean) {
   t11.imageStorage = 'http://lorempixel.com/640/480/';
   t11.name = 'Utilidade das antóceras';
   t11.user = await userRepository.findOne({ where: { seedingId } });
-  t11.textBody = random.words();
+  t11.textBody = lorem.paragraphs(5);
   seedingId++;
   const topic11 = await topicRepository.create(t11);
 
@@ -141,7 +141,7 @@ export default async function TopicsSeed(verifyRun: boolean) {
   t12.imageStorage = 'http://lorempixel.com/640/480/';
   t12.name = 'A Malva e o que você não sabia';
   t12.user = await userRepository.findOne({ where: { seedingId } });
-  t12.textBody = random.words();
+  t12.textBody = lorem.paragraphs(5);
   seedingId++;
   const topic12 = await topicRepository.create(t12);
 
@@ -152,7 +152,7 @@ export default async function TopicsSeed(verifyRun: boolean) {
   t13.imageStorage = 'http://lorempixel.com/640/480/';
   t13.name = 'Como ter seu próprio pé de Pitaya';
   t13.user = await userRepository.findOne({ where: { seedingId } });
-  t13.textBody = random.words();
+  t13.textBody = lorem.paragraphs(5);
   seedingId++;
   const topic13 = await topicRepository.create(t13);
 
@@ -163,7 +163,7 @@ export default async function TopicsSeed(verifyRun: boolean) {
   t14.imageStorage = 'http://lorempixel.com/640/480/';
   t14.name = 'Deixe seu tapete de grama beeeem verdinho';
   t14.user = await userRepository.findOne({ where: { seedingId } });
-  t14.textBody = random.words();
+  t14.textBody = lorem.paragraphs(5);
   seedingId++;
   const topic14 = await topicRepository.create(t14);
 
@@ -174,7 +174,7 @@ export default async function TopicsSeed(verifyRun: boolean) {
   t15.imageStorage = 'http://lorempixel.com/640/480/';
   t15.name = 'Os cactos mais caros que existem';
   t15.user = await userRepository.findOne({ where: { seedingId } });
-  t15.textBody = random.words();
+  t15.textBody = lorem.paragraphs(5);
   seedingId++;
   const topic15 = await topicRepository.create(t15);
 
@@ -183,7 +183,7 @@ export default async function TopicsSeed(verifyRun: boolean) {
   t16.imageStorage = 'http://lorempixel.com/640/480/';
   t16.name = 'Lugares mais baratos de São Paulo para comprar algas';
   t16.user = await userRepository.findOne({ where: { seedingId } });
-  t16.textBody = random.words();
+  t16.textBody = lorem.paragraphs(5);
   seedingId++;
   const topic16 = await topicRepository.create(t16);
 
@@ -192,7 +192,7 @@ export default async function TopicsSeed(verifyRun: boolean) {
   t17.imageStorage = 'http://lorempixel.com/640/480/';
   t17.name = 'Benefícios do Kombu';
   t17.user = await userRepository.findOne({ where: { seedingId } });
-  t17.textBody = random.words();
+  t17.textBody = lorem.paragraphs(5);
   seedingId++;
   const topic17 = await topicRepository.create(t17);
 
@@ -201,7 +201,7 @@ export default async function TopicsSeed(verifyRun: boolean) {
   t18.imageStorage = 'http://lorempixel.com/640/480/';
   t18.name = 'Espirulina tem contra-indicações?';
   t18.user = await userRepository.findOne({ where: { seedingId } });
-  t18.textBody = random.words();
+  t18.textBody = lorem.paragraphs(5);
   seedingId++;
   const topic18 = await topicRepository.create(t18);
 
@@ -212,7 +212,7 @@ export default async function TopicsSeed(verifyRun: boolean) {
   t19.imageStorage = 'http://lorempixel.com/640/480/';
   t19.name = 'Maçã Julieta nos vasos requer cuidados especiais?';
   t19.user = await userRepository.findOne({ where: { seedingId } });
-  t19.textBody = random.words();
+  t19.textBody = lorem.paragraphs(5);
   seedingId++;
   const topic19 = await topicRepository.create(t19);
 
@@ -223,7 +223,7 @@ export default async function TopicsSeed(verifyRun: boolean) {
   t20.imageStorage = 'http://lorempixel.com/640/480/';
   t20.name = 'Todo solo de cacto é seco?';
   t20.user = await userRepository.findOne({ where: { seedingId } });
-  t20.textBody = random.words();
+  t20.textBody = lorem.paragraphs(5);
   seedingId++;
   const topic20 = await topicRepository.create(t20);
 
