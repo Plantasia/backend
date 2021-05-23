@@ -80,9 +80,7 @@ export class UserController {
   @UseGuards(JwtAuthGuard)
   @Get('findme')
   async findOneByToken(@Request() req) {
-    console.log('entroi');
     const token = req.headers.authorization;
-    console.log('This token is:', token);
     return this.userService.findByToken(token);
   }
 
@@ -111,7 +109,7 @@ export class UserController {
       };
     } else {
       throw new ForbiddenException({
-        error: `The email : ${createUserDTO.email}    is already used!`,
+        error: `O email : ${createUserDTO.email} já esta sendo usado!`,
       });
     }
   }
@@ -128,7 +126,7 @@ export class UserController {
     const foundUser = await this.userService.findById(idUser);
 
     if (!foundUser) {
-      throw new NotFoundException(`Error: user with ID: ${idUser} not exists`);
+      throw new NotFoundException(`Error: usuário com o  ID: ${idUser} não existe`);
     }
 
     const selectedUser = await this.userService.findOne(idUser);
@@ -171,19 +169,19 @@ export class UserController {
         throw new HttpException(
           {
             status: HttpStatus.BAD_REQUEST,
-            error: 'Error to delete comment, please check data!',
+            error: 'Erro ao deletear esse usuário, por favor, verifique os dados!',
           },
           HttpStatus.BAD_REQUEST,
         );
       } else {
-        const message = 'Iten ' + id + ' deleted';
+        const message = 'Item ' + id + ' deletado';
         return {
           message,
         };
       }
     } else {
       throw new UnauthorizedException({
-        error: 'You are not permitted to remove this user!',
+        error: 'Você não esta autorizado a remover esse usuário!',
       });
     }
   }
@@ -207,7 +205,7 @@ export class UserController {
     const userRequestedToUpdate = await this.userService.findById(idUser);
 
     if (!userRequestedToUpdate || userRequestedToUpdate === undefined) {
-      throw new NotFoundException({ error: 'This user does not exists' });
+      throw new NotFoundException({ error: 'Esse usuário não existe' });
     }
 
     if (
@@ -228,9 +226,12 @@ export class UserController {
       const { name, email, bio, id } = user;
 
       return user;
-    } //add else
+    }else{
+      throw new UnauthorizedException({
+        error: 'Você não esta autorizado a atualizar essse usuário!',
+      });
+    }
   }
-  //find original local
 
   @Get('admin')
   async adminFindAll(@Request() req, @Query() query: QueryPage) {

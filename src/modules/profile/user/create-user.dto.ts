@@ -52,8 +52,6 @@ export class CreateUserDTO {
   @IsEmpty()
   public quarentineNum: number;
 
-  public isAdmin: boolean;
-
   @IsEmpty()
   public tokenLogout: string;
 
