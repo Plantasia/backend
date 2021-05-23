@@ -236,7 +236,7 @@ export class UserController {
   @Get('admin')
   async adminFindAll(@Request() req, @Query() query: QueryPage) {
     const page = query.page;
-    return this.userService.adminFindAll(); //passamos a variavel page como parametro do metodo FindAll
+    return this.userService.adminFindAll();
   }
 
   @Post('avatar')
