@@ -112,7 +112,6 @@ export class UserService {
     user.role = createUserDTO.role;
     user.email = createUserDTO.email;
     user.password = createUserDTO.password;
-    user.isAdmin = createUserDTO.isAdmin;
     user.quarentineNum = createUserDTO.quarentineNum;
     user.tokenLogout = createUserDTO.tokenLogout;
 
@@ -179,11 +178,11 @@ export class UserService {
     const userToCheck = await this.findByToken(tokenRequest);
     if (userToCheck.tokenLogout === tokenRequest || userToCheck) {
       return {
-        Message: 'Valid token ',
+        Message: 'Token válido ',
       };
     } else {
       throw new UnauthorizedException({
-        error: 'Unauthorized, your credentials is invalid',
+        error: 'Não autorizado, seu token esta inválido',
       });
     }
   }

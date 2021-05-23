@@ -1,5 +1,4 @@
 import { FindAllModel } from './api-model/find-all-model';
-
 import { QueryPage } from '@utils/page';
 import {
   Body,
@@ -77,7 +76,6 @@ export class CommentController {
     );
     const topic_id = data.topic_id;
     const topicAlreadyExists = await this.topicsService.findById(topic_id);
-    //We do not use the userID, but the token, is this   if (!userAlreadyExists) necessary?
     if (!userAlreadyExists) {
       throw new HttpException(
         {
@@ -186,7 +184,7 @@ export class CommentController {
     else{
      
       throw new UnauthorizedException({
-        error: 'You are not permitted to update this comment!',
+        error: 'Você não está autorizado a atualizar esse comentário!',
       });
 
     }
