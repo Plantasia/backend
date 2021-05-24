@@ -30,7 +30,7 @@ export class CreateUserDTO {
   })
   public avatar: string;
 
-  @IsNotEmpty()
+  @IsNotEmpty({message: 'Email não pode estar vazio'})
   @ApiProperty({
     type: String,
     description: 'Email',

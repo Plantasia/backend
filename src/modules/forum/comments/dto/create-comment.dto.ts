@@ -2,7 +2,7 @@ import { IsEmpty, IsNotEmpty } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateCommentDTO {
-  @IsNotEmpty()
+  @IsNotEmpty({message: 'Não é possível criar um comentário vázio'})
   @ApiProperty({
     type: String,
     description: 'Body of Comment',
