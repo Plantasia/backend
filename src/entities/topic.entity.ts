@@ -23,7 +23,7 @@ export class Topic extends BaseEntity {
   @Column()
   name: string;
 
-  @Column()
+  @Column({type: 'mediumtext'})
   textBody: string;
 
   @Column()

@@ -3,6 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateCommentDTO {
   @IsNotEmpty({message:"Não é possível criar uma categoria com o conteúdo vazio!"})
+
   @ApiProperty({
     type: String,
     description: 'Body of Comment',

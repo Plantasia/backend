@@ -62,9 +62,9 @@ export class TopicsController {
   @ApiOkResponse({ description: 'topic succesfully returned' })
   @ApiBadRequestResponse({ description: 'Bad request' })
   @Get()
-  async findAll(@Query() query: QueryPage):Promise<PaginatedTopicsDTO> {
-    const page = query.page;
-    return this.topicsService.findAll(page);
+  async findAll(@Query() query: QueryPage & { category: string | null }):Promise<PaginatedTopicsDTO> {
+    const { page, category } = query;
+    return this.topicsService.findAll(page, category);
   }
 
   @ApiOkResponse({ description: 'topic succesfully returned' })

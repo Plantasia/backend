@@ -28,20 +28,20 @@ export default async function CommentsSeed(
     if (i % 30 === 0) seedingId = 1;
     const comment = new Comment();
     const ownerComment = await userRepository.findOne({ where: { seedingId } });
-    const topic = await topicRepository.find({
-      relations: ['category'],
-      where: { seedingId: topicSeedingId },
-    });
+    // const topic = await topicRepository.find({
+    //   relations: ['category'],
+    //   where: { seedingId: topicSeedingId },
+    // });
 
-    comment.user = ownerComment;
-    comment.topic = topic[0];
-    comment.textBody = random.words();
-    comment.category = topic[0].category;
-    topicSeedingId++;
-    seedingId++;
+    // comment.user = ownerComment;
+    // comment.topic = topic[0];
+    // comment.textBody = random.words();
+    // comment.category = topic[0].category;
+    // topicSeedingId++;
+    // seedingId++;
 
-    const newComment = await commentsRepository.create(comment);
-    comments.push(newComment);
+    // const newComment = await commentsRepository.create(comment);
+    // comments.push(newComment);
   }
 
   const commentsInserted = await commentsRepository.save(comments);
