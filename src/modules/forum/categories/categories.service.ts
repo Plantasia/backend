@@ -7,6 +7,7 @@ import { FindAllModel } from './api-model/find-all.model';
 import { Topic } from '@entities/topic.entity';
 import UpdateModel from './api-model/update-model';
 import { FilesService } from '../../image/imageS3.service';
+import FindAllComboboxModel from './api-model/find-all-combobox-model';
 
 @Injectable()
 export class CategoryService {
@@ -32,8 +33,6 @@ export class CategoryService {
     const skip = 5 * (page - 1);
 
     let categories: any;
-
-    console.log('____START____');
 
     const { total } = (
       await this.categoryRepository.query(
@@ -78,10 +77,6 @@ export class CategoryService {
     if (!page || page <= 0) {
       page = 1;
     } else page = parseInt(page);
-
-    console.log('%%%PAGE:');
-    console.log(page);
-
     const take = 10;
     const skip = 10 * (page - 1);
 
@@ -139,8 +134,6 @@ export class CategoryService {
 
   async delete(id: string): Promise<void> {
     const resp = await this.categoryRepository.softDelete(id);
-
-    /*affected property == 1 (deleted) */
     console.log('has been deleted?  ', resp);
     if (resp.affected !== 0) {
       console.log(`deleted category ${id} `);
@@ -195,6 +188,14 @@ export class CategoryService {
       imageStorage,
     });
     return imageStorage;
+  }
+
+  async findCombobox(): Promise<FindAllComboboxModel> {
+    const query = await this.categoryRepository.query(
+      `SELECT categories.id, categories.name
+      FROM categories WHERE categories.deleted_at is null`,
+    )
+    return query;
   }
 }
 

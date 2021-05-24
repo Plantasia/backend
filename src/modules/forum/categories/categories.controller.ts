@@ -38,6 +38,7 @@ import { UserService } from 'src/modules/profile/user/user.service';
 import FindOneModel from './api-model/find-one-model';
 import { DeleteModel } from './dto/delete-model.dto';
 import UpdateModel from './api-model/update-model';
+import FindAllComboboxModel from './api-model/find-all-combobox-model';
 
 @ApiTags('categories')
 @Controller('forum/categories')
@@ -115,6 +116,19 @@ export class CategoryController {
     return this.categoryService.adminFindAll(page);
   }
 
+  @Get('/combobox')
+  @ApiOkResponse({ description: 'The category has been successful deleted' })
+  @ApiBadRequestResponse({ description: 'Bad request' })
+  async find(
+    @Request() req,
+  ): Promise<FindAllComboboxModel> {
+    const check = await this.userService.authorizationCheck(
+      req.headers.authorization,
+    );
+
+    return this.categoryService.findCombobox();
+  }
+
   @Get(':id')
   @ApiOkResponse({ description: 'The category has been successful deleted' })
   @ApiBadRequestResponse({ description: 'Bad request' })
@@ -137,6 +151,8 @@ export class CategoryController {
 
     return { id, name, imageStorage, description, authorEmail, authorId };
   }
+
+ 
 
   @UseGuards(JwtAuthGuard)
   @Delete(':id')

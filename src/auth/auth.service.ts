@@ -30,11 +30,10 @@ export class AuthService {
     const user = await this.userService.findByEmail(userEmail);
     if (user && user.password === userPassword) {
       const { id, name, email } = user;
-      //const hash = this.hashingPassword(userPassword);
       return { id: id, name, email };
     } else {
       throw new UnauthorizedException({
-        error: 'Incorrect username or password or this users does not exists!',
+        error: 'Usuário ou senha incorretas!',
       });
     }
   }
@@ -57,7 +56,7 @@ export class AuthService {
       return userLogged;
     } else {
       throw new NotFoundException({
-        error: `The token ${token} was not found!`,
+        error: `O token ${token} não foi encontrado!`,
       });
     }
   }
