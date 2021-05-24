@@ -31,7 +31,6 @@ export class AuthController {
   @ApiOkResponse({ description: 'user succesfully logged' })
   @ApiForbiddenResponse({ description: 'Forbidden' })
   login(@Request() req: CreateSessionDTO) {
-    console.log("token!!!!")
     console.log(req.user)
     return this.authService.login(req.user);
   }
@@ -39,14 +38,11 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Get('logout')
   async logout(@Request() req: any) {
-    //Colocar o metodo de validar o token
-    console.log("aoba")
     const userToken = req.headers.authorization;
-
     const userIsLogged = await this.authService.checkToken(userToken);
 
     if (!userIsLogged) {
-      throw new NotFoundException({ error: 'This user is not logged' });
+      throw new NotFoundException({ error: 'Esse usuário não esta logado' });
     }
 
     return this.authService.logout(req.user.email);

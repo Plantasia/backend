@@ -5,7 +5,7 @@ import { Topic } from '@entities/topic.entity';
 import { User } from '@entities/user.entity';
 import { Category } from '@entities/category.entity';
 import { PaginatedTopicsDTO, CreateTopicDTO } from './dto';
-import { FilesService } from '@image/imageS3.service';
+import { FilesService } from '../../image/imageS3.service';
 
 @Injectable()
 export class TopicsService {
@@ -131,8 +131,6 @@ export class TopicsService {
   }
 
   async takeTopicData(topicId: string): Promise<Topic> {
-    console.log('__________start_____________');
-
     const topic = await getRepository(Topic)
       .createQueryBuilder('t')
       .leftJoin('t.category', 'cat', 'cat.id = t.categoryId')
@@ -183,8 +181,6 @@ export class TopicsService {
         'com.created_at': 'ASC', // Getting the last comment
       })
       .getOne();
-
-    console.log('__________end_______________');
 
     return topic;
   }
