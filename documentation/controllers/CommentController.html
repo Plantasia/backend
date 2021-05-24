@@ -54,14 +54,14 @@
             <h3>File</h3>
         </p>
         <p class="comment">
-            <code>src/comments/comments.controller.ts</code>
+            <code>src/modules/forum/comments/comments.controller.ts</code>
         </p>
 
             <p class="comment">
                 <h3>Prefix</h3>
             </p>
             <p class="comment">
-                <code>comments</code>
+                <code>forum/comments</code>
             </p>
 
 
@@ -82,16 +82,26 @@
                     <td class="col-md-4">
                         <ul class="index-list">
                             <li>
-                                <a href="#create">create</a>
+                                <a href="#adminFindAll">adminFindAll</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#createComment">createComment</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#deleteComment">deleteComment</a>
                             </li>
                             <li>
                                 <a href="#findAll">findAll</a>
                             </li>
                             <li>
+                                    <span class="modifier">Async</span>
                                 <a href="#findOne">findOne</a>
                             </li>
                             <li>
-                                <a href="#remove">remove</a>
+                                    <span class="modifier">Async</span>
+                                <a href="#update">update</a>
                             </li>
                         </ul>
                     </td>
@@ -114,18 +124,18 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="create"></a>
+                    <a name="adminFindAll"></a>
                     <span class="name">
                         <b>
-                            create
+                            adminFindAll
                         </b>
-                        <a href="#create"><span class="icon ion-ios-link"></span></a>
+                        <a href="#adminFindAll"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>create(createCommentDTO: <a href="../classes/CreateCommentDTO.html">CreateCommentDTO</a>)</code>
+<code>adminFindAll(query: <a href="../interfaces/QueryPage.html">QueryPage</a>)</code>
                 </td>
             </tr>
 
@@ -133,14 +143,14 @@
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Post()<br /></code>
+                    <code>@Get(&#x27;admin&#x27;)<br />@ApiCreatedResponse({description: &#x27;comment succesfully created&#x27;})<br />@ApiForbiddenResponse({description: &#x27;Forbidden&#x27;})<br /></code>
                 </td>
             </tr>
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="23"
-                            class="link-to-prism">src/comments/comments.controller.ts:23</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="58"
+                            class="link-to-prism">src/modules/forum/comments/comments.controller.ts:58</a></div>
                 </td>
             </tr>
 
@@ -160,7 +170,86 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>createCommentDTO</td>
+                                    <td>query</td>
+                                    <td>
+                                                <code><a href="../interfaces/QueryPage.html" target="_self" >QueryPage</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../classes/Comment.html" target="_self" >Promise&lt;Comment[]&gt;</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="createComment"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Async</span>
+                            createComment
+                        </b>
+                        <a href="#createComment"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>createComment(data: <a href="../classes/CreateCommentDTO.html">CreateCommentDTO</a>, req)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@Post()<br />@UseGuards(JwtAuthGuard)<br />@UsePipes(ValidationPipe)<br />@ApiCreatedResponse({description: &#x27;comment succesfully created&#x27;})<br />@ApiBadRequestResponse({description: &#x27;Bad request&#x27;})<br />@UsePipes(ValidationPipe)<br /></code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="70"
+                            class="link-to-prism">src/modules/forum/comments/comments.controller.ts:70</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>data</td>
                                     <td>
                                                 <code><a href="../classes/CreateCommentDTO.html" target="_self" >CreateCommentDTO</a></code>
                                     </td>
@@ -171,13 +260,24 @@
 
 
                                 </tr>
+                                <tr>
+                                    <td>req</td>
+                                    <td>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
                             </tbody>
                         </table>
                     </div>
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../classes/Comment.html" target="_self" >Promise&lt;Comment&gt;</a></code>
+                        <b>Returns : </b>        <code><a href="../interfaces/CommentModel.html" target="_self" >Promise&lt;CommentModel&gt;</a></code>
 
                     </div>
                     <div class="io-description">
@@ -191,18 +291,20 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="findAll"></a>
+                    <a name="deleteComment"></a>
                     <span class="name">
                         <b>
-                            findAll
+                            <span class="modifier">Async</span>
+                            deleteComment
                         </b>
-                        <a href="#findAll"><span class="icon ion-ios-link"></span></a>
+                        <a href="#deleteComment"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>findAll()</code>
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>deleteComment(id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, req)</code>
                 </td>
             </tr>
 
@@ -210,60 +312,14 @@
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Get()<br /></code>
+                    <code>@Delete(&#x27;:id&#x27;)<br />@UseGuards(JwtAuthGuard)<br />@ApiOkResponse({description: &#x27;The comment has been successful deleted&#x27;})<br />@ApiBadRequestResponse({description: &#x27;Bad request&#x27;})<br />@ApiHeader({name: &#x27;JWT&#x27;, description: &#x27;JWT token must to be passed to do this request&#x27;})<br /></code>
                 </td>
             </tr>
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="16"
-                            class="link-to-prism">src/comments/comments.controller.ts:16</a></div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../classes/Comment.html" target="_self" >Promise&lt;Comment[]&gt;</a></code>
-
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="findOne"></a>
-                    <span class="name">
-                        <b>
-                            findOne
-                        </b>
-                        <a href="#findOne"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>findOne(id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
-                </td>
-            </tr>
-
-            <tr>
-                <td class="col-md-4">
-                    <b>Decorators : </b>
-                    <br />
-                    <code>@Get(&#x27;:id&#x27;)<br /></code>
-                </td>
-            </tr>
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="28"
-                            class="link-to-prism">src/comments/comments.controller.ts:28</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="134"
+                            class="link-to-prism">src/modules/forum/comments/comments.controller.ts:134</a></div>
                 </td>
             </tr>
 
@@ -294,75 +350,9 @@
 
 
                                 </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../classes/Comment.html" target="_self" >Promise&lt;Comment&gt;</a></code>
-
-                    </div>
-                    <div class="io-description">
-                        
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="remove"></a>
-                    <span class="name">
-                        <b>
-                            remove
-                        </b>
-                        <a href="#remove"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>remove(id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
-                </td>
-            </tr>
-
-            <tr>
-                <td class="col-md-4">
-                    <b>Decorators : </b>
-                    <br />
-                    <code>@Delete(&#x27;:id&#x27;)<br /></code>
-                </td>
-            </tr>
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="34"
-                            class="link-to-prism">src/comments/comments.controller.ts:34</a></div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        <table class="params">
-                            <thead>
                                 <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>id</td>
+                                    <td>req</td>
                                     <td>
-                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
                                     </td>
 
                                     <td>
@@ -387,49 +377,473 @@
             </tr>
         </tbody>
     </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="findAll"></a>
+                    <span class="name">
+                        <b>
+                            findAll
+                        </b>
+                        <a href="#findAll"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>findAll(query: <a href="../interfaces/QueryPage.html">QueryPage</a>)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@Get()<br />@ApiCreatedResponse({description: &#x27;comment succesfully created&#x27;})<br />@ApiBadRequestResponse({description: &#x27;Bad request&#x27;})<br /></code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="49"
+                            class="link-to-prism">src/modules/forum/comments/comments.controller.ts:49</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>query</td>
+                                    <td>
+                                                <code><a href="../interfaces/QueryPage.html" target="_self" >QueryPage</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;FindAllModel&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="findOne"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Async</span>
+                            findOne
+                        </b>
+                        <a href="#findOne"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>findOne(id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, req)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@Get(&#x27;:id&#x27;)<br />@UseGuards(JwtAuthGuard)<br />@ApiOkResponse({description: &#x27;The comments has been succesfful returned&#x27;})<br />@ApiBadRequestResponse({description: &#x27;Bad request&#x27;})<br />@ApiHeader({name: &#x27;JWT&#x27;, description: &#x27;JWT token must to be passed to do this request&#x27;})<br /></code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="118"
+                            class="link-to-prism">src/modules/forum/comments/comments.controller.ts:118</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>id</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>req</td>
+                                    <td>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../interfaces/CommentModel.html" target="_self" >Promise&lt;CommentModel&gt;</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="update"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Async</span>
+                            update
+                        </b>
+                        <a href="#update"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>update(id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, data: <a href="../classes/UpdateCommentDTO.html">UpdateCommentDTO</a>, req: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@UseGuards(JwtAuthGuard)<br />@Patch(&#x27;:id&#x27;)<br />@ApiOkResponse({description: &#x27;The comment has beenn successful updated&#x27;})<br />@ApiBadRequestResponse({description: &#x27;Bad request&#x27;})<br /></code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="169"
+                            class="link-to-prism">src/modules/forum/comments/comments.controller.ts:169</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>id</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>data</td>
+                                    <td>
+                                                <code><a href="../classes/UpdateCommentDTO.html" target="_self" >UpdateCommentDTO</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>req</td>
+                                    <td>
+                                                <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../interfaces/CommentModel.html" target="_self" >Promise&lt;CommentModel&gt;</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </section>    </div>
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Body, Controller, Delete, Get, Param, Post, Render } from &#x27;@nestjs/common&#x27;;
-import { CommentService } from &#x27;../comments/comments.service&#x27;;
-import { CreateCommentDTO } from &#x27;../comments/create-comment.dto&#x27;
-import { Comment } from &#x27;../comments/comments.entity&#x27;;
-import {uuid} from &#x27;uuidv4&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { FindAllModel } from &#x27;./api-model/find-all-model&#x27;;
 
-
-
-@Controller(&#x27;comments&#x27;)
+import { QueryPage } from &#x27;@utils/page&#x27;;
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Patch,
+  HttpException,
+  HttpStatus,
+  Param,
+  Post,
+  Request,
+  UseGuards,
+  UsePipes,
+  ValidationPipe,
+  Query,
+  UnauthorizedException
+} from &#x27;@nestjs/common&#x27;;
+import { CommentService } from &#x27;./comments.service&#x27;;
+import { CreateCommentDTO } from &#x27;./dto/create-comment.dto&#x27;;
+import { UpdateCommentDTO } from &#x27;./dto/update-comment.dto&#x27;
+import { Comment } from &#x27;@entities/comments.entity&#x27;;
+import { JwtAuthGuard } from &#x27;@auth/jwt-auth.guard&#x27;;
+import {
+  ApiCreatedResponse,
+  ApiBadRequestResponse,
+  ApiHeader,
+  ApiOkResponse,
+  ApiTags,
+  ApiForbiddenResponse,
+} from &#x27;@nestjs/swagger&#x27;;
+import { UserService } from &#x27;src/modules/profile/user/user.service&#x27;;
+import { TopicsService } from &#x27;../topics/topics.service&#x27;;
+import { CommentModel } from &#x27;./dto/paginated-comments-dtio&#x27;;
+@ApiTags(&#x27;comments&#x27;)
+@Controller(&#x27;forum/comments&#x27;)
 export class CommentController {
   constructor(
     private readonly commentService: CommentService,
-  ){}
+    private readonly userService: UserService,
+    private readonly topicsService: TopicsService,
+  ) {}
 
   @Get()
-  findAll(): Promise&lt;Comment[]&gt;{
-    return this.commentService.findAll()
-
+  @ApiCreatedResponse({ description: &#x27;comment succesfully created&#x27; })
+  @ApiBadRequestResponse({ description: &#x27;Bad request&#x27; })
+  findAll(@Query() query: QueryPage ):Promise&lt;FindAllModel&gt;{
+  
+    const page &#x3D; query.page;
+    return this.commentService.findAll(page);
   }
 
+  @Get(&#x27;admin&#x27;)
+  @ApiCreatedResponse({ description: &#x27;comment succesfully created&#x27; })
+  @ApiForbiddenResponse({ description: &#x27;Forbidden&#x27; })
+  adminFindAll(@Query() query: QueryPage ):Promise&lt;Comment[]&gt; {
+  
+    const page &#x3D; query.page;
+    return this.commentService.adminFindAll(page);
+  }
 
   @Post()
-  create( @Body() createCommentDTO:CreateCommentDTO):Promise&lt;Comment&gt;{
-    return this.commentService.create(createCommentDTO);
+  @UseGuards(JwtAuthGuard)
+  @UsePipes(ValidationPipe)
+  @ApiCreatedResponse({ description: &#x27;comment succesfully created&#x27; })
+  @ApiBadRequestResponse({ description: &#x27;Bad request&#x27; })
+  @UsePipes(ValidationPipe)
+  async createComment(
+    @Body() data: CreateCommentDTO,
+    @Request() req,
+  ): Promise&lt;CommentModel&gt; {
+    const token &#x3D;  req.headers.authorization
+    const userAlreadyExists &#x3D; await this.userService.authorizationCheck(
+      token,
+    );
+    const topic_id &#x3D; data.topic_id;
+    const topicAlreadyExists &#x3D; await this.topicsService.findById(topic_id);
+    //We do not use the userID, but the token, is this   if (!userAlreadyExists) necessary?
+    if (!userAlreadyExists) {
+      throw new HttpException(
+        {
+          status: HttpStatus.UNAUTHORIZED,
+          error: &#x27;Usuário não autorizado ou inexistente!&#x27;,
+        },
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
+    else if (!topicAlreadyExists) {
+      throw new HttpException(
+        {
+          status: HttpStatus.UNPROCESSABLE_ENTITY,
+          error: &#x27;Tópico não existe&#x27;,
+        },
+        HttpStatus.FORBIDDEN,
+      );
+    } else {
+      
+      const{id,textBody,updated_at} &#x3D; await this.commentService.create(data, token);
+      
+      return {
+        id,
+        textBody,
+        updated_at
+      }
+    }
   }
 
   @Get(&#x27;:id&#x27;)
-   findOne(@Param(&#x27;id&#x27;) id:string): Promise&lt;Comment&gt;{
+  @UseGuards(JwtAuthGuard)
+  @ApiOkResponse({ description: &#x27;The comments has been succesfful returned&#x27; })
+  @ApiBadRequestResponse({ description: &#x27;Bad request&#x27; })
+  @ApiHeader({
+    name: &#x27;JWT&#x27;,
+    description: &#x27;JWT token must to be passed to do this request&#x27;,
+  })
+  async findOne(@Param(&#x27;id&#x27;) id: string, @Request() req): Promise&lt;CommentModel&gt; {
+    
+    const token &#x3D; req.headers.authorization
+   this.userService.authorizationCheck(token);
 
     return this.commentService.findOne(id);
-   }
+  }
 
-   @Delete(&#x27;:id&#x27;)
-   remove(@Param(&#x27;id&#x27;) id:string): Promise&lt;void&gt;{
-    return this.commentService.remove(id)
-   }
+  @Delete(&#x27;:id&#x27;)
+  @UseGuards(JwtAuthGuard)
+  @ApiOkResponse({ description: &#x27;The comment has been successful deleted&#x27; })
+  @ApiBadRequestResponse({ description: &#x27;Bad request&#x27; })
+  @ApiHeader({
+    name: &#x27;JWT&#x27;,
+    description: &#x27;JWT token must to be passed to do this request&#x27;,
+  })
+  async deleteComment(@Param(&#x27;id&#x27;) id: string, @Request() req): Promise&lt;void&gt; {
+    
+    const token &#x3D; req.headers.authorization
+    await this.userService.authorizationCheck(token);
 
+    const author &#x3D; await this.commentService.findOne(id)
+    const user &#x3D; await this.userService.findByToken(token)
 
+    if (author.user.id &#x3D;&#x3D;&#x3D;  user.id ||
+      user.isAdmin &#x3D;&#x3D;&#x3D; true){
 
+        const deleted &#x3D; await this.commentService.delete(id);
+
+        if (!deleted){
+          throw new HttpException(
+            {
+              status: HttpStatus.EXPECTATION_FAILED,
+              error: &#x27;Erro ao deletar comentário!&#x27;,
+            },
+            HttpStatus.EXPECTATION_FAILED,
+          );
+        }
+      }
+      else{
+        throw new UnauthorizedException({
+          error: &#x27;Você não está autorizado a deletar esse comentário&#x27;,
+        });
+      }
+    
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch(&#x27;:id&#x27;)
+  @ApiOkResponse({ description: &#x27;The comment has beenn successful updated&#x27; })
+  @ApiBadRequestResponse({ description: &#x27;Bad request&#x27; })
+  async update(
+    @Param(&#x27;id&#x27;) id: string,
+    @Body() data: UpdateCommentDTO,
+    @Request() req: any,
+  ): Promise&lt;CommentModel&gt; {
+
+    const token &#x3D; req.headers.authorization
+    this.userService.authorizationCheck(token);
+
+    const author &#x3D; await this.commentService.findOne(id)
+    const user &#x3D; await this.userService.findByToken(token)
+
+    if (author.user.id &#x3D;&#x3D;&#x3D;  user.id ||
+        user.isAdmin &#x3D;&#x3D;&#x3D; true){
+
+        return this.commentService.update(id, data);
+    }
+    else{
+     
+      throw new UnauthorizedException({
+        error: &#x27;You are not permitted to update this comment!&#x27;,
+      });
+
+    }
+  }
 }
 </code></pre>
     </div>

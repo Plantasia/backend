@@ -139,8 +139,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="16"
-                            class="link-to-prism">src/auth/jwt.strategy.ts:16</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="15"
+                            class="link-to-prism">src/auth/jwt.strategy.ts:15</a></div>
                 </td>
             </tr>
 
@@ -193,24 +193,23 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ExtractJwt , Strategy } from &#x27;passport-jwt&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ExtractJwt, Strategy } from &#x27;passport-jwt&#x27;;
 import { PassportStrategy } from &#x27;@nestjs/passport&#x27;;
 import { Injectable } from &#x27;@nestjs/common&#x27;;
-import { jwtConstants } from &#x27;./constants&#x27;;
+
 
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy){
-    constructor(){
-        super({
-            jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-            ignoreExpiration: false,
-            secretOrKey: jwtConstants.secret,
-        });
-
-    }
-    async validate(payload: any){
-        return{id: payload.sub, email: payload.email};
-    }
+export class JwtStrategy extends PassportStrategy(Strategy) {
+  constructor() {
+    super({
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      ignoreExpiration: false,
+      secretOrKey: &quot;edac5915-8dc3-476a-95b4-d2cc9f632137&quot;,
+    });
+  }
+  async validate(payload: any) {
+    return { id: payload.sub, email: payload.email };
+  }
 }</code></pre>
     </div>
 

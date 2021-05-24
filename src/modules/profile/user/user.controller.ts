@@ -20,19 +20,19 @@ import {
   UploadedFile,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserDTO } from './create-user.dto';
-import { DeletedItemUserDTO } from './delete-user.dto';
-import { User } from '@entities/user.entity';
+import { CreateUserDTO } from './dto/create-user.dto';
+import { DeletedItemUserDTO } from './dto/delete-user.dto';
 import { JwtAuthGuard } from '@auth/jwt-auth.guard'; //' ' auth/jwt-auth.guard';
 import { ValidationPipe } from '@nestjs/common/pipes/validation.pipe';
 import {
   ApiBadRequestResponse,
-  ApiForbiddenResponse,
   ApiHeader,
   ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
+import UserModel from './api-model/user-default-model';
+import {FindAllModel} from './api-model/find-all-model';
 
 @ApiTags('users')
 @Controller('users')
@@ -47,7 +47,7 @@ export class UserController {
     description: 'JWT token must to be passed to do this request',
   })
   @Get()
-  async findAll(@Request() req, @Query() query: QueryPage) {
+  async findAll(@Request() req, @Query() query: QueryPage): Promise<FindAllModel> {
     console.log(req.headers.authorization);
 
     const thisUser = await this.userService.findByEmail(req.user.email);
@@ -94,12 +94,12 @@ export class UserController {
     description: 'JWT token must to be passed to do this request',
   })
   @Post()
-  async create(@Body() createUserDTO: CreateUserDTO): Promise<Partial<User>> {
+  async create(@Body() data: CreateUserDTO): Promise<UserModel> {
     const userAlreadyExists = await this.userService.checkIfAlreadyExists(
-      createUserDTO.email,
+      data.email,
     );
     if (userAlreadyExists === undefined || !userAlreadyExists) {
-      const createdUser = await this.userService.create(createUserDTO);
+      const createdUser = await this.userService.create(data);
 
       const { name, email, bio, id } = createdUser;
 
@@ -111,7 +111,7 @@ export class UserController {
       };
     } else {
       throw new ForbiddenException({
-        error: `The email : ${createUserDTO.email}    is already used!`,
+        error: `The email : ${data.email}    is already used!`,
       });
     }
   }
@@ -124,7 +124,7 @@ export class UserController {
     name: 'JWT',
     description: 'JWT token must to be passed to do this request',
   })
-  async findOne(@Param('id') idUser: string): Promise<Partial<User>> {
+  async findOne(@Param('id') idUser: string): Promise<UserModel> {
     const foundUser = await this.userService.findById(idUser);
 
     if (!foundUser) {
@@ -200,7 +200,7 @@ export class UserController {
     @Param('id') idUser: string,
     @Body() createUserDTO: CreateUserDTO,
     @Request() req,
-  ): Promise<Partial<User>> {
+  ): Promise<UserModel> {
     const token = req.headers.authorization;
     const check = await this.userService.authorizationCheck(token);
     const requestedUser = await await this.userService.findByToken(token);
@@ -228,9 +228,8 @@ export class UserController {
       const { name, email, bio, id } = user;
 
       return user;
-    } //add else
+    } 
   }
-  //find original local
 
   @Get('admin')
   async adminFindAll(@Request() req, @Query() query: QueryPage) {

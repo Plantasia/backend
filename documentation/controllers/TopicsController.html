@@ -54,14 +54,14 @@
             <h3>File</h3>
         </p>
         <p class="comment">
-            <code>src/topics/topics.controller.ts</code>
+            <code>src/modules/forum/topics/topics.controller.ts</code>
         </p>
 
             <p class="comment">
                 <h3>Prefix</h3>
             </p>
             <p class="comment">
-                <code>topics</code>
+                <code>forum/topics</code>
             </p>
 
 
@@ -82,18 +82,31 @@
                     <td class="col-md-4">
                         <ul class="index-list">
                             <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#addImage">addImage</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#adminFindAll">adminFindAll</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
                                 <a href="#create">create</a>
                             </li>
                             <li>
+                                    <span class="modifier">Async</span>
                                 <a href="#delete">delete</a>
                             </li>
                             <li>
+                                    <span class="modifier">Async</span>
                                 <a href="#findAll">findAll</a>
                             </li>
                             <li>
-                                <a href="#findOne">findOne</a>
+                                    <span class="modifier">Async</span>
+                                <a href="#getTopicById">getTopicById</a>
                             </li>
                             <li>
+                                    <span class="modifier">Async</span>
                                 <a href="#update">update</a>
                             </li>
                         </ul>
@@ -117,9 +130,160 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="addImage"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Async</span>
+                            addImage
+                        </b>
+                        <a href="#addImage"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>addImage(req, id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, file: Express.Multer.File)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@Post(&#x27;image/:id&#x27;)<br />@UseGuards(JwtAuthGuard)<br />@UseInterceptors(undefined)<br /></code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="187"
+                            class="link-to-prism">src/modules/forum/topics/topics.controller.ts:187</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>req</td>
+                                    <td>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>id</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>file</td>
+                                    <td>
+                                            <code>Express.Multer.File</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>{}</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="adminFindAll"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Async</span>
+                            adminFindAll
+                        </b>
+                        <a href="#adminFindAll"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>adminFindAll()</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@ApiOkResponse({description: &#x27;topic succesfully returned&#x27;})<br />@ApiForbiddenResponse({description: &#x27;Forbidden&#x27;})<br />@Get(&#x27;admin/list&#x27;)<br /></code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="73"
+                            class="link-to-prism">src/modules/forum/topics/topics.controller.ts:73</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../classes/Topic.html" target="_self" >Promise&lt;Topic[]&gt;</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="create"></a>
                     <span class="name">
                         <b>
+                            <span class="modifier">Async</span>
                             create
                         </b>
                         <a href="#create"><span class="icon ion-ios-link"></span></a>
@@ -128,7 +292,8 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>create(createTopicDTO: <a href="../classes/CreateTopicDTO.html">CreateTopicDTO</a>)</code>
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>create(createTopicDTO: <a href="../classes/CreateTopicDTO.html">CreateTopicDTO</a>, req)</code>
                 </td>
             </tr>
 
@@ -136,14 +301,14 @@
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Post()<br /></code>
+                    <code>@UseGuards(JwtAuthGuard)<br />@UsePipes(ValidationPipe)<br />@ApiHeader({name: &#x27;JWT&#x27;, description: &#x27;JWT token must to be passed to do this request&#x27;})<br />@ApiCreatedResponse({description: &#x27;topic succesfully created&#x27;})<br />@ApiBadRequestResponse({description: &#x27;Bad request&#x27;})<br />@Post()<br /></code>
                 </td>
             </tr>
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="25"
-                            class="link-to-prism">src/topics/topics.controller.ts:25</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="115"
+                            class="link-to-prism">src/modules/forum/topics/topics.controller.ts:115</a></div>
                 </td>
             </tr>
 
@@ -166,6 +331,17 @@
                                     <td>createTopicDTO</td>
                                     <td>
                                                 <code><a href="../classes/CreateTopicDTO.html" target="_self" >CreateTopicDTO</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>req</td>
+                                    <td>
                                     </td>
 
                                     <td>
@@ -197,6 +373,7 @@
                     <a name="delete"></a>
                     <span class="name">
                         <b>
+                            <span class="modifier">Async</span>
                             delete
                         </b>
                         <a href="#delete"><span class="icon ion-ios-link"></span></a>
@@ -205,7 +382,8 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>delete(id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>delete(id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, req)</code>
                 </td>
             </tr>
 
@@ -213,14 +391,14 @@
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Delete(&#x27;:id&#x27;)<br /></code>
+                    <code>@UseGuards(JwtAuthGuard)<br />@ApiOkResponse({description: &#x27;topic succesfully deleted&#x27;})<br />@ApiBadRequestResponse({description: &#x27;Bad request&#x27;})<br />@ApiHeader({name: &#x27;JWT&#x27;, description: &#x27;JWT token must to be passed to do this request&#x27;})<br />@Delete(&#x27;:id&#x27;)<br /></code>
                 </td>
             </tr>
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="38"
-                            class="link-to-prism">src/topics/topics.controller.ts:38</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="150"
+                            class="link-to-prism">src/modules/forum/topics/topics.controller.ts:150</a></div>
                 </td>
             </tr>
 
@@ -251,13 +429,24 @@
 
 
                                 </tr>
+                                <tr>
+                                    <td>req</td>
+                                    <td>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
                             </tbody>
                         </table>
                     </div>
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+                        <b>Returns : </b>    <code>Promise&lt;DeletedItemTopicDTO&gt;</code>
 
                     </div>
                     <div class="io-description">
@@ -274,6 +463,7 @@
                     <a name="findAll"></a>
                     <span class="name">
                         <b>
+                            <span class="modifier">Async</span>
                             findAll
                         </b>
                         <a href="#findAll"><span class="icon ion-ios-link"></span></a>
@@ -282,7 +472,8 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>findAll()</code>
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>findAll(query: <a href="../interfaces/QueryPage.html">QueryPage</a>)</code>
                 </td>
             </tr>
 
@@ -290,60 +481,14 @@
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Get()<br /></code>
+                    <code>@ApiOkResponse({description: &#x27;topic succesfully returned&#x27;})<br />@ApiBadRequestResponse({description: &#x27;Bad request&#x27;})<br />@Get()<br /></code>
                 </td>
             </tr>
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="15"
-                            class="link-to-prism">src/topics/topics.controller.ts:15</a></div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../classes/Topic.html" target="_self" >Promise&lt;Topic[]&gt;</a></code>
-
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="findOne"></a>
-                    <span class="name">
-                        <b>
-                            findOne
-                        </b>
-                        <a href="#findOne"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>findOne(id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
-                </td>
-            </tr>
-
-            <tr>
-                <td class="col-md-4">
-                    <b>Decorators : </b>
-                    <br />
-                    <code>@Get(&#x27;:id&#x27;)<br /></code>
-                </td>
-            </tr>
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="33"
-                            class="link-to-prism">src/topics/topics.controller.ts:33</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="65"
+                            class="link-to-prism">src/modules/forum/topics/topics.controller.ts:65</a></div>
                 </td>
             </tr>
 
@@ -363,7 +508,86 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>id</td>
+                                    <td>query</td>
+                                    <td>
+                                                <code><a href="../interfaces/QueryPage.html" target="_self" >QueryPage</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;FindAllModel&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getTopicById"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Async</span>
+                            getTopicById
+                        </b>
+                        <a href="#getTopicById"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getTopicById(topicId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@Get(&#x27;:topicId&#x27;)<br /></code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="58"
+                            class="link-to-prism">src/modules/forum/topics/topics.controller.ts:58</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>topicId</td>
                                     <td>
                                                 <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
                                     </td>
@@ -397,6 +621,7 @@
                     <a name="update"></a>
                     <span class="name">
                         <b>
+                            <span class="modifier">Async</span>
                             update
                         </b>
                         <a href="#update"><span class="icon ion-ios-link"></span></a>
@@ -405,7 +630,8 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>update(id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, createTopicDTO: <a href="../classes/CreateTopicDTO.html">CreateTopicDTO</a>)</code>
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>update(id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, createTopicDTO: <a href="../classes/CreateTopicDTO.html">CreateTopicDTO</a>, req)</code>
                 </td>
             </tr>
 
@@ -413,14 +639,14 @@
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Put(&#x27;:id&#x27;)<br /></code>
+                    <code>@UseGuards(JwtAuthGuard)<br />@ApiOkResponse({description: &#x27;topic succesfully updated&#x27;})<br />@ApiBadRequestResponse({description: &#x27;Bad request&#x27;})<br />@ApiHeader({name: &#x27;JWT&#x27;, description: &#x27;JWT token must to be passed to do this request&#x27;})<br />@Patch(&#x27;:id&#x27;)<br /></code>
                 </td>
             </tr>
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="20"
-                            class="link-to-prism">src/topics/topics.controller.ts:20</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="85"
+                            class="link-to-prism">src/modules/forum/topics/topics.controller.ts:85</a></div>
                 </td>
             </tr>
 
@@ -463,6 +689,17 @@
 
 
                                 </tr>
+                                <tr>
+                                    <td>req</td>
+                                    <td>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -483,46 +720,207 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Body, Controller, Get, Post, Param, Delete, Put } from &#x27;@nestjs/common&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">
+import { QueryPage } from &#x27;@utils/page&#x27;;
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Param,
+  Delete,
+  Patch,
+  Request,
+  UseGuards,
+  UsePipes,
+  ValidationPipe,
+  Query,
+  UnauthorizedException,
+  HttpStatus,
+  UseInterceptors,
+  UploadedFile 
+} from &#x27;@nestjs/common&#x27;;
 import { TopicsService } from &#x27;./topics.service&#x27;;
-import {Topic} from &#x27;./topic.entity&#x27;
-import { CreateTopicDTO } from &#x27;./create-topic.dto&#x27;;
+import { Topic } from &#x27;@entities/topic.entity&#x27;;
+import { CreateTopicDTO } from &#x27;./dto/create-topic.dto&#x27;;
+import { DeletedItemTopicDTO } from &#x27;./dto/delete-topic.dto&#x27;;
+import { JwtAuthGuard } from &#x27;@auth/jwt-auth.guard&#x27;;
+import {
+  ApiCreatedResponse,
+  ApiBadRequestResponse,
+  ApiHeader,
+  ApiOkResponse,
+  ApiTags,
+  ApiForbiddenResponse,
+} from &#x27;@nestjs/swagger&#x27;;
+import { HttpException } from &#x27;@nestjs/common/exceptions/http.exception&#x27;;
+import { UserService } from &#x27;../../profile/user/user.service&#x27;;
+import { FileInterceptor } from &#x27;@nestjs/platform-express&#x27;;
+import { FindAllModel } from &#x27;./api-model/find-all-model&#x27;;
 
-
-@Controller(&#x27;topics&#x27;)
+@ApiTags(&#x27;topics&#x27;)
+@Controller(&#x27;forum/topics&#x27;)
 export class TopicsController {
-
   constructor(
     private readonly topicsService: TopicsService,
-  ){}
+    private readonly userService: UserService,
+  ) {}
 
+  // @Get(&#x27;byCategory/:categoryId&#x27;)
+  // async getTopicsByCategory(@Param(&#x27;categoryId&#x27;) categoryId: string):Promise&lt;Topic[]&gt; {
+  //   return this.topicsService.findByCategory(categoryId);
+  // }
+
+  /*@Get(&#x27;admin/:topicId&#x27;)
+  async adminGetTopicById(@Param(&#x27;topicId&#x27;) topicId: string) {
+    return this.topicsService.adminFindOne(topicId)
+  } */
+
+  @Get(&#x27;:topicId&#x27;)
+  async getTopicById(@Param(&#x27;topicId&#x27;) topicId: string): Promise&lt;Topic&gt; {
+    return this.topicsService.takeTopicData(topicId);
+  }
+
+  @ApiOkResponse({ description: &#x27;topic succesfully returned&#x27; })
+  @ApiBadRequestResponse({ description: &#x27;Bad request&#x27; })
   @Get()
-  findAll(): Promise&lt;Topic[]&gt;{
-    return this.topicsService.findAll()
-
+  async findAll(@Query() query: QueryPage):Promise&lt;FindAllModel&gt; {
+    const page &#x3D; query.page;
+    return this.topicsService.findAll(page);
   }
-  @Put(&#x27;:id&#x27;)
-    update(@Param(&#x27;id&#x27;) id:string, @Body() createTopicDTO:CreateTopicDTO ): Promise&lt;Topic&gt;{
-      return this.topicsService.update(id,createTopicDTO);
+
+  @ApiOkResponse({ description: &#x27;topic succesfully returned&#x27; })
+  @ApiForbiddenResponse({ description: &#x27;Forbidden&#x27; })
+  @Get(&#x27;admin/list&#x27;)
+  async adminFindAll():Promise&lt;Topic[]&gt; {
+    return this.topicsService.adminFindAll();
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @ApiOkResponse({ description: &#x27;topic succesfully updated&#x27; })
+  @ApiBadRequestResponse({ description: &#x27;Bad request&#x27; })
+  @ApiHeader({
+    name: &#x27;JWT&#x27;,
+    description: &#x27;JWT token must to be passed to do this request&#x27;,
+  })
+  @Patch(&#x27;:id&#x27;)
+  async update(
+    @Param(&#x27;id&#x27;) id: string,
+    @Body() createTopicDTO: CreateTopicDTO,
+    @Request() req,
+  ): Promise&lt;Topic&gt; {
+    const token &#x3D; req.headers.authorization;
+    const check &#x3D; await this.userService.authorizationCheck(token);
+    const author &#x3D; this.topicsService.findOne(id);
+    const requesterUser &#x3D; this.userService.findByToken(token);
+    if (
+      (await author).user.id &#x3D;&#x3D;&#x3D; (await requesterUser).id ||
+      (await requesterUser).isAdmin &#x3D;&#x3D;&#x3D; true
+    ) {
+      return this.topicsService.update(id, createTopicDTO);
+    } else {
+      throw new UnauthorizedException({
+        error: &#x27;You are not permitted to update this Topic!&#x27;,
+      });
     }
+  }
 
+  @UseGuards(JwtAuthGuard)
+  @UsePipes(ValidationPipe)
+  @ApiHeader({
+    name: &#x27;JWT&#x27;,
+    description: &#x27;JWT token must to be passed to do this request&#x27;,
+  })
+  @ApiCreatedResponse({ description: &#x27;topic succesfully created&#x27; })
+  @ApiBadRequestResponse({ description: &#x27;Bad request&#x27; })
   @Post()
-  create(@Body() createTopicDTO:CreateTopicDTO  ): Promise&lt;Topic&gt;{
-    /** This assures us integrity references into DB */
-    console.log(&#x27;123&#x27;)
+  async create(
+    @Body() createTopicDTO: CreateTopicDTO,
+    @Request() req,
+  ): Promise&lt;Topic&gt; {
+    const token &#x3D; req.headers.authorization;
+    const userAlreadyExists &#x3D; await this.userService.authorizationCheck(token);
+    if (!userAlreadyExists) {
+      throw new HttpException(
+        {
+          status: HttpStatus.BAD_REQUEST,
+          error: &#x27;User does not exists, please check data!&#x27;,
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    } else {
+      const response &#x3D; this.topicsService.create(createTopicDTO);
+      const category &#x3D; this.topicsService.findOne(createTopicDTO.category_id);
+      const user &#x3D; this.topicsService.findOne(createTopicDTO.user_id);
 
-    return this.topicsService.create(createTopicDTO);
+      if (!category &amp;&amp; !user) {
+        const errors &#x3D; { Error: &#x27;User or Category not passed into&#x27; };
+        throw new HttpException({ errors }, 401);
+      }
+      return response;
+    }
   }
 
-  @Get(&#x27;:id&#x27;)
-  findOne(@Param(&#x27;id&#x27;) id:string): Promise&lt;Topic&gt;{
-    return this.topicsService.findOne(id)
-  }
-
+  @UseGuards(JwtAuthGuard)
+  @ApiOkResponse({ description: &#x27;topic succesfully deleted&#x27; })
+  @ApiBadRequestResponse({ description: &#x27;Bad request&#x27; })
+  @ApiHeader({
+    name: &#x27;JWT&#x27;,
+    description: &#x27;JWT token must to be passed to do this request&#x27;,
+  })
   @Delete(&#x27;:id&#x27;)
-  delete(@Param(&#x27;id&#x27;) id:string ):Promise&lt;void&gt;{
-     this.topicsService.findOne(id);
-      return
+  async delete(
+    @Param(&#x27;id&#x27;) id: string,
+    @Request() req,
+  ): Promise&lt;DeletedItemTopicDTO&gt; {
+    const token &#x3D; req.headers.authorization;
+    const check &#x3D; await this.userService.authorizationCheck(token);
+    const author &#x3D; this.topicsService.findOne(id);
+    const requesterUser &#x3D; this.userService.findByToken(token);
+    if (
+      (await author).user.id &#x3D;&#x3D;&#x3D; (await requesterUser).id ||
+      (await requesterUser).isAdmin &#x3D;&#x3D;&#x3D; true
+    ) {
+      const deletedIten &#x3D; this.topicsService.findOne(id);
+      if (!deletedIten) {
+        throw new HttpException(
+          {
+            status: HttpStatus.BAD_REQUEST,
+            error: &#x27;Error to delete topic, please check data!&#x27;,
+          },
+          HttpStatus.BAD_REQUEST,
+        );
+      } else {
+        const message &#x3D; &#x27;Iten &#x27; + id + &#x27; deleted&#x27;;
+        return {
+          message,
+        };
+      }
+    } else {
+      throw new UnauthorizedException({
+        error: &#x27;You are not permitted to update this Topic!&#x27;,
+      });
+    }
+  }
+
+  @Post(&#x27;image/:id&#x27;)
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(FileInterceptor(&#x27;file&#x27;))
+  async addImage(@Request() req, @Param(&#x27;id&#x27;) id: string, @UploadedFile() file: Express.Multer.File) {
+    const token &#x3D; req.headers.authorization;
+    const check &#x3D; await this.userService.authorizationCheck(token);
+    const author &#x3D; this.topicsService.findOne(id);
+    const requesterUser &#x3D; this.userService.findByToken(token);
+    if (
+      (await author).user.id &#x3D;&#x3D;&#x3D; (await requesterUser).id ||
+      (await requesterUser).isAdmin &#x3D;&#x3D;&#x3D; true
+    ) {
+      return this.topicsService.addImage(id,file.buffer, file.originalname);
+    } else {
+      throw new UnauthorizedException({
+        error: &#x27;You are not permitted to update this Topic!&#x27;,
+      });
+    }
   }
 }
 </code></pre>

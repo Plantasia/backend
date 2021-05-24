@@ -76,8 +76,19 @@
                     <td class="col-md-4">
                         <ul class="index-list">
                             <li>
-                                    <span class="modifier">Async</span>
                                 <a href="#login">login</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#logout">logout</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#resetPassword">resetPassword</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#sendRecoverPasswordEmail">sendRecoverPasswordEmail</a>
                             </li>
                         </ul>
                     </td>
@@ -103,7 +114,6 @@
                     <a name="login"></a>
                     <span class="name">
                         <b>
-                            <span class="modifier">Async</span>
                             login
                         </b>
                         <a href="#login"><span class="icon ion-ios-link"></span></a>
@@ -112,8 +122,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>login(req: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
+<code>login(req: <a href="../classes/CreateSessionDTO.html">CreateSessionDTO</a>)</code>
                 </td>
             </tr>
 
@@ -121,14 +130,93 @@
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@UseGuards(LocalAuthGuard)<br />@Post(&#x27;auth/login&#x27;)<br /></code>
+                    <code>@UseGuards(LocalAuthGuard)<br />@Post(&#x27;signin&#x27;)<br />@ApiOkResponse({description: &#x27;user succesfully logged&#x27;})<br />@ApiForbiddenResponse({description: &#x27;Forbidden&#x27;})<br /></code>
                 </td>
             </tr>
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="14"
-                            class="link-to-prism">src/auth/auth.controller.ts:14</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="33"
+                            class="link-to-prism">src/auth/auth.controller.ts:33</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>req</td>
+                                    <td>
+                                                <code><a href="../classes/CreateSessionDTO.html" target="_self" >CreateSessionDTO</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="logout"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Async</span>
+                            logout
+                        </b>
+                        <a href="#logout"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>logout(req: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@UseGuards(LocalAuthGuard)<br />@Get(&#x27;logout&#x27;)<br /></code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="41"
+                            class="link-to-prism">src/auth/auth.controller.ts:41</a></div>
                 </td>
             </tr>
 
@@ -175,27 +263,256 @@
             </tr>
         </tbody>
     </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="resetPassword"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Async</span>
+                            resetPassword
+                        </b>
+                        <a href="#resetPassword"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>resetPassword(token: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, newPasswordDto: <a href="../classes/NewPasswordDto.html">NewPasswordDto</a>)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@Patch(&#x27;/reset-password/:token&#x27;)<br /></code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="66"
+                            class="link-to-prism">src/auth/auth.controller.ts:66</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>token</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>newPasswordDto</td>
+                                    <td>
+                                                <code><a href="../classes/NewPasswordDto.html" target="_self" >NewPasswordDto</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;literal type&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="sendRecoverPasswordEmail"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Async</span>
+                            sendRecoverPasswordEmail
+                        </b>
+                        <a href="#sendRecoverPasswordEmail"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>sendRecoverPasswordEmail(email: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@Post(&#x27;/send-recover-email&#x27;)<br /></code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="56"
+                            class="link-to-prism">src/auth/auth.controller.ts:56</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>email</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;literal type&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </section>    </div>
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Controller, UseGuards, Request, Post } from &#x27;@nestjs/common&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {
+  Controller,
+  UseGuards,
+  Request,
+  Post,
+  Get,
+  NotFoundException,
+  Body,
+  Patch,
+  Param,
+  ValidationPipe,
+} from &#x27;@nestjs/common&#x27;;
+import {
+  ApiCreatedResponse,
+  ApiForbiddenResponse,
+  ApiOkResponse,
+  ApiTags,
+} from &#x27;@nestjs/swagger&#x27;;
 import { AuthService } from &#x27;./auth.service&#x27;;
-import { LocalAuthGuard } from &#x27;./local-auth.guard&#x27;;
+import { CreateSessionDTO } from &#x27;./createSessionDTO&#x27;;
+import { LocalAuthGuard } from &#x27;../auth/local-auth.guard&#x27;;
+import { NewPasswordDto } from &#x27;./newPassworDTO&#x27;;
 
+@ApiTags(&#x27;Signin &amp; Signup&#x27;)
 @Controller()
 export class AuthController {
+  constructor(private authService: AuthService) {}
 
-    constructor(
-        private authService: AuthService,
-    ){}
+  @UseGuards(LocalAuthGuard)
+  @Post(&#x27;signin&#x27;)
+  @ApiOkResponse({ description: &#x27;user succesfully logged&#x27; })
+  @ApiForbiddenResponse({ description: &#x27;Forbidden&#x27; })
+  login(@Request() req: CreateSessionDTO) {
+    console.log(&quot;token!!!!&quot;)
+    console.log(req.user)
+    return this.authService.login(req.user);
+  }
 
-    @UseGuards(LocalAuthGuard)
-    @Post(&#x27;auth/login&#x27;)
-    async login(@Request() req: any ){
-        return this.authService.login(req.user);
+  @UseGuards(LocalAuthGuard)
+  @Get(&#x27;logout&#x27;)
+  async logout(@Request() req: any) {
+    //Colocar o metodo de validar o token
+    console.log(&quot;aoba&quot;)
+    const userToken &#x3D; req.headers.authorization;
+
+    const userIsLogged &#x3D; await this.authService.checkToken(userToken);
+
+    if (!userIsLogged) {
+      throw new NotFoundException({ error: &#x27;This user is not logged&#x27; });
     }
- }
+
+    return this.authService.logout(req.user.email);
+  }
+
+  @Post(&#x27;/send-recover-email&#x27;)
+  async sendRecoverPasswordEmail(
+    @Body(&#x27;email&#x27;) email: string,
+  ): Promise&lt;{ message: string }&gt; {
+    await this.authService.sendRecoverPasswordEmail(email);
+    return {
+      message: &#x27;Foi enviado um email com instruções para resetar sua senha&#x27;,
+    };
+  }
+
+  @Patch(&#x27;/reset-password/:token&#x27;)
+  async resetPassword(
+    @Param(&#x27;token&#x27;) token: string,
+    @Body(ValidationPipe) newPasswordDto: NewPasswordDto,
+  ): Promise&lt;{ message: string }&gt; {
+    await this.authService.resetPassword(token, newPasswordDto);
+
+    return {
+      message: &#x27;Senha alterada com sucesso&#x27;,
+    };
+  }
+}
 </code></pre>
     </div>
 </div>

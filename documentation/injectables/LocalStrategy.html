@@ -56,7 +56,7 @@
             <h3>File</h3>
         </p>
         <p class="comment">
-            <code>src/auth/local.stategy.ts</code>
+            <code>src/auth/local.strategy.ts</code>
         </p>
 
 
@@ -102,7 +102,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="8" class="link-to-prism">src/auth/local.stategy.ts:8</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="11" class="link-to-prism">src/auth/local.strategy.ts:11</a></div>
                             </td>
                         </tr>
 
@@ -169,8 +169,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="16"
-                            class="link-to-prism">src/auth/local.stategy.ts:16</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="19"
+                            class="link-to-prism">src/auth/local.strategy.ts:19</a></div>
                 </td>
             </tr>
 
@@ -235,29 +235,33 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable , UnauthorizedException } from &#x27;@nestjs/common&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {
+  Injectable,
+  UnauthorizedException,
+  ArgumentsHost,
+} from &#x27;@nestjs/common&#x27;;
 import { Strategy } from &#x27;passport-local&#x27;;
 import { PassportStrategy } from &#x27;@nestjs/passport&#x27;;
-import { AuthService} from &#x27;./auth.service&#x27;;
-import { NOW } from &#x27;sequelize&#x27;;
+import { AuthService } from &#x27;./auth.service&#x27;;
 
 @Injectable()
-export class LocalStrategy extends PassportStrategy(Strategy){
-    constructor(private authService: AuthService){
-        super({
-            usernameField: &#x27;email&#x27;,
-            passwordFiels: &#x27;password&#x27;,
-        }); 
-    }
+export class LocalStrategy extends PassportStrategy(Strategy) {
+  constructor(private authService: AuthService) {
+    super({
+      usernameField: &#x27;email&#x27;,
+      passwordField: &#x27;password&#x27;,
+    });
+  }
 
-    async validate(email: string , password: string): Promise&lt;any&gt;{
-        const user &#x3D; await this.authService.validateUser(email, password);
-        if(!user){
-            throw new UnauthorizedException();
-        }
-        return user
+  async validate(email: string, password: string): Promise&lt;any&gt; {
+    const user &#x3D; await this.authService.validateUser(email, password);
+    if (!user) {
+      throw new UnauthorizedException(&#x27;Error: Invalid arguments&#x27;);
     }
-}</code></pre>
+    return user;
+  }
+}
+</code></pre>
     </div>
 
 </div>

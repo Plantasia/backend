@@ -77,7 +77,35 @@
                         <ul class="index-list">
                             <li>
                                     <span class="modifier">Async</span>
+                                <a href="#changePassword">changePassword</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#checkToken">checkToken</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
                                 <a href="#login">login</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#logout">logout</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#nullPasswordLogout">nullPasswordLogout</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#resetPassword">resetPassword</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#sendRecoverPasswordEmail">sendRecoverPasswordEmail</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#updatePasswordLogout">updatePasswordLogout</a>
                             </li>
                             <li>
                                     <span class="modifier">Async</span>
@@ -101,12 +129,12 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(userService: <a href="../injectables/UserService.html">UserService</a>, jwtService: JwtService)</code>
+<code>constructor(userService: <a href="../injectables/UserService.html">UserService</a>, jwtService: JwtService, mailerService: MailerService, UserRepository: <a href="../classes/User.html">Repository<User></a>)</code>
                     </td>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="8" class="link-to-prism">src/auth/auth.service.ts:8</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="18" class="link-to-prism">src/auth/auth.service.ts:18</a></div>
                             </td>
                         </tr>
 
@@ -147,6 +175,30 @@
                                                     </td>
                                                     
                                                 </tr>
+                                                <tr>
+                                                        <td>mailerService</td>
+                                                  
+                                                        <td>
+                                                                    <code>MailerService</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>UserRepository</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../classes/User.html" target="_self" >Repository&lt;User&gt;</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
                                         </tbody>
                                     </table>
                             </div>
@@ -161,6 +213,169 @@
     <h3 id="methods">
         Methods
     </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="changePassword"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Async</span>
+                            changePassword
+                        </b>
+                        <a href="#changePassword"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>changePassword(id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, newPasswordDto: <a href="../classes/NewPasswordDto.html">NewPasswordDto</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="139"
+                            class="link-to-prism">src/auth/auth.service.ts:139</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>id</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>newPasswordDto</td>
+                                    <td>
+                                                <code><a href="../classes/NewPasswordDto.html" target="_self" >NewPasswordDto</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="checkToken"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Async</span>
+                            checkToken
+                        </b>
+                        <a href="#checkToken"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>checkToken(token: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="50"
+                            class="link-to-prism">src/auth/auth.service.ts:50</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>*
+NOTE:  checkToken(token:string) ==&gt;</p>
+<p>Only to be used in logout context
+to don&#39;t permit new using of a token
+which was already deactivated by logoff</p>
+<p>*</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>token</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>{}</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
     <table class="table table-sm table-bordered">
         <tbody>
             <tr>
@@ -185,8 +400,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="23"
-                            class="link-to-prism">src/auth/auth.service.ts:23</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="88"
+                            class="link-to-prism">src/auth/auth.service.ts:88</a></div>
                 </td>
             </tr>
 
@@ -237,6 +452,401 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="logout"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Async</span>
+                            logout
+                        </b>
+                        <a href="#logout"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>logout(userEmail: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="103"
+                            class="link-to-prism">src/auth/auth.service.ts:103</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>NOTE: This method is
+to clean token from DB</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>userEmail</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>{}</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="nullPasswordLogout"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Async</span>
+                            nullPasswordLogout
+                        </b>
+                        <a href="#nullPasswordLogout"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>nullPasswordLogout(userEmail: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="108"
+                            class="link-to-prism">src/auth/auth.service.ts:108</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>userEmail</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>{}</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="resetPassword"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Async</span>
+                            resetPassword
+                        </b>
+                        <a href="#resetPassword"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>resetPassword(recoverToken: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, newPasswordDto: <a href="../classes/NewPasswordDto.html">NewPasswordDto</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="152"
+                            class="link-to-prism">src/auth/auth.service.ts:152</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>recoverToken</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>newPasswordDto</td>
+                                    <td>
+                                                <code><a href="../classes/NewPasswordDto.html" target="_self" >NewPasswordDto</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="sendRecoverPasswordEmail"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Async</span>
+                            sendRecoverPasswordEmail
+                        </b>
+                        <a href="#sendRecoverPasswordEmail"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>sendRecoverPasswordEmail(email: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="118"
+                            class="link-to-prism">src/auth/auth.service.ts:118</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>email</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="updatePasswordLogout"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Async</span>
+                            updatePasswordLogout
+                        </b>
+                        <a href="#updatePasswordLogout"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>updatePasswordLogout(token: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, userId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="81"
+                            class="link-to-prism">src/auth/auth.service.ts:81</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>NOTE: This is to hashing a password
+NOW_NOT_USED!</p>
+<p>Function for hashing string, deprecated
+async hashingPassword(userPassword: string){
+const saltOrRounds = 5;
+const hash = await bcrypt.hash(userPassword, saltOrRounds);
+return hash }</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>token</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>userId</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>{}</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="validateUser"></a>
                     <span class="name">
                         <b>
@@ -257,8 +867,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="14"
-                            class="link-to-prism">src/auth/auth.service.ts:14</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="29"
+                            class="link-to-prism">src/auth/auth.service.ts:29</a></div>
                 </td>
             </tr>
 
@@ -323,34 +933,170 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable } from &#x27;@nestjs/common&#x27;;
-import {UserService} from &#x27;../user/user.service&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {
+  Injectable,
+  UnauthorizedException,
+  NotFoundException,
+  UnprocessableEntityException,
+} from &#x27;@nestjs/common&#x27;;
+import { UserService } from &#x27;../modules/profile/user/user.service&#x27;;
 import { JwtService } from &#x27;@nestjs/jwt&#x27;;
-
-
+import { Repository } from &#x27;typeorm&#x27;;
+import { InjectRepository } from &#x27;@nestjs/typeorm&#x27;;
+import { MailerService } from &#x27;@nestjs-modules/mailer&#x27;;
+import { randomBytes } from &#x27;crypto&#x27;;
+import { User } from &#x27;@entities/user.entity&#x27;;
+import { CreateUserDTO } from &#x27;../modules/profile/user/create-user.dto&#x27;;
+import { NewPasswordDto } from &#x27;./newPassworDTO&#x27;;
 
 @Injectable()
-export class AuthService { 
-    constructor(
-        private userService: UserService,
-        private jwtService:JwtService,
-    ){}
+export class AuthService {
+  constructor(
+    private userService: UserService,
+    private jwtService: JwtService,
+    private mailerService: MailerService,
+    @InjectRepository(User)
+    private UserRepository: Repository&lt;User&gt;,
+  ) {
+    this.UserRepository &#x3D; UserRepository;
+  }
 
-    async validateUser(userEmail: string, userPassword: string){
-        const user &#x3D; await this.userService.findByEmail(userEmail);
-        if (user &amp;&amp; user.password &#x3D;&#x3D;&#x3D; userPassword){
-            const {id, name, email} &#x3D; user;
-            return {id : id , name , email};
-        }
-        return null;
+  async validateUser(userEmail: string, userPassword: string) {
+    const user &#x3D; await this.userService.findByEmail(userEmail);
+    if (user &amp;&amp; user.password &#x3D;&#x3D;&#x3D; userPassword) {
+      const { id, name, email } &#x3D; user;
+      //const hash &#x3D; this.hashingPassword(userPassword);
+      return { id: id, name, email };
+    } else {
+      throw new UnauthorizedException({
+        error: &#x27;Incorrect username or password or this users does not exists!&#x27;,
+      });
     }
+  }
 
-    async login(user: any){
-        const payload &#x3D; {email: user.email, sub: user.id};
-        return{
-            access_token: this.jwtService.sign(payload),
-        };
+  /***
+   *  NOTE:  checkToken(token:string) &#x3D;&#x3D;&gt;
+   *
+   *   Only to be used in logout context
+   *  to don&#x27;t permit new using of a token
+   *  which was already deactivated by logoff
+   *
+   ***/
+  async checkToken(token: string) {
+    const userLogged &#x3D; await this.UserRepository.findOne({
+      where: {
+        tokenLogout: token,
+      },
+    });
+    if (userLogged) {
+      return userLogged;
+    } else {
+      throw new NotFoundException({
+        error: &#x60;The token ${token} was not found!&#x60;,
+      });
     }
+  }
+
+  /**
+   *  NOTE: This is to hashing a password
+   *  NOW_NOT_USED!
+   *
+   * Function for hashing string, deprecated
+   * async hashingPassword(userPassword: string){
+   * const saltOrRounds &#x3D; 5;
+   * const hash &#x3D; await bcrypt.hash(userPassword, saltOrRounds);
+   * return hash }
+   **/
+
+  /**
+   *
+   * NOTE:
+   *
+   **/
+  async updatePasswordLogout(token: string, userId: string) {
+    const user &#x3D; new CreateUserDTO();
+    user.tokenLogout &#x3D; token;
+    const update &#x3D; await this.userService.passwordLogout(userId, user);
+    return console.log(update);
+  }
+
+  async login(user: any) {
+    const payload &#x3D; { email: user.email, sub: user.id };
+    const token &#x3D; await this.jwtService.sign(payload);
+    await this.updatePasswordLogout(&#x27;Bearer &#x27; + token, user.id);
+    return {
+      access_token: token,
+    };
+  }
+
+  /**
+   *
+   * NOTE: This method is
+   * to clean token from DB
+   *
+   **/
+  async logout(userEmail: string) {
+    const clean &#x3D; this.nullPasswordLogout(userEmail);
+    return console.log(clean);
+  }
+
+  async nullPasswordLogout(userEmail: string) {
+    const user &#x3D; new CreateUserDTO();
+    user.tokenLogout &#x3D; process.env.LOGOUT_CONSTANT;
+    const update &#x3D; await this.userService.passwordLogoutByEmail(
+      userEmail,
+      user,
+    );
+    return console.log(update);
+  }
+
+  async sendRecoverPasswordEmail(email: string): Promise&lt;void&gt; {
+    const user &#x3D; await this.userService.findByEmail(email);
+
+    if (!user)
+      throw new NotFoundException(&#x27;Não há usuário cadastrado com esse email.&#x27;);
+
+    user.recoverToken &#x3D; randomBytes(32).toString(&#x27;hex&#x27;);
+    await this.UserRepository.save(user);
+
+    const mail &#x3D; {
+      subject: &#x27;Recuperação de senha&#x27;,
+      template: &#x27;recover-password&#x27;,
+      from: process.env.SENDER_EMAIL,
+      to: user.email,
+      context: {
+        token: user.recoverToken,
+      },
+    };
+    await this.mailerService.sendMail(mail);
+  }
+
+  async changePassword(
+    id: string,
+    newPasswordDto: NewPasswordDto,
+  ): Promise&lt;void&gt; {
+    const { password, passwordConfirmation } &#x3D; newPasswordDto;
+
+    if (password !&#x3D; passwordConfirmation)
+      throw new UnprocessableEntityException(&#x27;As senhas não conferem&#x27;);
+    const user &#x3D; new CreateUserDTO();
+    user.password &#x3D; password;
+    await this.userService.changePassword(id, user);
+  }
+
+  async resetPassword(
+    recoverToken: string,
+    newPasswordDto: NewPasswordDto,
+  ): Promise&lt;void&gt; {
+    const user &#x3D; await this.userService.findByRecoverToken(recoverToken);
+    if (!user) throw new NotFoundException(&#x27;Token inválido.&#x27;);
+
+    try {
+      await this.changePassword(user.id, newPasswordDto);
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 </code></pre>
     </div>

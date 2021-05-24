@@ -60,7 +60,7 @@
             <h3>File</h3>
         </p>
         <p class="comment">
-            <code>src/comments/create-comment.dto.ts</code>
+            <code>src/modules/forum/comments/dto/create-comment.dto.ts</code>
         </p>
 
 
@@ -107,15 +107,11 @@
                             <li>
                                     <span class="modifier">Public</span>
                                     <span class="modifier">Readonly</span>
-                                <a href="#text">text</a>
+                                <a href="#textBody">textBody</a>
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
                                 <a href="#topic_id">topic_id</a>
-                            </li>
-                            <li>
-                                    <span class="modifier">Public</span>
-                                <a href="#user_id">user_id</a>
                             </li>
                         </ul>
                     </td>
@@ -156,9 +152,18 @@
 
                         </td>
                     </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <b>Decorators : </b>
+                            <br />
+                            <code>
+                                @IsEmpty()<br />
+                            </code>
+                        </td>
+                    </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="7" class="link-to-prism">src/comments/create-comment.dto.ts:7</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="22" class="link-to-prism">src/modules/forum/comments/dto/create-comment.dto.ts:22</a></div>
                             </td>
                         </tr>
 
@@ -185,9 +190,18 @@
 
                         </td>
                     </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <b>Decorators : </b>
+                            <br />
+                            <code>
+                                @IsEmpty()<br />
+                            </code>
+                        </td>
+                    </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="8" class="link-to-prism">src/comments/create-comment.dto.ts:8</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="25" class="link-to-prism">src/modules/forum/comments/dto/create-comment.dto.ts:25</a></div>
                             </td>
                         </tr>
 
@@ -214,9 +228,18 @@
 
                         </td>
                     </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <b>Decorators : </b>
+                            <br />
+                            <code>
+                                @IsEmpty()<br />
+                            </code>
+                        </td>
+                    </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="9" class="link-to-prism">src/comments/create-comment.dto.ts:9</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="28" class="link-to-prism">src/modules/forum/comments/dto/create-comment.dto.ts:28</a></div>
                             </td>
                         </tr>
 
@@ -243,9 +266,18 @@
 
                         </td>
                     </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <b>Decorators : </b>
+                            <br />
+                            <code>
+                                @IsEmpty()<br />
+                            </code>
+                        </td>
+                    </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="10" class="link-to-prism">src/comments/create-comment.dto.ts:10</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="31" class="link-to-prism">src/modules/forum/comments/dto/create-comment.dto.ts:31</a></div>
                             </td>
                         </tr>
 
@@ -272,9 +304,18 @@
 
                         </td>
                     </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <b>Decorators : </b>
+                            <br />
+                            <code>
+                                @ApiProperty({type: String, description: &#x27;Reaction&#x27;, default: &#x27;&#x27;})<br />@IsEmpty()<br />
+                            </code>
+                        </td>
+                    </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="6" class="link-to-prism">src/comments/create-comment.dto.ts:6</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="19" class="link-to-prism">src/modules/forum/comments/dto/create-comment.dto.ts:19</a></div>
                             </td>
                         </tr>
 
@@ -285,13 +326,13 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-                        <a name="text"></a>
+                        <a name="textBody"></a>
                         <span class="name">
                             <b>
                                 <span class="modifier">Public</span>
                                 <span class="modifier">Readonly</span>
-                            text</b>
-                            <a href="#text"><span class="icon ion-ios-link"></span></a>
+                            textBody</b>
+                            <a href="#textBody"><span class="icon ion-ios-link"></span></a>
                         </span>
                     </td>
                 </tr>
@@ -301,9 +342,18 @@
 
                         </td>
                     </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <b>Decorators : </b>
+                            <br />
+                            <code>
+                                @IsNotEmpty()<br />@ApiProperty({type: String, description: &#x27;Body of Comment&#x27;, default: &#x27;&#x27;})<br />
+                            </code>
+                        </td>
+                    </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="5" class="link-to-prism">src/comments/create-comment.dto.ts:5</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="11" class="link-to-prism">src/modules/forum/comments/dto/create-comment.dto.ts:11</a></div>
                             </td>
                         </tr>
 
@@ -329,37 +379,18 @@
 
                         </td>
                     </tr>
-                        <tr>
-                            <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="11" class="link-to-prism">src/comments/create-comment.dto.ts:11</a></div>
-                            </td>
-                        </tr>
-
-
-            </tbody>
-        </table>
-        <table class="table table-sm table-bordered">
-            <tbody>
-                <tr>
-                    <td class="col-md-4">
-                        <a name="user_id"></a>
-                        <span class="name">
-                            <b>
-                                <span class="modifier">Public</span>
-                            user_id</b>
-                            <a href="#user_id"><span class="icon ion-ios-link"></span></a>
-                        </span>
-                    </td>
-                </tr>
                     <tr>
                         <td class="col-md-4">
-                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-
+                            <b>Decorators : </b>
+                            <br />
+                            <code>
+                                @IsNotEmpty()<br />@ApiProperty({type: String, description: &#x27;Id of topic&#x27;, default: &#x27;&#x27;})<br />
+                            </code>
                         </td>
                     </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="12" class="link-to-prism">src/comments/create-comment.dto.ts:12</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="39" class="link-to-prism">src/modules/forum/comments/dto/create-comment.dto.ts:39</a></div>
                             </td>
                         </tr>
 
@@ -378,20 +409,47 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {Topic} from &#x27;../topics/topic.entity&#x27;
-import {User} from &#x27;../user/user.entity&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { IsEmpty, IsNotEmpty } from &#x27;class-validator&#x27;;
+import { ApiProperty } from &#x27;@nestjs/swagger&#x27;;
 
 export class CreateCommentDTO {
-    public readonly text: string;
-    public readonly reaction: string;
-    public readonly disable: boolean;
-    public readonly hasParenteComment: boolean;
-    public readonly idParentComment: string;
-    public readonly indexOrder: number;
-    public          topic_id :string;
-    public          user_id :string;
-  }
-  </code></pre>
+  @IsNotEmpty()
+  @ApiProperty({
+    type: String,
+    description: &#x27;Body of Comment&#x27;,
+    default: &#x27;&#x27;,
+  })
+  public readonly textBody: string;
+
+  @ApiProperty({
+    type: String,
+    description: &#x27;Reaction&#x27;,
+    default: &#x27;&#x27;,
+  })
+  @IsEmpty()
+  public readonly reaction: string;
+
+  @IsEmpty()
+  public readonly disable: boolean;
+
+  @IsEmpty()
+  public readonly hasParenteComment: boolean;
+
+  @IsEmpty()
+  public readonly idParentComment: string;
+
+  @IsEmpty()
+  public readonly indexOrder: number;
+
+  @IsNotEmpty()
+  @ApiProperty({
+    type: String,
+    description: &#x27;Id of topic&#x27;,
+    default: &#x27;&#x27;,
+  })
+  public topic_id: string;
+}
+</code></pre>
     </div>
 </div>
 

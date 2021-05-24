@@ -54,7 +54,7 @@
             <h3>File</h3>
         </p>
         <p class="comment">
-            <code>src/user/user.controller.ts</code>
+            <code>src/modules/profile/user/user.controller.ts</code>
         </p>
 
             <p class="comment">
@@ -82,18 +82,35 @@
                     <td class="col-md-4">
                         <ul class="index-list">
                             <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#addAvatar">addAvatar</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#adminFindAll">adminFindAll</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
                                 <a href="#create">create</a>
                             </li>
                             <li>
+                                    <span class="modifier">Async</span>
                                 <a href="#findAll">findAll</a>
                             </li>
                             <li>
+                                    <span class="modifier">Async</span>
                                 <a href="#findOne">findOne</a>
                             </li>
                             <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#findOneByToken">findOneByToken</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
                                 <a href="#remove">remove</a>
                             </li>
                             <li>
+                                    <span class="modifier">Async</span>
                                 <a href="#update">update</a>
                             </li>
                         </ul>
@@ -117,9 +134,190 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="addAvatar"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Async</span>
+                            addAvatar
+                        </b>
+                        <a href="#addAvatar"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>addAvatar(request, file: Express.Multer.File)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@Post(&#x27;avatar&#x27;)<br />@UseGuards(JwtAuthGuard)<br />@UseInterceptors(undefined)<br /></code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="244"
+                            class="link-to-prism">src/modules/profile/user/user.controller.ts:244</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>request</td>
+                                    <td>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>file</td>
+                                    <td>
+                                            <code>Express.Multer.File</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>{}</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="adminFindAll"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Async</span>
+                            adminFindAll
+                        </b>
+                        <a href="#adminFindAll"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>adminFindAll(req, query: <a href="../interfaces/QueryPage.html">QueryPage</a>)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@Get(&#x27;admin&#x27;)<br /></code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="236"
+                            class="link-to-prism">src/modules/profile/user/user.controller.ts:236</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>req</td>
+                                    <td>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>query</td>
+                                    <td>
+                                                <code><a href="../interfaces/QueryPage.html" target="_self" >QueryPage</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>{}</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="create"></a>
                     <span class="name">
                         <b>
+                            <span class="modifier">Async</span>
                             create
                         </b>
                         <a href="#create"><span class="icon ion-ios-link"></span></a>
@@ -128,7 +326,8 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>create(createUserDTO: <a href="../classes/CreateUserDTO.html">CreateUserDTO</a>)</code>
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>create(createUserDTO: <a href="../classes/CreateUserDTO.html">CreateUserDTO</a>)</code>
                 </td>
             </tr>
 
@@ -136,14 +335,14 @@
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Post()<br /></code>
+                    <code>@UsePipes(ValidationPipe)<br />@ApiOkResponse({description: &#x27;The user has been succesfull created&#x27;})<br />@ApiBadRequestResponse({description: &#x27;Bad request&#x27;})<br />@ApiHeader({name: &#x27;JWT&#x27;, description: &#x27;JWT token must to be passed to do this request&#x27;})<br />@Post()<br /></code>
                 </td>
             </tr>
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="24"
-                            class="link-to-prism">src/user/user.controller.ts:24</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="97"
+                            class="link-to-prism">src/modules/profile/user/user.controller.ts:97</a></div>
                 </td>
             </tr>
 
@@ -180,7 +379,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../classes/User.html" target="_self" >Promise&lt;User&gt;</a></code>
+                        <b>Returns : </b>        <code><a href="../classes/User.html" target="_self" >Promise&lt;Partial&lt;User&gt;&gt;</a></code>
 
                     </div>
                     <div class="io-description">
@@ -197,6 +396,7 @@
                     <a name="findAll"></a>
                     <span class="name">
                         <b>
+                            <span class="modifier">Async</span>
                             findAll
                         </b>
                         <a href="#findAll"><span class="icon ion-ios-link"></span></a>
@@ -205,7 +405,8 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>findAll()</code>
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>findAll(req, query: <a href="../interfaces/QueryPage.html">QueryPage</a>)</code>
                 </td>
             </tr>
 
@@ -213,60 +414,14 @@
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Get()<br /></code>
+                    <code>@UseGuards(JwtAuthGuard)<br />@ApiOkResponse({description: &#x27;The users has been succesfull returned&#x27;})<br />@ApiBadRequestResponse({description: &#x27;Bad request&#x27;})<br />@ApiHeader({name: &#x27;JWT&#x27;, description: &#x27;JWT token must to be passed to do this request&#x27;})<br />@Get()<br /></code>
                 </td>
             </tr>
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="18"
-                            class="link-to-prism">src/user/user.controller.ts:18</a></div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../classes/User.html" target="_self" >Promise&lt;User[]&gt;</a></code>
-
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="findOne"></a>
-                    <span class="name">
-                        <b>
-                            findOne
-                        </b>
-                        <a href="#findOne"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>findOne(id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
-                </td>
-            </tr>
-
-            <tr>
-                <td class="col-md-4">
-                    <b>Decorators : </b>
-                    <br />
-                    <code>@Get(&#x27;:id&#x27;)<br /></code>
-                </td>
-            </tr>
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="29"
-                            class="link-to-prism">src/user/user.controller.ts:29</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="50"
+                            class="link-to-prism">src/modules/profile/user/user.controller.ts:50</a></div>
                 </td>
             </tr>
 
@@ -286,7 +441,97 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>id</td>
+                                    <td>req</td>
+                                    <td>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>query</td>
+                                    <td>
+                                                <code><a href="../interfaces/QueryPage.html" target="_self" >QueryPage</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>{}</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="findOne"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Async</span>
+                            findOne
+                        </b>
+                        <a href="#findOne"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>findOne(idUser: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@Get(&#x27;:id&#x27;)<br />@UseGuards(JwtAuthGuard)<br />@ApiOkResponse({description: &#x27;The user has been succesfull returned&#x27;})<br />@ApiBadRequestResponse({description: &#x27;Bad request&#x27;})<br />@ApiHeader({name: &#x27;JWT&#x27;, description: &#x27;JWT token must to be passed to do this request&#x27;})<br /></code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="127"
+                            class="link-to-prism">src/modules/profile/user/user.controller.ts:127</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>idUser</td>
                                     <td>
                                                 <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
                                     </td>
@@ -303,7 +548,82 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../classes/User.html" target="_self" >Promise&lt;User&gt;</a></code>
+                        <b>Returns : </b>        <code><a href="../classes/User.html" target="_self" >Promise&lt;Partial&lt;User&gt;&gt;</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="findOneByToken"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Async</span>
+                            findOneByToken
+                        </b>
+                        <a href="#findOneByToken"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>findOneByToken(req)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@UseGuards(JwtAuthGuard)<br />@Get(&#x27;findme&#x27;)<br /></code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="82"
+                            class="link-to-prism">src/modules/profile/user/user.controller.ts:82</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>req</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>{}</code>
 
                     </div>
                     <div class="io-description">
@@ -320,6 +640,7 @@
                     <a name="remove"></a>
                     <span class="name">
                         <b>
+                            <span class="modifier">Async</span>
                             remove
                         </b>
                         <a href="#remove"><span class="icon ion-ios-link"></span></a>
@@ -328,7 +649,8 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>remove(id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>remove(req, id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
                 </td>
             </tr>
 
@@ -336,14 +658,14 @@
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Delete(&#x27;:id&#x27;)<br /></code>
+                    <code>@Delete(&#x27;:id&#x27;)<br />@UseGuards(JwtAuthGuard)<br />@ApiOkResponse({description: &#x27;The user has been succesfull deleted&#x27;})<br />@ApiBadRequestResponse({description: &#x27;Bad request&#x27;})<br />@ApiHeader({name: &#x27;JWT&#x27;, description: &#x27;JWT token must to be passed to do this request&#x27;})<br /></code>
                 </td>
             </tr>
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="35"
-                            class="link-to-prism">src/user/user.controller.ts:35</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="153"
+                            class="link-to-prism">src/modules/profile/user/user.controller.ts:153</a></div>
                 </td>
             </tr>
 
@@ -362,6 +684,17 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                <tr>
+                                    <td>req</td>
+                                    <td>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
                                 <tr>
                                     <td>id</td>
                                     <td>
@@ -380,7 +713,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+                        <b>Returns : </b>    <code>Promise&lt;DeletedItemUserDTO&gt;</code>
 
                     </div>
                     <div class="io-description">
@@ -397,6 +730,7 @@
                     <a name="update"></a>
                     <span class="name">
                         <b>
+                            <span class="modifier">Async</span>
                             update
                         </b>
                         <a href="#update"><span class="icon ion-ios-link"></span></a>
@@ -405,7 +739,8 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>update(id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, createUserDTO: <a href="../classes/CreateUserDTO.html">CreateUserDTO</a>)</code>
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>update(idUser: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, createUserDTO: <a href="../classes/CreateUserDTO.html">CreateUserDTO</a>, req)</code>
                 </td>
             </tr>
 
@@ -413,14 +748,14 @@
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Put(&#x27;:id&#x27;)<br /></code>
+                    <code>@Patch(&#x27;:id&#x27;)<br />@UseGuards(JwtAuthGuard)<br />@ApiOkResponse({description: &#x27;The user has been succesfull deleted&#x27;})<br />@ApiBadRequestResponse({description: &#x27;Bad request&#x27;})<br />@ApiHeader({name: &#x27;JWT&#x27;, description: &#x27;JWT token must to be passed to do this request&#x27;})<br /></code>
                 </td>
             </tr>
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="40"
-                            class="link-to-prism">src/user/user.controller.ts:40</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="199"
+                            class="link-to-prism">src/modules/profile/user/user.controller.ts:199</a></div>
                 </td>
             </tr>
 
@@ -440,7 +775,7 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>id</td>
+                                    <td>idUser</td>
                                     <td>
                                                 <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
                                     </td>
@@ -463,13 +798,24 @@
 
 
                                 </tr>
+                                <tr>
+                                    <td>req</td>
+                                    <td>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
                             </tbody>
                         </table>
                     </div>
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../classes/User.html" target="_self" >Promise&lt;User&gt;</a></code>
+                        <b>Returns : </b>        <code><a href="../classes/User.html" target="_self" >Promise&lt;Partial&lt;User&gt;&gt;</a></code>
 
                     </div>
                     <div class="io-description">
@@ -483,51 +829,261 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Body, Controller, Delete, Get, Param, Post, Put, Req, Res,Response, UseGuards, HttpStatus } from &#x27;@nestjs/common&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { QueryPage } from &#x27;@utils/page&#x27;;
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Patch,
+  UseGuards,
+  UsePipes,
+  Request,
+  UnauthorizedException,
+  NotFoundException,
+  ForbiddenException,
+  HttpException,
+  Query,
+  HttpStatus,
+  UseInterceptors,
+  UploadedFile,
+} from &#x27;@nestjs/common&#x27;;
 import { UserService } from &#x27;./user.service&#x27;;
 import { CreateUserDTO } from &#x27;./create-user.dto&#x27;;
-import {User} from &#x27;./user.entity&#x27;;
-import {uuid} from &#x27;uuidv4&#x27;;
-import {JwtAuthGuard} from &#x27;../auth/jwt-auth.guard&#x27;
+import { DeletedItemUserDTO } from &#x27;./delete-user.dto&#x27;;
+import { User } from &#x27;@entities/user.entity&#x27;;
+import { JwtAuthGuard } from &#x27;@auth/jwt-auth.guard&#x27;; //&#x27; &#x27; auth/jwt-auth.guard&#x27;;
+import { ValidationPipe } from &#x27;@nestjs/common/pipes/validation.pipe&#x27;;
+import {
+  ApiBadRequestResponse,
+  ApiForbiddenResponse,
+  ApiHeader,
+  ApiOkResponse,
+  ApiTags,
+} from &#x27;@nestjs/swagger&#x27;;
+import { FileInterceptor } from &#x27;@nestjs/platform-express&#x27;;
 
-
-
+@ApiTags(&#x27;users&#x27;)
 @Controller(&#x27;users&#x27;)
 export class UserController {
-  constructor(
-    private readonly userService: UserService,
-  ){}
+  constructor(private readonly userService: UserService) {}
 
-  //@UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
+  @ApiOkResponse({ description: &#x27;The users has been succesfull returned&#x27; })
+  @ApiBadRequestResponse({ description: &#x27;Bad request&#x27; })
+  @ApiHeader({
+    name: &#x27;JWT&#x27;,
+    description: &#x27;JWT token must to be passed to do this request&#x27;,
+  })
   @Get()
-  findAll(): Promise&lt;User[]&gt;{
-    return this.userService.findAll()
+  async findAll(@Request() req, @Query() query: QueryPage) {
+    console.log(req.headers.authorization);
 
+    const thisUser &#x3D; await this.userService.findByEmail(req.user.email);
+
+    const check &#x3D; await this.userService.authorizationCheck(
+      req.headers.authorization,
+    );
+
+    const page &#x3D; query.page;
+    const paginatedUsers &#x3D; await this.userService.findAll(page); //passamos a variavel page como parametro do metodo FindAll
+    const {
+      users,
+      currentPage,
+      prevPage,
+      nextPage,
+      perPage,
+      totalRegisters,
+    } &#x3D; paginatedUsers;
+
+    return {
+      users,
+      currentPage,
+      prevPage,
+      nextPage,
+      perPage,
+      totalRegisters,
+    };
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Get(&#x27;findme&#x27;)
+  async findOneByToken(@Request() req) {
+    console.log(&#x27;entroi&#x27;);
+    const token &#x3D; req.headers.authorization;
+    console.log(&#x27;This token is:&#x27;, token);
+    return this.userService.findByToken(token);
+  }
+
+  @UsePipes(ValidationPipe)
+  @ApiOkResponse({ description: &#x27;The user has been succesfull created&#x27; })
+  @ApiBadRequestResponse({ description: &#x27;Bad request&#x27; })
+  @ApiHeader({
+    name: &#x27;JWT&#x27;,
+    description: &#x27;JWT token must to be passed to do this request&#x27;,
+  })
   @Post()
-  create(@Body() createUserDTO:CreateUserDTO):Promise&lt;User&gt;{
-    return this.userService.create(createUserDTO);
+  async create(@Body() createUserDTO: CreateUserDTO): Promise&lt;Partial&lt;User&gt;&gt; {
+    const userAlreadyExists &#x3D; await this.userService.checkIfAlreadyExists(
+      createUserDTO.email,
+    );
+    if (userAlreadyExists &#x3D;&#x3D;&#x3D; undefined || !userAlreadyExists) {
+      const createdUser &#x3D; await this.userService.create(createUserDTO);
+
+      const { name, email, bio, id } &#x3D; createdUser;
+
+      return {
+        name,
+        email,
+        bio,
+        id,
+      };
+    } else {
+      throw new ForbiddenException({
+        error: &#x60;The email : ${createUserDTO.email}    is already used!&#x60;,
+      });
+    }
   }
 
   @Get(&#x27;:id&#x27;)
-   findOne(@Param(&#x27;id&#x27;) id:string): Promise&lt;User&gt;{
+  @UseGuards(JwtAuthGuard)
+  @ApiOkResponse({ description: &#x27;The user has been succesfull returned&#x27; })
+  @ApiBadRequestResponse({ description: &#x27;Bad request&#x27; })
+  @ApiHeader({
+    name: &#x27;JWT&#x27;,
+    description: &#x27;JWT token must to be passed to do this request&#x27;,
+  })
+  async findOne(@Param(&#x27;id&#x27;) idUser: string): Promise&lt;Partial&lt;User&gt;&gt; {
+    const foundUser &#x3D; await this.userService.findById(idUser);
 
-    return this.userService.findOne(id);
-   }
+    if (!foundUser) {
+      throw new NotFoundException(&#x60;Error: user with ID: ${idUser} not exists&#x60;);
+    }
 
-   @Delete(&#x27;:id&#x27;)
-   remove(@Param(&#x27;id&#x27;) id:string): Promise&lt;void&gt;{
-    return this.userService.remove(id)
-   }
+    const selectedUser &#x3D; await this.userService.findOne(idUser);
+    const { name, email, bio, id } &#x3D; selectedUser;
 
-   @Put(&#x27;:id&#x27;)
-   update(@Param(&#x27;id&#x27;) id:string, @Body() createUserDTO:CreateUserDTO): Promise&lt;User&gt;{
-    return this.userService.update(id, createUserDTO);
-   }
+    return {
+      name,
+      email,
+      bio,
+      id,
+    };
+  }
 
+  @Delete(&#x27;:id&#x27;)
+  @UseGuards(JwtAuthGuard)
+  @ApiOkResponse({ description: &#x27;The user has been succesfull deleted&#x27; })
+  @ApiBadRequestResponse({ description: &#x27;Bad request&#x27; })
+  @ApiHeader({
+    name: &#x27;JWT&#x27;,
+    description: &#x27;JWT token must to be passed to do this request&#x27;,
+  })
+  async remove(
+    @Request() req,
+    @Param(&#x27;id&#x27;) id: string,
+  ): Promise&lt;DeletedItemUserDTO&gt; {
+    const token &#x3D; req.headers.authorization;
+    const check &#x3D; await this.userService.authorizationCheck(token);
+    const requestedUser &#x3D; await this.findOneByToken(token);
+    const userRequestedToDelete &#x3D; await this.userService.findById(id);
 
-}</code></pre>
+    console.log(userRequestedToDelete);
+
+    if (
+      (userRequestedToDelete.id &#x3D;&#x3D;&#x3D; requestedUser.id &amp;&amp;
+        userRequestedToDelete.email &#x3D;&#x3D;&#x3D; requestedUser.email) ||
+      requestedUser.isAdmin &#x3D;&#x3D;&#x3D; true
+    ) {
+      const deletedIten &#x3D; this.userService.delete(id);
+      if (!deletedIten) {
+        throw new HttpException(
+          {
+            status: HttpStatus.BAD_REQUEST,
+            error: &#x27;Error to delete comment, please check data!&#x27;,
+          },
+          HttpStatus.BAD_REQUEST,
+        );
+      } else {
+        const message &#x3D; &#x27;Iten &#x27; + id + &#x27; deleted&#x27;;
+        return {
+          message,
+        };
+      }
+    } else {
+      throw new UnauthorizedException({
+        error: &#x27;You are not permitted to remove this user!&#x27;,
+      });
+    }
+  }
+
+  @Patch(&#x27;:id&#x27;)
+  @UseGuards(JwtAuthGuard)
+  @ApiOkResponse({ description: &#x27;The user has been succesfull deleted&#x27; })
+  @ApiBadRequestResponse({ description: &#x27;Bad request&#x27; })
+  @ApiHeader({
+    name: &#x27;JWT&#x27;,
+    description: &#x27;JWT token must to be passed to do this request&#x27;,
+  })
+  async update(
+    @Param(&#x27;id&#x27;) idUser: string,
+    @Body() createUserDTO: CreateUserDTO,
+    @Request() req,
+  ): Promise&lt;Partial&lt;User&gt;&gt; {
+    const token &#x3D; req.headers.authorization;
+    const check &#x3D; await this.userService.authorizationCheck(token);
+    const requestedUser &#x3D; await await this.userService.findByToken(token);
+    const userRequestedToUpdate &#x3D; await this.userService.findById(idUser);
+
+    if (!userRequestedToUpdate || userRequestedToUpdate &#x3D;&#x3D;&#x3D; undefined) {
+      throw new NotFoundException({ error: &#x27;This user does not exists&#x27; });
+    }
+
+    if (
+      (userRequestedToUpdate.id &#x3D;&#x3D;&#x3D; requestedUser.id &amp;&amp;
+        userRequestedToUpdate.email &#x3D;&#x3D;&#x3D; requestedUser.email) ||
+      requestedUser.isAdmin &#x3D;&#x3D;&#x3D; true
+    ) {
+      /**NOTE: Only these values below &#x27;ll be updated */
+      userRequestedToUpdate.name &#x3D; createUserDTO.name;
+      userRequestedToUpdate.bio &#x3D; createUserDTO.bio;
+      userRequestedToUpdate.password &#x3D; createUserDTO.password;
+
+      const user &#x3D; await this.userService.update(
+        userRequestedToUpdate.id,
+        userRequestedToUpdate,
+      );
+
+      const { name, email, bio, id } &#x3D; user;
+
+      return user;
+    } //add else
+  }
+  //find original local
+
+  @Get(&#x27;admin&#x27;)
+  async adminFindAll(@Request() req, @Query() query: QueryPage) {
+    const page &#x3D; query.page;
+    return this.userService.adminFindAll(); //passamos a variavel page como parametro do metodo FindAll
+  }
+
+  @Post(&#x27;avatar&#x27;)
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(FileInterceptor(&#x27;file&#x27;))
+  async addAvatar(
+    @Request() request,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    return this.userService.addAvatar(
+      request.user.id,
+      file.buffer,
+      file.originalname,
+    );
+  }
+}
+</code></pre>
     </div>
 </div>
 

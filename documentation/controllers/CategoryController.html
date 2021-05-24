@@ -54,14 +54,14 @@
             <h3>File</h3>
         </p>
         <p class="comment">
-            <code>src/category/category.controller.ts</code>
+            <code>src/modules/forum/categories/categories.controller.ts</code>
         </p>
 
             <p class="comment">
                 <h3>Prefix</h3>
             </p>
             <p class="comment">
-                <code>categories</code>
+                <code>forum/categories</code>
             </p>
 
 
@@ -82,18 +82,35 @@
                     <td class="col-md-4">
                         <ul class="index-list">
                             <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#addAvatar">addAvatar</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#adminFindAll">adminFindAll</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#adminFindOne">adminFindOne</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
                                 <a href="#create">create</a>
                             </li>
                             <li>
+                                    <span class="modifier">Async</span>
                                 <a href="#findAll">findAll</a>
                             </li>
                             <li>
+                                    <span class="modifier">Async</span>
                                 <a href="#findOne">findOne</a>
                             </li>
                             <li>
+                                    <span class="modifier">Async</span>
                                 <a href="#remove">remove</a>
                             </li>
                             <li>
+                                    <span class="modifier">Async</span>
                                 <a href="#update">update</a>
                             </li>
                         </ul>
@@ -117,9 +134,281 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="addAvatar"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Async</span>
+                            addAvatar
+                        </b>
+                        <a href="#addAvatar"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>addAvatar(req, id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, file: Express.Multer.File)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@Post(&#x27;image/:id&#x27;)<br />@UseGuards(JwtAuthGuard)<br />@UseInterceptors(undefined)<br /></code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="212"
+                            class="link-to-prism">src/modules/forum/categories/categories.controller.ts:212</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>req</td>
+                                    <td>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>id</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>file</td>
+                                    <td>
+                                            <code>Express.Multer.File</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>{}</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="adminFindAll"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Async</span>
+                            adminFindAll
+                        </b>
+                        <a href="#adminFindAll"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>adminFindAll(query: <a href="../interfaces/QueryPage.html">QueryPage</a>)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@Get(&#x27;admin&#x27;)<br />@ApiOkResponse({description: &#x27;The categories has been succesfful returned&#x27;})<br />@ApiForbiddenResponse({description: &#x27;Forbidden&#x27;})<br /></code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="113"
+                            class="link-to-prism">src/modules/forum/categories/categories.controller.ts:113</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>query</td>
+                                    <td>
+                                                <code><a href="../interfaces/QueryPage.html" target="_self" >QueryPage</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../classes/Category.html" target="_self" >Promise&lt;Category[]&gt;</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="adminFindOne"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Async</span>
+                            adminFindOne
+                        </b>
+                        <a href="#adminFindOne"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>adminFindOne(categoryId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, req)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@UseGuards(JwtAuthGuard)<br />@ApiOkResponse({description: &#x27;The category has been successful deleted&#x27;})<br />@ApiForbiddenResponse({description: &#x27;Forbidden&#x27;})<br />@Get(&#x27;admin/:id&#x27;)<br /></code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="176"
+                            class="link-to-prism">src/modules/forum/categories/categories.controller.ts:176</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>categoryId</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>req</td>
+                                    <td>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../classes/Category.html" target="_self" >Promise&lt;Category&gt;</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="create"></a>
                     <span class="name">
                         <b>
+                            <span class="modifier">Async</span>
                             create
                         </b>
                         <a href="#create"><span class="icon ion-ios-link"></span></a>
@@ -128,7 +417,8 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>create(createCategoryDTO: <a href="../classes/CreateCategoryDTO.html">CreateCategoryDTO</a>)</code>
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>create(createCategoryDTO: <a href="../classes/CreateCategoryDTO.html">CreateCategoryDTO</a>, req)</code>
                 </td>
             </tr>
 
@@ -136,14 +426,14 @@
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Post()<br /></code>
+                    <code>@ApiHeader({name: &#x27;Bearer Token&#x27;, description: &#x27;JWT Token&#x27;})<br />@UseGuards(JwtAuthGuard)<br />@Post()<br />@ApiCreatedResponse({description: &#x27;Categoria criada com sucesso!&#x27;})<br />@ApiForbiddenResponse({description: &#x27;Ação não autorizada: Somente um admin pode criar uma categoria&#x27;})<br />@UsePipes(ValidationPipe)<br /></code>
                 </td>
             </tr>
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="17"
-                            class="link-to-prism">src/category/category.controller.ts:17</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="63"
+                            class="link-to-prism">src/modules/forum/categories/categories.controller.ts:63</a></div>
                 </td>
             </tr>
 
@@ -174,13 +464,24 @@
 
 
                                 </tr>
+                                <tr>
+                                    <td>req</td>
+                                    <td>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
                             </tbody>
                         </table>
                     </div>
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../classes/Category.html" target="_self" >Promise&lt;Category&gt;</a></code>
+                        <b>Returns : </b>        <code><a href="../classes/CreateModel.html" target="_self" >Promise&lt;CreateModel&gt;</a></code>
 
                     </div>
                     <div class="io-description">
@@ -197,6 +498,7 @@
                     <a name="findAll"></a>
                     <span class="name">
                         <b>
+                            <span class="modifier">Async</span>
                             findAll
                         </b>
                         <a href="#findAll"><span class="icon ion-ios-link"></span></a>
@@ -205,7 +507,8 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>findAll()</code>
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>findAll(query: <a href="../interfaces/QueryPage.html">QueryPage</a>)</code>
                 </td>
             </tr>
 
@@ -213,60 +516,14 @@
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Get()<br /></code>
+                    <code>@Get()<br />@ApiOkResponse({description: &#x27;Categp&#x27;})<br />@ApiBadRequestResponse({description: &#x27;Bad request&#x27;})<br /></code>
                 </td>
             </tr>
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="22"
-                            class="link-to-prism">src/category/category.controller.ts:22</a></div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../classes/Category.html" target="_self" >Promise&lt;Category[]&gt;</a></code>
-
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="findOne"></a>
-                    <span class="name">
-                        <b>
-                            findOne
-                        </b>
-                        <a href="#findOne"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>findOne(id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
-                </td>
-            </tr>
-
-            <tr>
-                <td class="col-md-4">
-                    <b>Decorators : </b>
-                    <br />
-                    <code>@Get(&#x27;:id&#x27;)<br /></code>
-                </td>
-            </tr>
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="28"
-                            class="link-to-prism">src/category/category.controller.ts:28</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="104"
+                            class="link-to-prism">src/modules/forum/categories/categories.controller.ts:104</a></div>
                 </td>
             </tr>
 
@@ -286,9 +543,9 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>id</td>
+                                    <td>query</td>
                                     <td>
-                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                <code><a href="../interfaces/QueryPage.html" target="_self" >QueryPage</a></code>
                                     </td>
 
                                     <td>
@@ -303,7 +560,97 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../classes/Category.html" target="_self" >Promise&lt;Category&gt;</a></code>
+                        <b>Returns : </b>    <code>Promise&lt;FindAllModel&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="findOne"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Async</span>
+                            findOne
+                        </b>
+                        <a href="#findOne"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>findOne(categoryId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, req)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@Get(&#x27;:id&#x27;)<br />@ApiOkResponse({description: &#x27;The category has been successful deleted&#x27;})<br />@ApiBadRequestResponse({description: &#x27;Bad request&#x27;})<br /></code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="122"
+                            class="link-to-prism">src/modules/forum/categories/categories.controller.ts:122</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>categoryId</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>req</td>
+                                    <td>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../classes/FindOneModel.html" target="_self" >Promise&lt;FindOneModel&gt;</a></code>
 
                     </div>
                     <div class="io-description">
@@ -320,6 +667,7 @@
                     <a name="remove"></a>
                     <span class="name">
                         <b>
+                            <span class="modifier">Async</span>
                             remove
                         </b>
                         <a href="#remove"><span class="icon ion-ios-link"></span></a>
@@ -328,7 +676,8 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>remove(id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>remove(id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, req)</code>
                 </td>
             </tr>
 
@@ -336,14 +685,14 @@
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Delete(&#x27;:id&#x27;)<br />@ApiResponse({status: 400, description: &#x27;Error: Id is incorrect or category not exists&#x27;})<br /></code>
+                    <code>@UseGuards(JwtAuthGuard)<br />@Delete(&#x27;:id&#x27;)<br />@ApiOkResponse({description: &#x27;The category has been successful deleted&#x27;})<br />@ApiBadRequestResponse({description: &#x27;Bad request&#x27;})<br /></code>
                 </td>
             </tr>
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="38"
-                            class="link-to-prism">src/category/category.controller.ts:38</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="146"
+                            class="link-to-prism">src/modules/forum/categories/categories.controller.ts:146</a></div>
                 </td>
             </tr>
 
@@ -374,13 +723,24 @@
 
 
                                 </tr>
+                                <tr>
+                                    <td>req</td>
+                                    <td>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
                             </tbody>
                         </table>
                     </div>
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+                        <b>Returns : </b>        <code><a href="../classes/DeleteModel.html" target="_self" >Promise&lt;DeleteModel&gt;</a></code>
 
                     </div>
                     <div class="io-description">
@@ -397,6 +757,7 @@
                     <a name="update"></a>
                     <span class="name">
                         <b>
+                            <span class="modifier">Async</span>
                             update
                         </b>
                         <a href="#update"><span class="icon ion-ios-link"></span></a>
@@ -405,7 +766,8 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>update(id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, createCategoryDTO: <a href="../classes/CreateCategoryDTO.html">CreateCategoryDTO</a>)</code>
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>update(id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, createCategoryDTO: <a href="../classes/CreateCategoryDTO.html">CreateCategoryDTO</a>, req: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
                 </td>
             </tr>
 
@@ -413,14 +775,14 @@
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Put(&#x27;:id&#x27;)<br /></code>
+                    <code>@UseGuards(JwtAuthGuard)<br />@Patch(&#x27;:id&#x27;)<br />@ApiOkResponse({description: &#x27;The category has beenn successful updated&#x27;})<br />@ApiForbiddenResponse({description: &#x27;Forbidden&#x27;})<br /></code>
                 </td>
             </tr>
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="43"
-                            class="link-to-prism">src/category/category.controller.ts:43</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="187"
+                            class="link-to-prism">src/modules/forum/categories/categories.controller.ts:187</a></div>
                 </td>
             </tr>
 
@@ -463,13 +825,25 @@
 
 
                                 </tr>
+                                <tr>
+                                    <td>req</td>
+                                    <td>
+                                                <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
                             </tbody>
                         </table>
                     </div>
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../classes/Category.html" target="_self" >Promise&lt;Category&gt;</a></code>
+                        <b>Returns : </b>        <code><a href="../classes/UpdateModel.html" target="_self" >Promise&lt;UpdateModel&gt;</a></code>
 
                     </div>
                     <div class="io-description">
@@ -483,53 +857,233 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Body, Controller, Delete, Get, Param, Post, Put, Render, } from &#x27;@nestjs/common&#x27;;
-import { CategoryService } from &#x27;../category/category.service&#x27;;
-import { CreateCategoryDTO} from &#x27;../category/create-category.dto&#x27;
-import { Category } from &#x27;../category/category.entity&#x27;;
-import {uuid} from &#x27;uuidv4&#x27;;
-import {ApiResponse} from &#x27;@nestjs/swagger&#x27;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { FindAllModel } from &#x27;./api-model/find-all.model&#x27;;
+import { CreateModel } from &#x27;./api-model/create-model&#x27;;
+import { QueryPage } from &#x27;@utils/page&#x27;;
+import { LocalAuthGuard } from &#x27;@auth/local-auth.guard&#x27;;
+import { FileInterceptor } from &#x27;@nestjs/platform-express&#x27;;
+import {
+  Body,
+  Controller,
+  Delete,
+  Request,
+  Get,
+  Param,
+  Post,
+  Patch,
+  UseGuards,
+  UsePipes,
+  ValidationPipe,
+  HttpException,
+  HttpStatus,
+  UnauthorizedException,
+  NotFoundException,
+  Query,
+  UseInterceptors,
+  UploadedFile,
+} from &#x27;@nestjs/common&#x27;;
+import { CategoryService } from &#x27;./categories.service&#x27;;
+import { CreateCategoryDTO } from &#x27;./dto/create-category.dto&#x27;;
+import { Category } from &#x27;../../../entities/category.entity&#x27;;
+import {
+  ApiCreatedResponse,
+  ApiBadRequestResponse,
+  ApiHeader,
+  ApiOkResponse,
+  ApiTags,
+  ApiForbiddenResponse,
+} from &#x27;@nestjs/swagger&#x27;;
+import { JwtAuthGuard } from &#x27;../../../auth/jwt-auth.guard&#x27;;
+import { UserService } from &#x27;src/modules/profile/user/user.service&#x27;;
+import FindOneModel from &#x27;./api-model/find-one-model&#x27;;
+import { DeleteModel } from &#x27;./dto/delete-model.dto&#x27;;
+import UpdateModel from &#x27;./api-model/update-model&#x27;;
 
-
-
-@Controller(&#x27;categories&#x27;)
+@ApiTags(&#x27;categories&#x27;)
+@Controller(&#x27;forum/categories&#x27;)
 export class CategoryController {
   constructor(
     private readonly categoryService: CategoryService,
-  ){}
+    private readonly userService: UserService,
+  ) {}
 
+  @ApiHeader({
+    name: &#x27;Bearer Token&#x27;,
+    description: &#x27;JWT Token&#x27;,
+  })
+  @UseGuards(JwtAuthGuard)
   @Post()
-  create( @Body() createCategoryDTO:CreateCategoryDTO):Promise&lt;Category&gt;{
-    return this.categoryService.create(createCategoryDTO);
+  @ApiCreatedResponse({ description: &#x27;Categoria criada com sucesso!&#x27; })
+  @ApiForbiddenResponse({
+    description:
+      &#x27;Ação não autorizada: Somente um admin pode criar uma categoria&#x27;,
+  })
+  @UsePipes(ValidationPipe)
+  async create(
+    @Body() createCategoryDTO: CreateCategoryDTO,
+    @Request() req,
+  ): Promise&lt;CreateModel&gt; {
+    const token &#x3D; req.headers.authorization;
+
+    const check &#x3D; await this.userService.authorizationCheck(token);
+
+    const author &#x3D; await this.userService.findByToken(token);
+    createCategoryDTO.authorEmail &#x3D; author.email;
+    createCategoryDTO.authorId &#x3D; author.id;
+    const requestedName &#x3D; createCategoryDTO.name;
+    const exists &#x3D; await this.categoryService.findByName(requestedName);
+    if (author.isAdmin &#x3D;&#x3D;&#x3D; true) {
+      if (!exists) {
+        const newCategory &#x3D; await this.categoryService.create(
+          createCategoryDTO,
+        );
+        const { id, name, imageStorage } &#x3D; newCategory;
+
+        return {
+          id,
+          name,
+          imageStorage,
+        };
+      } else {
+        throw new HttpException(
+          &#x60;Já existe uma categoria cadastrada com esse nome!&#x60;,
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+    } else {
+      throw new UnauthorizedException({
+        error: &#x27;Somente um administrador pode criar categorias!&#x27;,
+      });
+    }
   }
 
   @Get()
-  findAll(): Promise&lt;Category[]&gt;{
+  @ApiOkResponse({ description: &#x27;Categp&#x27; })
+  @ApiBadRequestResponse({ description: &#x27;Bad request&#x27; })
+  async findAll(@Query() query: QueryPage): Promise&lt;FindAllModel&gt; {
+    const page &#x3D; query.page;
+    console.log(page);
+    return this.categoryService.findAll(page);
+  }
 
-    return this.categoryService.findAll();
+  @Get(&#x27;admin&#x27;)
+  @ApiOkResponse({ description: &#x27;The categories has been succesfful returned&#x27; })
+  @ApiForbiddenResponse({ description: &#x27;Forbidden&#x27; })
+  async adminFindAll(@Query() query: QueryPage): Promise&lt;Category[]&gt; {
+    const page &#x3D; query.page;
+    console.log(page);
+    return this.categoryService.adminFindAll(page);
   }
 
   @Get(&#x27;:id&#x27;)
-   findOne(@Param(&#x27;id&#x27;) id:string): Promise&lt;Category&gt;{
+  @ApiOkResponse({ description: &#x27;The category has been successful deleted&#x27; })
+  @ApiBadRequestResponse({ description: &#x27;Bad request&#x27; })
+  async findOne(
+    @Param(&#x27;id&#x27;) categoryId: string,
+    @Request() req,
+  ): Promise&lt;FindOneModel&gt; {
+    const check &#x3D; await this.userService.authorizationCheck(
+      req.headers.authorization,
+    );
 
-    return this.categoryService.findOne(id);
-   }
+    const {
+      id,
+      name,
+      imageStorage,
+      description,
+      authorId,
+      authorEmail,
+    } &#x3D; await this.categoryService.findOne(categoryId);
 
-   @Delete(&#x27;:id&#x27;)
-
-   @ApiResponse({
-    status:400,
-    description:&quot;Error: Id is incorrect or category not exists&quot; })
-   remove(@Param(&#x27;id&#x27;) id:string): Promise&lt;void&gt;{
-    return this.categoryService.remove(id)
-   }
-
-  @Put(&#x27;:id&#x27;)
-  update(@Param(&#x27;id&#x27;) id:string, @Body() createCategoryDTO: CreateCategoryDTO ): Promise&lt;Category&gt;{
-    return this.categoryService.update(id,createCategoryDTO);
-
+    return { id, name, imageStorage, description, authorEmail, authorId };
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Delete(&#x27;:id&#x27;)
+  @ApiOkResponse({ description: &#x27;The category has been successful deleted&#x27; })
+  @ApiBadRequestResponse({ description: &#x27;Bad request&#x27; })
+  async remove(@Param(&#x27;id&#x27;) id: string, @Request() req): Promise&lt;DeleteModel&gt; {
+    //NOTE: Verifying if this user is authorized
+    const token &#x3D; req.headers.authorization;
+    const check &#x3D; await this.userService.authorizationCheck(token);
+    const author &#x3D; await this.userService.findByToken(token);
+    if (author.isAdmin &#x3D;&#x3D;&#x3D; true) {
+      const deletedItem &#x3D; this.categoryService.delete(id);
+      if (!deletedItem) {
+        throw new HttpException(
+          {
+            status: HttpStatus.BAD_REQUEST,
+            error: &#x27;Erro ao deletar categoria&#x27;,
+          },
+          HttpStatus.BAD_REQUEST,
+        );
+      } else {
+        const message &#x3D; &#x27;Categoria &#x27; + id + &#x27; foi  deletada&#x27;;
+        return { message };
+      }
+    } else {
+      throw new UnauthorizedException(
+        &#x27;Você não está autorizado a deletar essa categoria&#x27;,
+      );
+    }
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @ApiOkResponse({ description: &#x27;The category has been successful deleted&#x27; })
+  @ApiForbiddenResponse({ description: &#x27;Forbidden&#x27; })
+  @Get(&#x27;admin/:id&#x27;)
+  async adminFindOne(
+    @Param(&#x27;id&#x27;) categoryId: string,
+    @Request() req,
+  ): Promise&lt;Category&gt; {
+    return this.categoryService.findOne(categoryId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch(&#x27;:id&#x27;)
+  @ApiOkResponse({ description: &#x27;The category has beenn successful updated&#x27; })
+  @ApiForbiddenResponse({ description: &#x27;Forbidden&#x27; })
+  async update(
+    @Param(&#x27;id&#x27;) id: string,
+    @Body() createCategoryDTO: CreateCategoryDTO,
+    @Request() req: any,
+  ): Promise&lt;UpdateModel&gt; {
+    const categoryExists &#x3D; await await this.categoryService.findById(id);
+    const token &#x3D; req.headers.authorization;
+    const check &#x3D; await this.userService.authorizationCheck(token);
+    if (!categoryExists) {
+      throw new NotFoundException({ error: &#x27;This category does not exists&#x27; });
+    }
+    const authorId &#x3D; (await this.categoryService.findById(id)).authorId;
+    const userIsAuthorized &#x3D; this.userService.findById(authorId);
+
+    if (!userIsAuthorized) {
+      throw new UnauthorizedException({
+        error: &#x27;You are not authorized to update this category!&#x27;,
+      });
+    }
+
+    return this.categoryService.update(id, createCategoryDTO);
+  }
+  @Post(&#x27;image/:id&#x27;)
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(FileInterceptor(&#x27;file&#x27;))
+  async addAvatar(
+    @Request() req,
+    @Param(&#x27;id&#x27;) id: string,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    const token &#x3D; req.headers.authorization;
+    const check &#x3D; await this.userService.authorizationCheck(token);
+    const requesterUser &#x3D; this.userService.findByToken(token);
+    if ((await requesterUser).isAdmin &#x3D;&#x3D;&#x3D; true) {
+      return this.categoryService.addImage(id, file.buffer, file.originalname);
+    } else {
+      throw new UnauthorizedException({
+        error: &#x27;You are not permitted to update this Topic!&#x27;,
+      });
+    }
+  }
 }
 </code></pre>
     </div>

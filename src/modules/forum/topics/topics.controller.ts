@@ -1,3 +1,5 @@
+import { TopicModel } from './api-model/topic-default-model';
+
 import { QueryPage } from '@utils/page';
 import {
   Body,
@@ -21,7 +23,7 @@ import { TopicsService } from './topics.service';
 import { Topic } from '@entities/topic.entity';
 import { CreateTopicDTO } from './dto/create-topic.dto';
 import { DeletedItemTopicDTO } from './dto/delete-topic.dto';
-import { JwtAuthGuard } from '../../../auth/jwt-auth.guard';
+import { JwtAuthGuard } from '@auth/jwt-auth.guard';
 import {
   ApiCreatedResponse,
   ApiBadRequestResponse,
@@ -33,8 +35,7 @@ import {
 import { HttpException } from '@nestjs/common/exceptions/http.exception';
 import { UserService } from '../../profile/user/user.service';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { PaginatedTopicsDTO } from './dto/paginated-topics.dto';
-
+import { FindAllModel } from './api-model/find-all-model';
 
 @ApiTags('topics')
 @Controller('forum/topics')
@@ -62,7 +63,7 @@ export class TopicsController {
   @ApiOkResponse({ description: 'topic succesfully returned' })
   @ApiBadRequestResponse({ description: 'Bad request' })
   @Get()
-  async findAll(@Query() query: QueryPage):Promise<PaginatedTopicsDTO> {
+  async findAll(@Query() query: QueryPage):Promise<FindAllModel> {
     const page = query.page;
     return this.topicsService.findAll(page);
   }
@@ -86,7 +87,7 @@ export class TopicsController {
     @Param('id') id: string,
     @Body() createTopicDTO: CreateTopicDTO,
     @Request() req,
-  ): Promise<Topic> {
+  ): Promise<TopicModel> {
     const token = req.headers.authorization;
     const check = await this.userService.authorizationCheck(token);
     const author = this.topicsService.findOne(id);
@@ -155,10 +156,14 @@ export class TopicsController {
     const check = await this.userService.authorizationCheck(token);
     const author = this.topicsService.findOne(id);
     const requesterUser = this.userService.findByToken(token);
+
     if (
       (await author).user.id === (await requesterUser).id ||
       (await requesterUser).isAdmin === true
     ) {
+
+      this.topicsService.delete(id);
+      
       const deletedIten = this.topicsService.findOne(id);
       if (!deletedIten) {
         throw new HttpException(

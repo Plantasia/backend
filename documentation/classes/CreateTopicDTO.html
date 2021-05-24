@@ -60,7 +60,7 @@
             <h3>File</h3>
         </p>
         <p class="comment">
-            <code>src/topics/create-topic.dto.ts</code>
+            <code>src/modules/forum/topics/dto/create-topic.dto.ts</code>
         </p>
 
 
@@ -140,9 +140,18 @@
 
                         </td>
                     </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <b>Decorators : </b>
+                            <br />
+                            <code>
+                                @ApiProperty({type: String, description: &#x27;The id of category&#x27;, default: &#x27;&#x27;})<br />@IsNotEmpty()<br />
+                            </code>
+                        </td>
+                    </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="8" class="link-to-prism">src/topics/create-topic.dto.ts:8</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="34" class="link-to-prism">src/modules/forum/topics/dto/create-topic.dto.ts:34</a></div>
                             </td>
                         </tr>
 
@@ -169,9 +178,18 @@
 
                         </td>
                     </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <b>Decorators : </b>
+                            <br />
+                            <code>
+                                @ApiProperty({type: String, description: &#x27;The image of topic&#x27;, default: &#x27;&#x27;})<br />
+                            </code>
+                        </td>
+                    </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="7" class="link-to-prism">src/topics/create-topic.dto.ts:7</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="26" class="link-to-prism">src/modules/forum/topics/dto/create-topic.dto.ts:26</a></div>
                             </td>
                         </tr>
 
@@ -198,9 +216,18 @@
 
                         </td>
                     </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <b>Decorators : </b>
+                            <br />
+                            <code>
+                                @ApiProperty({type: String, description: &#x27;Topic name&#x27;, default: &#x27;&#x27;})<br />@IsNotEmpty()<br />
+                            </code>
+                        </td>
+                    </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="5" class="link-to-prism">src/topics/create-topic.dto.ts:5</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="11" class="link-to-prism">src/modules/forum/topics/dto/create-topic.dto.ts:11</a></div>
                             </td>
                         </tr>
 
@@ -227,9 +254,18 @@
 
                         </td>
                     </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <b>Decorators : </b>
+                            <br />
+                            <code>
+                                @ApiProperty({type: String, description: &#x27;Body text of topic&#x27;, default: &#x27;&#x27;})<br />@IsNotEmpty()<br />
+                            </code>
+                        </td>
+                    </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="6" class="link-to-prism">src/topics/create-topic.dto.ts:6</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="19" class="link-to-prism">src/modules/forum/topics/dto/create-topic.dto.ts:19</a></div>
                             </td>
                         </tr>
 
@@ -255,9 +291,18 @@
 
                         </td>
                     </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <b>Decorators : </b>
+                            <br />
+                            <code>
+                                @ApiProperty({type: String, description: &#x27;The id of user (author)&#x27;, default: &#x27;&#x27;})<br />@IsNotEmpty()<br />
+                            </code>
+                        </td>
+                    </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="9" class="link-to-prism">src/topics/create-topic.dto.ts:9</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="42" class="link-to-prism">src/modules/forum/topics/dto/create-topic.dto.ts:42</a></div>
                             </td>
                         </tr>
 
@@ -276,16 +321,50 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Category } from &quot;../category/category.entity&quot;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ApiProperty } from &#x27;@nestjs/swagger&#x27;;
+import { IsNotEmpty } from &#x27;class-validator&#x27;;
 
-
-export class CreateTopicDTO{
+export class CreateTopicDTO {
+  @ApiProperty({
+    type: String,
+    description: &#x27;Topic name&#x27;,
+    default: &#x27;&#x27;,
+  })
+  @IsNotEmpty()
   public readonly name: string;
+
+  @ApiProperty({
+    type: String,
+    description: &#x27;Body text of topic&#x27;,
+    default: &#x27;&#x27;,
+  })
+  @IsNotEmpty()
   public readonly textBody: string;
-  public readonly imageStorage:string;
-  public          category_id :string;
-  public          user_id: string;
-}</code></pre>
+
+  @ApiProperty({
+    type: String,
+    description: &#x27;The image of topic&#x27;,
+    default: &#x27;&#x27;,
+  })
+  public readonly imageStorage: string;
+
+  @ApiProperty({
+    type: String,
+    description: &#x27;The id of category&#x27;,
+    default: &#x27;&#x27;,
+  })
+  @IsNotEmpty()
+  public category_id: string;
+
+  @ApiProperty({
+    type: String,
+    description: &#x27;The id of user (author)&#x27;,
+    default: &#x27;&#x27;,
+  })
+  @IsNotEmpty()
+  public user_id: string;
+}
+</code></pre>
     </div>
 </div>
 
