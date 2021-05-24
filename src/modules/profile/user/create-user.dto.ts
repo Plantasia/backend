@@ -5,7 +5,7 @@ export class CreateUserDTO {
   @IsEmpty()
   id: string;
 
-  @IsNotEmpty()
+  @IsNotEmpty({message:"Nome do usuário não pode ser vazio"})
   @ApiProperty({
     type: String,
     description: 'Username',
@@ -30,7 +30,7 @@ export class CreateUserDTO {
   })
   public avatar: string;
 
-  @IsNotEmpty()
+  @IsNotEmpty({message:"Email do usuário não pode ser vazio"})
   @ApiProperty({
     type: String,
     description: 'Email',
@@ -38,7 +38,7 @@ export class CreateUserDTO {
   })
   public email: string;
 
-  @IsNotEmpty()
+  @IsNotEmpty({message:"Senha do usuário não pode ser vazio"})
   @ApiProperty({
     type: String,
     description: 'Password',
