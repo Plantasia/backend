@@ -1,3 +1,4 @@
+import { FindOneModel } from './api-model/find-one-model';
 import { TopicModel } from './api-model/topic-default-model';
 import { FindAllModel } from './api-model/find-all-model';
 import { Injectable } from '@nestjs/common';
@@ -131,7 +132,7 @@ export class TopicsService {
       });
     }
     
-    async takeTopicData(topicId: string): Promise<Topic> {
+    async takeTopicData(topicId: string): Promise<FindOneModel> {
       console.log('__________start_____________');
       
       const topic = await getRepository(Topic)

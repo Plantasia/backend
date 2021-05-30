@@ -1,3 +1,4 @@
+import { FindOneModel } from './api-model/find-one-model';
 import { TopicModel } from './api-model/topic-default-model';
 
 import { QueryPage } from '@utils/page';
@@ -56,7 +57,7 @@ export class TopicsController {
   } */
 
   @Get(':topicId')
-  async getTopicById(@Param('topicId') topicId: string): Promise<Topic> {
+  async getTopicById(@Param('topicId') topicId: string): Promise<FindOneModel> {
     return this.topicsService.takeTopicData(topicId);
   }
 
