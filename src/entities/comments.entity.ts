@@ -19,9 +19,8 @@ export class Comment {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({type: 'mediumtext'})
   textBody: string;
-
 
   @ManyToOne(
     () => User,
@@ -35,12 +34,11 @@ export class Comment {
   )
   topic: Topic;
 
-
   @ManyToOne(
-    ()=> Category,
-    category=>category.comments
+    () => Category,
+    category => category.comments,
   )
-  category: Category
+  category: Category;
 
   @UpdateDateColumn()
   updated_at: Date;

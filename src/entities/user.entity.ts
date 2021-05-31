@@ -9,14 +9,13 @@ import {
   DeleteDateColumn,
   Generated,
   JoinColumn,
-  OneToOne
+  OneToOne,
 } from 'typeorm';
 import { Topic } from './topic.entity';
 import { Comment } from './comments.entity';
 
 @Entity('users')
-export class User extends BaseEntity{
-
+export class User extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -29,16 +28,16 @@ export class User extends BaseEntity{
   @Column({ default: 'USER' })
   role: string;
 
-
-  @Column({default: "https://plantasia.s3-sa-east-1.amazonaws.com/default-profile.png"})
+  @Column({
+    default: 'https://plantasia.s3-sa-east-1.amazonaws.com/default-profile.png',
+  })
   avatar: string;
 
   @Column()
   email: string;
 
-
- @Column({default: null})
- seedingId:number
+  @Column({ default: null })
+  seedingId: number;
 
   @Column()
   password: string;
@@ -47,14 +46,14 @@ export class User extends BaseEntity{
   quarentineNum: number;
 
   @Column({ default: false })
-  isAdmin: boolean
+  isAdmin: boolean;
 
-  @Column({ default: "logout"})
+  @Column({ default: 'logout' })
   tokenLogout: string;
 
-  @Column({ default: ""})
+  @Column({ default: '' })
   recoverToken: string;
-  
+
   @OneToMany(
     () => Comment,
     comment => comment.user,
@@ -67,7 +66,6 @@ export class User extends BaseEntity{
   )
   topics: Topic[];
 
-
   @CreateDateColumn()
   created_at: Date;
 
@@ -76,6 +74,4 @@ export class User extends BaseEntity{
 
   @DeleteDateColumn()
   deleted_at: Date;
-
-
 }

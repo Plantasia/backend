@@ -5,7 +5,7 @@ import { Topic } from '@entities/topic.entity';
 import { User } from '@entities/user.entity';
 import { Category } from '@entities/category.entity';
 import { PaginatedTopicsDTO, CreateTopicDTO } from './dto';
-import { FilesService } from '@image/imageS3.service';
+import { FilesService } from '../../image/imageS3.service';
 
 @Injectable()
 export class TopicsService {
@@ -68,24 +68,26 @@ export class TopicsService {
     };
   }
 
-  async findAll(page): Promise<PaginatedTopicsDTO> {
+  async findAll(page, category = null): Promise<PaginatedTopicsDTO> {
     if (!page || page <= 0) {
       page = 1;
     } else page = parseInt(page);
 
-    const [result, total] = await this.topicRepository.findAndCount();
+    const [result, total] = category
+      ? await this.topicRepository.findAndCount({
+          where: { category: { id: category } },
+        })
+      : await this.topicRepository.findAndCount();
 
     const skip = 10 * (page - 1);
     const take = 10;
 
-    const topics = await getRepository(Topic)
+    const query = await getRepository(Topic)
       .createQueryBuilder('t')
-      .innerJoin('t.category', 'cat', 'cat.id = t.categoryId')
-      .innerJoin('t.comments', 'com', 'com.topicId = t.id')
-      .innerJoin('t.user', 'topicOwner', 't.userId = topicOwner.id')
-      .innerJoin('com.user', 'ownerComment', 'com.userId = ownerComment.id')
-      .take(take)
-      .skip(skip)
+      .leftJoin('t.category', 'cat', 'cat.id = t.categoryId')
+      .leftJoin('t.comments', 'com', 'com.topicId = t.id')
+      .leftJoin('t.user', 'topicOwner', 't.userId = topicOwner.id')
+      .leftJoin('com.user', 'ownerComment', 'com.userId = ownerComment.id')
       .addSelect('SUM(comments.id)', 'totalComments')
       .select([
         't.id',
@@ -108,7 +110,12 @@ export class TopicsService {
       .orderBy({
         'com.created_at': 'ASC',
       })
-      .getMany();
+      .take(take)
+      .skip(skip);
+
+    const topics = category
+      ? await query.where(`t.categoryId = '${category}'`).getMany()
+      : await query.getMany();
 
     return {
       topics,
@@ -130,14 +137,12 @@ export class TopicsService {
   }
 
   async takeTopicData(topicId: string): Promise<Topic> {
-    console.log('__________start_____________');
-
     const topic = await getRepository(Topic)
       .createQueryBuilder('t')
-      .innerJoin('t.category', 'cat', 'cat.id = t.categoryId')
-      .innerJoin('t.comments', 'com', 'com.topicId = t.id')
-      .innerJoinAndSelect('t.user', 'user', 't.userId = user.id')
-      .innerJoinAndSelect(
+      .leftJoin('t.category', 'cat', 'cat.id = t.categoryId')
+      .leftJoin('t.comments', 'com', 'com.topicId = t.id')
+      .leftJoinAndSelect('t.user', 'user', 't.userId = user.id')
+      .leftJoinAndSelect(
         'com.user',
         'userComment',
         'com.userId = userComment.id',
@@ -182,8 +187,6 @@ export class TopicsService {
         'com.created_at': 'ASC', // Getting the last comment
       })
       .getOne();
-
-    console.log('__________end_______________');
 
     return topic;
   }
