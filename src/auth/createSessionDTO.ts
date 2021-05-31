@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty } from 'class-validator';
 
 export class CreateSessionDTO {
-  @IsNotEmpty()
+  @IsNotEmpty({message:"Nome do usuário não pode ser vazio"})
   @ApiProperty({
     type: String,
     description: 'Name of user',
@@ -10,7 +10,7 @@ export class CreateSessionDTO {
   })
   public name: string;
 
-  @IsNotEmpty()
+  @IsNotEmpty({message:"Nome do email não pode ser vazio"})
   @ApiProperty({
     type: String,
     description: 'Email of user',

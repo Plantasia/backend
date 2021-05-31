@@ -7,7 +7,7 @@ export class CreateTopicDTO {
     description: 'Topic name',
     default: '',
   })
-  @IsNotEmpty()
+  @IsNotEmpty({message:"Nome do topico não pode ser vazio"})
   public readonly name: string;
 
   @ApiProperty({
@@ -15,7 +15,7 @@ export class CreateTopicDTO {
     description: 'Body text of topic',
     default: '',
   })
-  @IsNotEmpty()
+  @IsNotEmpty({message:"Não é possível criar uma categoria com o conteúdo vazio!"})
   public readonly textBody: string;
 
   @ApiProperty({
@@ -30,7 +30,7 @@ export class CreateTopicDTO {
     description: 'The id of category',
     default: '',
   })
-  @IsNotEmpty()
+  @IsNotEmpty({message:"O campo category_id não pode ser vazio"})
   public category_id: string;
 
   @ApiProperty({
@@ -38,6 +38,6 @@ export class CreateTopicDTO {
     description: 'The id of user (author)',
     default: '',
   })
-  @IsNotEmpty()
+  @IsNotEmpty({message:"O campo user_id não pode ser vazio"})
   public user_id: string;
 }

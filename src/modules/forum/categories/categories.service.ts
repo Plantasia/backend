@@ -7,6 +7,7 @@ import { FindAllModel } from './api-model/find-all.model';
 import { Topic } from '@entities/topic.entity';
 import UpdateModel from './api-model/update-model';
 import { FilesService } from '../../image/imageS3.service';
+import FindAllComboboxModel from './api-model/find-all-combobox-model';
 
 @Injectable()
 export class CategoryService {
@@ -33,8 +34,6 @@ export class CategoryService {
 
     let categories: any;
 
-    console.log('____START____');
-
     const { total } = (
       await this.categoryRepository.query(
         `SELECT count(distinct(categories.id)) as total
@@ -49,20 +48,19 @@ export class CategoryService {
 
     const entityManager = getManager();
     const query = await entityManager.query(`
-
     select c.name, c.id, c.imageStorage, c.description, 
     (select topics.id from topics where categoryId = c.id order by created_at asc limit 1) as lastTopicId, 
     (select topics.name from topics where categoryId = c.id order by created_at asc limit 1) as lastTopicName, 
+    (select max(topics.created_at) from topics where categoryId = c.id order by created_at asc limit 1) as lastTopicActivity, 
     max(c2.updated_at) as lastActivity, count(c2.id) as countComments, count(distinct(t.id)) as countTopics from categories c 
     left join topics t 
     on t.categoryId = c.id
-    inner join comments c2 
+    left join comments c2 
     on c2.topicId = t.id
     where t.id is not null and c.deleted_at is null 
     group by c.id
     LIMIT ${take} 
     OFFSET ${skip}
-
   `);
 
     return {
@@ -79,10 +77,6 @@ export class CategoryService {
     if (!page || page <= 0) {
       page = 1;
     } else page = parseInt(page);
-
-    console.log('%%%PAGE:');
-    console.log(page);
-
     const take = 10;
     const skip = 10 * (page - 1);
 
@@ -140,8 +134,6 @@ export class CategoryService {
 
   async delete(id: string): Promise<void> {
     const resp = await this.categoryRepository.softDelete(id);
-
-    /*affected property == 1 (deleted) */
     console.log('has been deleted?  ', resp);
     if (resp.affected !== 0) {
       console.log(`deleted category ${id} `);
@@ -196,6 +188,14 @@ export class CategoryService {
       imageStorage,
     });
     return imageStorage;
+  }
+
+  async findCombobox(): Promise<FindAllComboboxModel> {
+    const query = await this.categoryRepository.query(
+      `SELECT categories.id, categories.name
+      FROM categories WHERE categories.deleted_at is null`,
+    )
+    return query;
   }
 }
 

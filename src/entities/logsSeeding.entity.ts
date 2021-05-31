@@ -1,4 +1,3 @@
-
 import {
   Entity,
   Column,
@@ -16,15 +15,14 @@ import { User } from '../entities/user.entity';
 
 @Entity('logsSeeding')
 export class LogsSeeding extends BaseEntity {
-  
   @PrimaryGeneratedColumn('increment')
-  id:number;
+  id: number;
 
   @Column()
-  runnedAllMigrations:boolean;
+  runnedAllMigrations: boolean;
 
-  constructor(runnedAllMigrations:boolean){
-   super();
-   this.runnedAllMigrations = true
+  constructor(runnedAllMigrations: boolean) {
+    super();
+    this.runnedAllMigrations = true;
   }
 }
