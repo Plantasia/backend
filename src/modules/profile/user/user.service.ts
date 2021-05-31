@@ -165,6 +165,9 @@ export class UserService {
       where: {
         tokenLogout: token,
       },
+      select: [
+        'avatar', 'bio', 'email', 'id','created_at', 'name'
+      ]
     });
 
     if (!userToCheck) {
@@ -204,7 +207,7 @@ export class UserService {
     return idUser;
   }
 
-  async addAvatar(userId:String, imageBuffer: Buffer, filename: string) {
+  async addAvatar(userId:string, imageBuffer: Buffer, filename: string) {
     const avatar = await this.filesService.uploadPublicFile(imageBuffer, filename);
     const user = await this.findById(userId);
     await this.userRepository.update(userId, {
