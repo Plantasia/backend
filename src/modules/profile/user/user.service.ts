@@ -113,7 +113,6 @@ export class UserService {
     user.role = data.role;
     user.email = data.email;
     user.password = data.password;
-    user.isAdmin = data.isAdmin;
     user.quarentineNum = data.quarentineNum;
     user.tokenLogout = data.tokenLogout;
 
@@ -179,11 +178,10 @@ export class UserService {
     const userToCheck = await this.findByToken(tokenRequest);
     if (userToCheck.tokenLogout === tokenRequest || userToCheck) {
       return 
-        Message: 'Valid token ';
-
+        'Token válido ';
     } else {
       throw new UnauthorizedException({
-        error: 'Unauthorized, your credentials is invalid',
+        error: 'Não autorizado, seu token esta inválido',
       });
     }
   }

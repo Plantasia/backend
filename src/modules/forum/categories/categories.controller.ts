@@ -1,7 +1,6 @@
 import { FindAllModel } from './api-model/find-all.model';
 import { CreateModel } from './api-model/create-model';
 import { QueryPage } from '@utils/page';
-import { LocalAuthGuard } from '@auth/local-auth.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
 import {
   Body,
@@ -39,7 +38,11 @@ import { UserService } from 'src/modules/profile/user/user.service';
 import FindOneModel from './api-model/find-one-model';
 import { DeleteModel } from './dto/delete-model.dto';
 import UpdateModel from './api-model/update-model';
+<<<<<<< HEAD
 import { UpdateCategoryDTO } from './dto/update-category.dto';
+=======
+import FindAllComboboxModel from './api-model/find-all-combobox-model';
+>>>>>>> 07fdefea9f446ca5ea1ead5d04d995da5f46cacc
 
 @ApiTags('categories')
 @Controller('forum/categories')
@@ -117,6 +120,19 @@ export class CategoryController {
     return this.categoryService.adminFindAll();
   }
 
+  @Get('/combobox')
+  @ApiOkResponse({ description: 'The category has been successful deleted' })
+  @ApiBadRequestResponse({ description: 'Bad request' })
+  async find(
+    @Request() req,
+  ): Promise<FindAllComboboxModel> {
+    const check = await this.userService.authorizationCheck(
+      req.headers.authorization,
+    );
+
+    return this.categoryService.findCombobox();
+  }
+
   @Get(':id')
   @ApiOkResponse({ description: 'The category has been successful deleted' })
   @ApiBadRequestResponse({ description: 'Bad request' })
@@ -139,6 +155,8 @@ export class CategoryController {
 
     return { id, name, imageStorage, description, authorEmail, authorId };
   }
+
+ 
 
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
@@ -194,14 +212,14 @@ export class CategoryController {
     const token = req.headers.authorization;
     const check = await this.userService.authorizationCheck(token);
     if (!categoryExists) {
-      throw new NotFoundException({ error: 'This category does not exists' });
+      throw new NotFoundException({ error: 'Essa categoria não existe ' });
     }
     const authorId = (await this.categoryService.findById(id)).authorId;
     const userIsAuthorized = this.userService.findById(authorId);
 
     if (!userIsAuthorized) {
       throw new UnauthorizedException({
-        error: 'You are not authorized to update this category!',
+        error: 'Você não esta autorizado a ataualizar essa categoria!',
       });
     }
 
@@ -222,7 +240,7 @@ export class CategoryController {
       return this.categoryService.addImage(id, file.buffer, file.originalname);
     } else {
       throw new UnauthorizedException({
-        error: 'You are not permitted to update this Topic!',
+        error: 'Você não esta autorizado a ataualizar essa categoria!',
       });
     }
   }

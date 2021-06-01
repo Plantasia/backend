@@ -2,7 +2,8 @@ import { IsEmpty, IsNotEmpty } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateCommentDTO {
-  @IsNotEmpty()
+  @IsNotEmpty({message:"Não é possível criar uma categoria com o conteúdo vazio!"})
+
   @ApiProperty({
     type: String,
     description: 'Body of Comment',
@@ -30,7 +31,7 @@ export class CreateCommentDTO {
   @IsEmpty()
   public readonly indexOrder: number;
 
-  @IsNotEmpty()
+  @IsNotEmpty({message:"O campo topic_id não pode ser vazio"})
   @ApiProperty({
     type: String,
     description: 'Id of topic',

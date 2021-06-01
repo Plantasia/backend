@@ -6,7 +6,7 @@ export class CreateCategoryDTO {
   @IsEmpty()
   public id: string;
 
-  @IsNotEmpty()
+  @IsNotEmpty({message:"Nome da categoria não pode ser vazio"})
   @ApiProperty({
     type: String,
     description: 'Name of new category',
@@ -20,10 +20,10 @@ export class CreateCategoryDTO {
   @IsEmpty()
   public authorEmail: string;
 
-  @IsNotEmpty()
+  @IsNotEmpty({message:"Descrição da categoria não pode ser vazio"})
   @ApiProperty({
     type: String,
-    description: 'Name of your new category',
+    description: 'Description of your new category',
     default: '',
   })
   public description: string;

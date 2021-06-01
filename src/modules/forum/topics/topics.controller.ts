@@ -73,6 +73,11 @@ export class TopicsController {
     return this.topicsService.findAll(page, category);
   }
 
+  /*async findAll(@Query() query: QueryPage & { category: string | null }):Promise<FindAllModel> {
+    const { page, category } = query;
+    return this.topicsService.findAll(page, category);
+  }*/
+
   @ApiOkResponse({ description: 'topic succesfully returned' })
   @ApiForbiddenResponse({ description: 'Forbidden' })
   @Get('admin/list')
