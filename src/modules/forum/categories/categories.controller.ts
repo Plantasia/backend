@@ -39,6 +39,7 @@ import { UserService } from 'src/modules/profile/user/user.service';
 import FindOneModel from './api-model/find-one-model';
 import { DeleteModel } from './dto/delete-model.dto';
 import UpdateModel from './api-model/update-model';
+import { UpdateCategoryDTO } from './dto/update-category.dto';
 
 @ApiTags('categories')
 @Controller('forum/categories')
@@ -113,7 +114,7 @@ export class CategoryController {
   async adminFindAll(@Query() query: QueryPage): Promise<Category[]> {
     const page = query.page;
     console.log(page);
-    return this.categoryService.adminFindAll(page);
+    return this.categoryService.adminFindAll();
   }
 
   @Get(':id')
@@ -186,7 +187,7 @@ export class CategoryController {
   @ApiForbiddenResponse({ description: 'Forbidden' })
   async update(
     @Param('id') id: string,
-    @Body() createCategoryDTO: CreateCategoryDTO,
+    @Body() data: UpdateCategoryDTO,
     @Request() req: any,
   ): Promise<UpdateModel> {
     const categoryExists = await await this.categoryService.findById(id);
@@ -204,7 +205,7 @@ export class CategoryController {
       });
     }
 
-    return this.categoryService.update(id, createCategoryDTO);
+    return this.categoryService.update(id, data);
   }
   @Post('image/:id')
   @UseGuards(JwtAuthGuard)

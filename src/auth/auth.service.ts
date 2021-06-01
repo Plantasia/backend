@@ -47,7 +47,7 @@ export class AuthService {
    *  which was already deactivated by logoff
    *
    ***/
-  async checkToken(token: string) {
+  async checkToken(token: string):Promise<User> {
     const userLogged = await this.UserRepository.findOne({
       where: {
         tokenLogout: token,

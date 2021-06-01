@@ -21,7 +21,7 @@ import {
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDTO } from './dto/create-user.dto';
-import { DeletedItemUserDTO } from './dto/delete-user.dto';
+import {  DeleteModel } from './dto/delete-user.dto';
 import { JwtAuthGuard } from '@auth/jwt-auth.guard'; //' ' auth/jwt-auth.guard';
 import { ValidationPipe } from '@nestjs/common/pipes/validation.pipe';
 import {
@@ -33,6 +33,8 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import UserModel from './api-model/user-default-model';
 import {FindAllModel} from './api-model/find-all-model';
+import { User } from '@entities/user.entity';
+import { UpdateUserDTO } from './dto/update-user-dto';
 
 @ApiTags('users')
 @Controller('users')
@@ -80,7 +82,6 @@ export class UserController {
   @UseGuards(JwtAuthGuard)
   @Get('findme')
   async findOneByToken(@Request() req) {
-    console.log('entroi');
     const token = req.headers.authorization;
     console.log('This token is:', token);
     return this.userService.findByToken(token);
@@ -153,7 +154,7 @@ export class UserController {
   async remove(
     @Request() req,
     @Param('id') id: string,
-  ): Promise<DeletedItemUserDTO> {
+  ): Promise<DeleteModel> {
     const token = req.headers.authorization;
     const check = await this.userService.authorizationCheck(token);
     const requestedUser = await this.findOneByToken(token);
@@ -198,7 +199,7 @@ export class UserController {
   })
   async update(
     @Param('id') idUser: string,
-    @Body() createUserDTO: CreateUserDTO,
+    @Body() data: UpdateUserDTO,
     @Request() req,
   ): Promise<UserModel> {
     const token = req.headers.authorization;
@@ -232,7 +233,7 @@ export class UserController {
   }
 
   @Get('admin')
-  async adminFindAll(@Request() req, @Query() query: QueryPage) {
+  async adminFindAll(@Request() req, @Query() query: QueryPage):Promise<User[]> {
     const page = query.page;
     return this.userService.adminFindAll(); //passamos a variavel page como parametro do metodo FindAll
   }
@@ -243,7 +244,7 @@ export class UserController {
   async addAvatar(
     @Request() request,
     @UploadedFile() file: Express.Multer.File,
-  ) {
+  ):Promise<string> {
     return this.userService.addAvatar(
       request.user.id,
       file.buffer,

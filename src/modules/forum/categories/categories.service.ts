@@ -1,3 +1,4 @@
+import { UpdateCategoryDTO } from './dto/update-category.dto';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateCategoryDTO } from './dto/create-category.dto';
@@ -75,8 +76,8 @@ export class CategoryService {
     };
   }
 
-  async adminFindAll(page): Promise<Category[]> {
-    if (!page || page <= 0) {
+  async adminFindAll(): Promise<Category[]> {
+    /*if (!page || page <= 0) {
       page = 1;
     } else page = parseInt(page);
 
@@ -84,7 +85,7 @@ export class CategoryService {
     console.log(page);
 
     const take = 10;
-    const skip = 10 * (page - 1);
+    const skip = 10 * (page - 1);*/
 
     const categories = await this.categoryRepository.find({
       withDeleted: true,
@@ -148,13 +149,13 @@ export class CategoryService {
     }
   }
 
-  async create(createCategoryDTO: CreateCategoryDTO): Promise<Category> {
+  async create(data: CreateCategoryDTO): Promise<Category> {
     const category = new Category();
 
-    category.authorId = createCategoryDTO.authorId;
-    category.name = createCategoryDTO.name;
-    category.authorEmail = createCategoryDTO.authorEmail;
-    category.description = createCategoryDTO.description;
+    category.authorId = data.authorId;
+    category.name = data.name;
+    category.authorEmail = data.authorEmail;
+    category.description = data.description;
     const cat = await this.categoryRepository.create(category);
 
     return this.categoryRepository.save(cat);
@@ -162,7 +163,7 @@ export class CategoryService {
 
   async update(
     categoryId: string,
-    data: CreateCategoryDTO,
+    data: UpdateCategoryDTO,
   ): Promise<UpdateModel> {
     await this.categoryRepository.update(categoryId, data);
 

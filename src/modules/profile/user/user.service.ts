@@ -8,6 +8,8 @@ import { User } from '@entities/user.entity';
 import { FilesService } from '../../image/imageS3.service';
 import { AdminFindOneModel } from './api-model/find-all-admin';
 import UserModel from './api-model/user-default-model';
+import { UserDTO } from './dto/defaul-user-dto';
+import { UpdateUserDTO } from './dto/update-user-dto';
 
 @Injectable()
 export class UserService {
@@ -25,7 +27,7 @@ export class UserService {
     });
   }
 
-  async checkIfAlreadyExists(email: string): Promise<User> {
+  async checkIfAlreadyExists(email: string): Promise<UserModel> {
     return this.userRepository.findOne({
       where: {
         email,
@@ -41,7 +43,7 @@ export class UserService {
     });
   }
 
-  async findById(id: string): Promise<User> {
+  async findById(id: string): Promise<UserModel> {
     return this.userRepository.findOne({
       where: {
         id,
@@ -136,15 +138,15 @@ export class UserService {
 
   async passwordLogout(
     id: string,
-    passwordLogout: CreateUserDTO,
+    userData: UserDTO,
   ): Promise<UserModel> {
-    await this.userRepository.update(id, passwordLogout);
+    await this.userRepository.update(id, userData);
     return this.userRepository.findOne(id);
   }
 
   async passwordLogoutByEmail(
     userEmail: string,
-    passwordLogout: CreateUserDTO,
+    userData: UserDTO,
   ): Promise<UserModel> {
     const userToUpdate = (
       await this.userRepository.findOne({
@@ -153,7 +155,7 @@ export class UserService {
         },
       })
     ).id;
-    const resp = await this.userRepository.update(userToUpdate, passwordLogout);
+    const resp = await this.userRepository.update(userToUpdate, userData);
     const user = await this.findByEmail(userEmail);
 
     return user;
@@ -185,7 +187,7 @@ export class UserService {
       });
     }
   }
-  async changePassword(id: string, password: CreateUserDTO):Promise<string> {
+  async changePassword(id: string, password: UpdateUserDTO):Promise<string> {
 
      await this.userRepository.update(id, password);
      const user = await this.findOne(id);

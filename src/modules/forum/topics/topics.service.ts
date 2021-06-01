@@ -29,7 +29,7 @@ export class TopicsService {
       this.topicRepository = topicRepository;
     }
     
-    async create(createTopicDTO: CreateTopicDTO): Promise<Topic> {
+    async create(createTopicDTO: CreateTopicDTO): Promise<TopicModel> {
       const topic = new Topic();
       
       topic.name = createTopicDTO.name;
@@ -39,15 +39,36 @@ export class TopicsService {
       
       topic.user = await this.UserRepository.findOne(user_id);
       topic.category = await this.CategoryRepository.findOne(category_id);
-      const newTopic = await this.topicRepository.create(topic);
-      return newTopic;
+      
+      const {
+        id,
+        name,
+        textBody,
+        imageStorage,
+        isActive,
+        created_at,
+        updated_at,
+        deleted_at,
+      } = await this.topicRepository.create(topic);
+
+      return {
+        id,
+        name,
+        textBody,
+        imageStorage,
+        isActive,
+        created_at,
+        updated_at,
+        deleted_at,
+      };
+
     }
     
     async adminFindAll(): Promise<Topic[]> {
       return this.topicRepository.find({ withDeleted: true });
     }
     
-    async adminFindOne(topicId: string) {
+    async adminFindOne(topicId: string): Promise<TopicModel> {
       const {
         id,
         name,
@@ -135,7 +156,7 @@ export class TopicsService {
     async takeTopicData(topicId: string): Promise<FindOneModel> {
       console.log('__________start_____________');
       
-      const topic = await getRepository(Topic)
+      const topics = await getRepository(Topic)
       .createQueryBuilder('t')
       .innerJoin('t.category', 'cat', 'cat.id = t.categoryId')
       .innerJoin('t.comments', 'com', 'com.topicId = t.id')
@@ -188,24 +209,24 @@ export class TopicsService {
         
         console.log('__________end_______________');
         
-        return topic;
+        return {topics};
       }
       
-      async findWithOrderBy() {
+      async findWithOrderBy():Promise<Topic[]> {
         const qb = this.topicRepository.createQueryBuilder('Topic');
         qb.orderBy('Topic.created_at', 'DESC');
         console.log(qb.getQuery());
         return await qb.getMany();
       }
       
-      async findNoResponse(id: string) {
+      async findNoResponse(id: string):Promise<Topic[]> {
         const qb = this.topicRepository.createQueryBuilder('Topic');
         qb.where('Topic.response = 0');
         console.log(qb.getQuery());
         return await qb.getMany();
       }
       
-      async findByCategory(categoryId: string) {
+      async findByCategory(categoryId: string):Promise<Topic[]> {
         const qb = this.topicRepository.createQueryBuilder('topic');
         qb.where('topic.categoryId = :categoryId', { categoryId });
         
@@ -221,7 +242,7 @@ export class TopicsService {
         console.log(qb.getQuery());
         const topic = await qb.getMany();
         
-        return { topic };
+        return  topic ;
       }
       
       async findById(id: string): Promise<Topic> {
@@ -252,7 +273,7 @@ export class TopicsService {
       async delete(id: string): Promise<void> {
         await this.topicRepository.softDelete(id);
       }
-      async addImage(topicId: string, imageBuffer: Buffer, filename: string) {
+      async addImage(topicId: string, imageBuffer: Buffer, filename: string):Promise<string> {
         const imageStorage = await this.filesService.uploadPublicFile(
           imageBuffer,
           filename,

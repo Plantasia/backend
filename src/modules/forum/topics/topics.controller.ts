@@ -64,9 +64,13 @@ export class TopicsController {
   @ApiOkResponse({ description: 'topic succesfully returned' })
   @ApiBadRequestResponse({ description: 'Bad request' })
   @Get()
-  async findAll(@Query() query: QueryPage):Promise<FindAllModel> {
+  /*async findAll(@Query() query: QueryPage):Promise<FindAllModel> {
     const page = query.page;
     return this.topicsService.findAll(page);
+  }*/
+  async findAll(@Query() query: QueryPage & { category: string | null }):Promise<FindAllModel> {
+    const { page, category } = query;
+    return this.topicsService.findAll(page, category);
   }
 
   @ApiOkResponse({ description: 'topic succesfully returned' })
@@ -100,7 +104,7 @@ export class TopicsController {
       return this.topicsService.update(id, createTopicDTO);
     } else {
       throw new UnauthorizedException({
-        error: 'You are not permitted to update this Topic!',
+        error: 'Você não esta autorizado a atualizar esse tópico!',
       });
     }
   }
@@ -117,14 +121,14 @@ export class TopicsController {
   async create(
     @Body() createTopicDTO: CreateTopicDTO,
     @Request() req,
-  ): Promise<Topic> {
+  ): Promise<TopicModel> {
     const token = req.headers.authorization;
     const userAlreadyExists = await this.userService.authorizationCheck(token);
     if (!userAlreadyExists) {
       throw new HttpException(
         {
           status: HttpStatus.BAD_REQUEST,
-          error: 'User does not exists, please check data!',
+          error: 'Esse usuário não existe, por favor, verifique os dados',
         },
         HttpStatus.BAD_REQUEST,
       );
@@ -134,7 +138,7 @@ export class TopicsController {
       const user = this.topicsService.findOne(createTopicDTO.user_id);
 
       if (!category && !user) {
-        const errors = { Error: 'User or Category not passed into' };
+        const errors = { Error: 'Campos obrigatórios, user e category, não foram passados' };
         throw new HttpException({ errors }, 401);
       }
       return response;
@@ -170,19 +174,19 @@ export class TopicsController {
         throw new HttpException(
           {
             status: HttpStatus.BAD_REQUEST,
-            error: 'Error to delete topic, please check data!',
+            error: 'Error ao deletar o topico, por favor verifique os dados!',
           },
           HttpStatus.BAD_REQUEST,
         );
       } else {
-        const message = 'Iten ' + id + ' deleted';
+        const message = 'Item ' + id + ' deletado';
         return {
           message,
         };
       }
     } else {
       throw new UnauthorizedException({
-        error: 'You are not permitted to update this Topic!',
+        error: 'Você não esta autorizado a deletar esse tópico!',
       });
     }
   }
@@ -202,7 +206,7 @@ export class TopicsController {
       return this.topicsService.addImage(id,file.buffer, file.originalname);
     } else {
       throw new UnauthorizedException({
-        error: 'You are not permitted to update this Topic!',
+        error: 'Você não esta permitido a atualizar esse tópico!',
       });
     }
   }

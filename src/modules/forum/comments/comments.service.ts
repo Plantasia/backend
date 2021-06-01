@@ -8,6 +8,7 @@ import { Topic } from '../../../entities/topic.entity';
 import { TopicsService } from '../topics/topics.service';
 import { UserService } from '../../profile/user/user.service';
 import PaginatedCommentsModel from './dto/paginated-comments-dtio';
+import { UpdateCommentDTO } from './dto/update-comment.dto';
 
 
 @Injectable()
@@ -88,7 +89,7 @@ export class CommentService {
      
   }
 
-  async update(id: string, data: CreateCommentDTO): Promise<Comment> {
+  async update(id: string, data: UpdateCommentDTO): Promise<Comment> {
     await this.commentsRepository.update(id, data);
     return this.commentsRepository.findOne(id);
   }
