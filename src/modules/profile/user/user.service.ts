@@ -1,14 +1,16 @@
+
+import { FindAllModel}  from './api-model/find-all-model'
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateUserDTO } from './create-user.dto';
+import { CreateUserDTO } from './dto/create-user.dto';
 import { User } from '@entities/user.entity';
 import { FilesService } from '../../image/imageS3.service';
-import { PaginatedUsersDTO } from '../paginated-users.dto';
-import { String } from 'aws-sdk/clients/appstream';
-
-
-
+import { AdminFindOneModel } from './api-model/find-all-admin';
+import UserModel from './api-model/user-default-model';
+import { UserDTO } from './dto/default-user-dto';
+import { UpdateUserDTO } from './dto/update-user-dto';
+import { NewPasswordDto } from '@src/auth/newPassworDTO';
 
 @Injectable()
 export class UserService {
@@ -26,7 +28,7 @@ export class UserService {
     });
   }
 
-  async checkIfAlreadyExists(email: string): Promise<User> {
+  async checkIfAlreadyExists(email: string): Promise<UserModel> {
     return this.userRepository.findOne({
       where: {
         email,
@@ -42,7 +44,7 @@ export class UserService {
     });
   }
 
-  async findById(id: string): Promise<User> {
+  async findById(id: string): Promise<UserModel> {
     return this.userRepository.findOne({
       where: {
         id,
@@ -50,7 +52,7 @@ export class UserService {
     });
   }
 
-  async findAll(page): Promise<PaginatedUsersDTO> {
+  async findAll(page): Promise<FindAllModel> {
     const take = 10;
     const skip = 10 * (page - 1);
 
@@ -64,7 +66,7 @@ export class UserService {
     });
 
     const allUsers = result.map(({ id, name, bio, avatar }) => {
-      const user = new CreateUserDTO();
+      const user = new User();
       user.id = id;
       user.name = name;
       user.bio = bio;
@@ -86,7 +88,7 @@ export class UserService {
     await this.userRepository.softDelete(id);
   }
 
-  async adminFindAll() {
+  async adminFindAll():Promise<User[]> {
     return this.userRepository.find({
       select: [
         'name',
@@ -105,48 +107,47 @@ export class UserService {
     await this.userRepository.delete(id);
   }
 
-  async create(createUserDTO: CreateUserDTO): Promise<Partial<User>> {
+  async create(data: CreateUserDTO): Promise<UserModel> {
     const user = new User();
-    user.name = createUserDTO.name;
-    user.bio = createUserDTO.bio;
-    user.role = createUserDTO.role;
-    user.email = createUserDTO.email;
-    user.password = createUserDTO.password;
-    user.quarentineNum = createUserDTO.quarentineNum;
-    user.tokenLogout = createUserDTO.tokenLogout;
+    user.name = data.name;
+    user.bio = data.bio;
+    user.role = data.role;
+    user.email = data.email;
+    user.password = data.password;
+    user.quarentineNum = data.quarentineNum;
+    user.tokenLogout = data.tokenLogout;
 
     const newUser = await this.userRepository.create(user);
     console.log('User created!');
     this.userRepository.save(newUser);
 
-    const { name, password, email, bio } = newUser;
+    const { id, name, email, bio } = newUser;
 
     return {
+      id,
       name,
-      password,
       email,
       bio,
     };
   }
 
-  async update(id: string, data: any): Promise<User> {
+  async update(id: string, data: any): Promise<UserModel> {
     await this.userRepository.update(id, data);
-
     return this.userRepository.findOne(id);
   }
 
   async passwordLogout(
     id: string,
-    passwordLogout: CreateUserDTO,
-  ): Promise<User> {
-    await this.userRepository.update(id, passwordLogout);
+    userData: UserDTO,
+  ): Promise<UserModel> {
+    await this.userRepository.update(id, userData);
     return this.userRepository.findOne(id);
   }
 
   async passwordLogoutByEmail(
     userEmail: string,
-    passwordLogout: CreateUserDTO,
-  ): Promise<Partial<User>> {
+    userData: UserDTO,
+  ): Promise<UserModel> {
     const userToUpdate = (
       await this.userRepository.findOne({
         where: {
@@ -154,7 +155,7 @@ export class UserService {
         },
       })
     ).id;
-    const resp = await this.userRepository.update(userToUpdate, passwordLogout);
+    const resp = await this.userRepository.update(userToUpdate, userData);
     const user = await this.findByEmail(userEmail);
 
     return user;
@@ -177,28 +178,26 @@ export class UserService {
     return userToCheck;
   }
 
-  async authorizationCheck(tokenRequest: string) {
+  async authorizationCheck(tokenRequest: string): Promise<string> {
     const userToCheck = await this.findByToken(tokenRequest);
     if (userToCheck.tokenLogout === tokenRequest || userToCheck) {
-      return {
-        Message: 'Token válido ',
-      };
+      return 
+        'Token válido ';
     } else {
       throw new UnauthorizedException({
         error: 'Não autorizado, seu token esta inválido',
       });
     }
   }
-  async changePassword(id: string, password: CreateUserDTO) {
-    const user = await this.findOne(id);
-    console.log(user);
-    const newPassword = await this.userRepository.update(id, password);
-    console.log(newPassword);
+  async changePassword(id: string, password: NewPasswordDto):Promise<string> {
 
-    return newPassword;
+     await this.userRepository.update(id, password);
+     const user = await this.findOne(id);
+     console.log(user);
+     return user.password;
   }
 
-  async findByRecoverToken(recoverToken: string) {
+  async findByRecoverToken(recoverToken: string):Promise<UserModel> {
     const idUser = await this.userRepository.findOne({
       where: {
         recoverToken: recoverToken,
@@ -207,7 +206,7 @@ export class UserService {
     return idUser;
   }
 
-  async addAvatar(userId:string, imageBuffer: Buffer, filename: string) {
+  async addAvatar(userId:string, imageBuffer: Buffer, filename: string):Promise<string> {
     const avatar = await this.filesService.uploadPublicFile(imageBuffer, filename);
     const user = await this.findById(userId);
     await this.userRepository.update(userId, {

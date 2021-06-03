@@ -2,7 +2,7 @@ import { IsEmpty, IsNotEmpty } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { Topic } from '@entities/topic.entity';
 import { Comment } from '@entities/comments.entity';
-export class CreateCategoryDTO {
+export class UpdateCategoryDTO {
   @IsEmpty()
   public id: string;
 

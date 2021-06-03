@@ -12,6 +12,7 @@
     "baseUrl": ".",
     "paths": {
       "@entities/*": ["./src/entities/*"],
+      "@src/*": ["./src/*"],
       "@utils/*":["./src/utils/*"],
       "@controllers/*": ["./src/controllers/*"],
       "@auth/*": ["./src/auth/*"],
