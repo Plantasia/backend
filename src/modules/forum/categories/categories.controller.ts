@@ -206,7 +206,7 @@ export class CategoryController {
     @Body() data: UpdateCategoryDTO,
     @Request() req: any,
   ): Promise<UpdateModel> {
-    const categoryExists = await await this.categoryService.findById(id);
+    const categoryExists = await this.categoryService.findById(id);
     const token = req.headers.authorization;
     const check = await this.userService.authorizationCheck(token);
     if (!categoryExists) {
