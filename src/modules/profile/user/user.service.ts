@@ -8,8 +8,9 @@ import { User } from '@entities/user.entity';
 import { FilesService } from '../../image/imageS3.service';
 import { AdminFindOneModel } from './api-model/find-all-admin';
 import UserModel from './api-model/user-default-model';
-import { UserDTO } from './dto/defaul-user-dto';
+import { UserDTO } from './dto/default-user-dto';
 import { UpdateUserDTO } from './dto/update-user-dto';
+import { NewPasswordDto } from '@src/auth/newPassworDTO';
 
 @Injectable()
 export class UserService {
@@ -185,7 +186,7 @@ export class UserService {
       });
     }
   }
-  async changePassword(id: string, password: UpdateUserDTO):Promise<string> {
+  async changePassword(id: string, password: NewPasswordDto):Promise<string> {
 
      await this.userRepository.update(id, password);
      const user = await this.findOne(id);

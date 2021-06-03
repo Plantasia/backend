@@ -11,8 +11,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { MailerService } from '@nestjs-modules/mailer';
 import { randomBytes } from 'crypto';
 import { User } from '@entities/user.entity';
-import { CreateUserDTO } from '../modules/profile/user/create-user.dto';
+import { CreateUserDTO } from '../modules/profile/user/dto/create-user.dto';
 import { NewPasswordDto } from './newPassworDTO';
+import { UserDTO } from '@src/modules/profile/user/dto/default-user-dto';
 
 @Injectable()
 export class AuthService {
@@ -78,7 +79,7 @@ export class AuthService {
    *
    **/
   async updatePasswordLogout(token: string, userId: string) {
-    const user = new CreateUserDTO();
+    const user = new UserDTO();
     user.tokenLogout = token;
     const update = await this.userService.passwordLogout(userId, user);
     return console.log(update);
@@ -105,12 +106,9 @@ export class AuthService {
   }
 
   async nullPasswordLogout(userEmail: string) {
-    const user = new CreateUserDTO();
+    const user = new UserDTO();
     user.tokenLogout = process.env.LOGOUT_CONSTANT;
-    const update = await this.userService.passwordLogoutByEmail(
-      userEmail,
-      user,
-    );
+    const update = await this.userService.passwordLogoutByEmail(userEmail, user);
     return console.log(update);
   }
 
@@ -145,7 +143,7 @@ export class AuthService {
       throw new UnprocessableEntityException('As senhas não conferem');
     const user = new CreateUserDTO();
     user.password = password;
-    await this.userService.changePassword(id, user);
+    await this.userService.changePassword(id, newPasswordDto);
   }
 
   async resetPassword(

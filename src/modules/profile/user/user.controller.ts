@@ -188,6 +188,8 @@ export class UserController {
     }
   }
 
+  // REFATORAR E DIVIDIR
+
   @Patch(':id')
   @UseGuards(JwtAuthGuard)
   @ApiOkResponse({ description: 'The user has been succesfull deleted' })
@@ -216,9 +218,9 @@ export class UserController {
       requestedUser.isAdmin === true
     ) {
       /**NOTE: Only these values below 'll be updated */
-      userRequestedToUpdate.name = createUserDTO.name;
-      userRequestedToUpdate.bio = createUserDTO.bio;
-      userRequestedToUpdate.password = createUserDTO.password;
+      userRequestedToUpdate.name = data.name;
+      userRequestedToUpdate.bio = data.bio;
+      userRequestedToUpdate.password = data.password;
 
       const user = await this.userService.update(
         userRequestedToUpdate.id,
