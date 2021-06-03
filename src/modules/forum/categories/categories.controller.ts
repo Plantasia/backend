@@ -38,11 +38,9 @@ import { UserService } from 'src/modules/profile/user/user.service';
 import FindOneModel from './api-model/find-one-model';
 import { DeleteModel } from './dto/delete-model.dto';
 import UpdateModel from './api-model/update-model';
-<<<<<<< HEAD
 import { UpdateCategoryDTO } from './dto/update-category.dto';
-=======
 import FindAllComboboxModel from './api-model/find-all-combobox-model';
->>>>>>> 07fdefea9f446ca5ea1ead5d04d995da5f46cacc
+
 
 @ApiTags('categories')
 @Controller('forum/categories')
