@@ -22,7 +22,7 @@ import {
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDTO } from './dto/create-user.dto';
-import {  DeleteModel } from './dto/delete-user.dto';
+import { DeleteModel } from './dto/delete-user.dto';
 import { JwtAuthGuard } from '@auth/jwt-auth.guard'; //' ' auth/jwt-auth.guard';
 import { ValidationPipe } from '@nestjs/common/pipes/validation.pipe';
 import {
@@ -33,10 +33,10 @@ import {
 } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import UserModel from './api-model/user-default-model';
-import {FindAllModel} from './api-model/find-all-model';
+import { FindAllModel } from './api-model/find-all-model';
 import { User } from '@entities/user.entity';
 import { UpdateUserDTO } from './dto/update-user-dto';
-import {UpdatePasswordDTO } from './dto/upadate-password.dto'
+import { UpdatePasswordDTO } from './dto/update-password.dto';
 
 @ApiTags('users')
 @Controller('users')
@@ -51,7 +51,10 @@ export class UserController {
     description: 'JWT token must to be passed to do this request',
   })
   @Get()
-  async findAll(@Request() req, @Query() query: QueryPage): Promise<FindAllModel> {
+  async findAll(
+    @Request() req,
+    @Query() query: QueryPage,
+  ): Promise<FindAllModel> {
     console.log(req.headers.authorization);
 
     const thisUser = await this.userService.findByEmail(req.user.email);
@@ -130,7 +133,9 @@ export class UserController {
     const foundUser = await this.userService.findById(idUser);
 
     if (!foundUser) {
-      throw new NotFoundException(`Error: usuário com o  ID: ${idUser} não existe`);
+      throw new NotFoundException(
+        `Error: usuário com o  ID: ${idUser} não existe`,
+      );
     }
 
     const selectedUser = await this.userService.findOne(idUser);
@@ -152,10 +157,7 @@ export class UserController {
     name: 'JWT',
     description: 'JWT token must to be passed to do this request',
   })
-  async remove(
-    @Request() req,
-    @Param('id') id: string,
-  ): Promise<DeleteModel> {
+  async remove(@Request() req, @Param('id') id: string): Promise<DeleteModel> {
     const token = req.headers.authorization;
     const check = await this.userService.authorizationCheck(token);
     const requestedUser = await this.findOneByToken(token);
@@ -173,7 +175,8 @@ export class UserController {
         throw new HttpException(
           {
             status: HttpStatus.BAD_REQUEST,
-            error: 'Erro ao deletear esse usuário, por favor, verifique os dados!',
+            error:
+              'Erro ao deletear esse usuário, por favor, verifique os dados!',
           },
           HttpStatus.BAD_REQUEST,
         );
@@ -206,21 +209,17 @@ export class UserController {
     const check = await this.userService.authorizationCheck(token);
     const requestedUser = await await this.userService.findByToken(token);
 
-
     if (!requestedUser || requestedUser === undefined) {
       throw new NotFoundException({ error: 'Esse usuário não existe' });
     }
-      requestedUser.name = data.name;
-      requestedUser.bio = data.bio;
+    requestedUser.name = data.name;
+    requestedUser.bio = data.bio;
 
-      const user = await this.userService.update(
-        requestedUser.id,
-        requestedUser,
-      );
+    const user = await this.userService.update(requestedUser.id, requestedUser);
 
-      const { name, email, bio, id } = user;
+    const { name, email, bio, id } = user;
 
-      return user;
+    return user;
   }
 
   @Patch('/changePassword')
@@ -239,17 +238,20 @@ export class UserController {
     const check = await this.userService.authorizationCheck(token);
     const requestedUser = await await this.userService.findByToken(token);
 
-
     if (!requestedUser || requestedUser === undefined) {
       throw new NotFoundException({ error: 'Esse usuário não existe' });
     }
-    if (requestedUser.password != data.oldpassword){
-      console.log(requestedUser.password)
-      throw new UnprocessableEntityException({error: 'Senha atual incorreta'});
+    if (requestedUser.password != data.oldpassword) {
+      console.log(requestedUser.password);
+      throw new UnprocessableEntityException({
+        error: 'Senha atual incorreta',
+      });
     }
-    if(data.oldpassword == data.newpassword){
-      throw new UnprocessableEntityException({error: 'A nova senha não pode ser igual a senha atual'});
-    }else{
+    if (data.oldpassword == data.newpassword) {
+      throw new UnprocessableEntityException({
+        error: 'A nova senha não pode ser igual a senha atual',
+      });
+    } else {
       requestedUser.password = data.newpassword;
 
       const user = await this.userService.update(
@@ -303,7 +305,7 @@ export class UserController {
       const { name, email, bio, id } = user;
 
       return user;
-    }else{
+    } else {
       throw new UnauthorizedException({
         error: 'Você não esta autorizado a atualizar essse usuário!',
       });
@@ -311,7 +313,10 @@ export class UserController {
   }
 
   @Get('admin')
-  async adminFindAll(@Request() req, @Query() query: QueryPage):Promise<User[]> {
+  async adminFindAll(
+    @Request() req,
+    @Query() query: QueryPage,
+  ): Promise<User[]> {
     const page = query.page;
     return this.userService.adminFindAll();
   }
@@ -322,7 +327,7 @@ export class UserController {
   async addAvatar(
     @Request() request,
     @UploadedFile() file: Express.Multer.File,
-  ):Promise<string> {
+  ): Promise<string> {
     return this.userService.addAvatar(
       request.user.id,
       file.buffer,
