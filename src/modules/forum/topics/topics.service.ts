@@ -23,108 +23,23 @@ export class TopicsService {
     private readonly CategoryRepository: Repository<Category>,
     
     private filesService: FilesService,
-    ) {
-      this.CategoryRepository = CategoryRepository;
-      this.UserRepository = UserRepository;
-      this.topicRepository = topicRepository;
-    }
-    
-<<<<<<< HEAD
-    async create(createTopicDTO: CreateTopicDTO): Promise<TopicModel> {
-      const topic = new Topic();
-      
-      topic.name = createTopicDTO.name;
-      topic.textBody = createTopicDTO.textBody;
-      const user_id = createTopicDTO.user_id;
-      const category_id = createTopicDTO.category_id;
-      
-      topic.user = await this.UserRepository.findOne(user_id);
-      topic.category = await this.CategoryRepository.findOne(category_id);
-      
-      const {
-        id,
-        name,
-        textBody,
-        imageStorage,
-        isActive,
-        created_at,
-        updated_at,
-        deleted_at,
-      } = await this.topicRepository.create(topic);
+  ) {
+    this.CategoryRepository = CategoryRepository;
+    this.UserRepository = UserRepository;
+    this.topicRepository = topicRepository;
+  }
 
-      return {
-        id,
-        name,
-        textBody,
-        imageStorage,
-        isActive,
-        created_at,
-        updated_at,
-        deleted_at,
-      };
-
-    }
-    
-    async adminFindAll(): Promise<Topic[]> {
-      return this.topicRepository.find({ withDeleted: true });
-    }
-    
-    async adminFindOne(topicId: string): Promise<TopicModel> {
-      const {
-        id,
-        name,
-        textBody,
-        imageStorage,
-        isActive,
-        created_at,
-        updated_at,
-        deleted_at,
-      } = await this.topicRepository.findOne(topicId, { withDeleted: true });
-      
-      return {
-        id,
-        name,
-        textBody,
-        imageStorage,
-        isActive,
-        created_at,
-        updated_at,
-        deleted_at,
-      };
-    }
-    
-    async findAll(page): Promise<FindAllModel> {
-      if (!page || page <= 0) {
-        page = 1;
-      } else page = parseInt(page);
-      
-      const [result, total] = await this.topicRepository.findAndCount();
-      
-      const skip = 10 * (page - 1);
-      const take = 10;
-      
-      const topics = await getRepository(Topic)
-=======
-    async adminFindAll(): Promise<Topic[]> {
-      return this.topicRepository.find({ withDeleted: true });
-    }
-
-  async create(createTopicDTO: CreateTopicDTO): Promise<Topic> {
+  async create(createTopicDTO: CreateTopicDTO): Promise<TopicModel> {
     const topic = new Topic();
-
+      
     topic.name = createTopicDTO.name;
     topic.textBody = createTopicDTO.textBody;
     const user_id = createTopicDTO.user_id;
     const category_id = createTopicDTO.category_id;
-
+      
     topic.user = await this.UserRepository.findOne(user_id);
     topic.category = await this.CategoryRepository.findOne(category_id);
-    const newTopic = await this.topicRepository.create(topic);
-    return newTopic;
-  }
-
-
-  async adminFindOne(topicId: string) {
+      
     const {
       id,
       name,
@@ -134,7 +49,7 @@ export class TopicsService {
       created_at,
       updated_at,
       deleted_at,
-    } = await this.topicRepository.findOne(topicId, { withDeleted: true });
+    } = await this.topicRepository.create(topic);
 
     return {
       id,
@@ -146,8 +61,37 @@ export class TopicsService {
       updated_at,
       deleted_at,
     };
-  }
 
+  }
+    
+  async adminFindAll(): Promise<Topic[]> {
+    return this.topicRepository.find({ withDeleted: true });
+  }
+    
+  async adminFindOne(topicId: string): Promise<TopicModel> {
+    const {
+      id,
+      name,
+      textBody,
+      imageStorage,
+      isActive,
+      created_at,
+      updated_at,
+      deleted_at,
+    } = await this.topicRepository.findOne(topicId, { withDeleted: true });
+      
+    return {
+      id,
+      name,
+      textBody,
+      imageStorage,
+      isActive,
+      created_at,
+      updated_at,
+      deleted_at,
+    };
+  }
+  
   async findAll(page, category = null): Promise<FindAllModel> {
     if (!page || page <= 0) {
       page = 1;
@@ -155,15 +99,14 @@ export class TopicsService {
 
     const [result, total] = category
       ? await this.topicRepository.findAndCount({
-          where: { category: { id: category } },
-        })
+        where: { category: { id: category } },
+      })
       : await this.topicRepository.findAndCount();
 
     const skip = 10 * (page - 1);
     const take = 10;
 
     const topics = await getRepository(Topic)
->>>>>>> 07fdefea9f446ca5ea1ead5d04d995da5f46cacc
       .createQueryBuilder('t')
       .leftJoin('t.category', 'cat', 'cat.id = t.categoryId')
       .leftJoin('t.comments', 'com', 'com.topicId = t.id')
@@ -193,39 +136,6 @@ export class TopicsService {
       })
       .getMany();
       
-      return {
-        topics,
-        currentPage: page,
-        perPage: take,
-        prevPage: page > 1 ? page - 1 : null,
-        nextPage: take >= skip + take ? page + 1 : null,
-        totalRegisters: total,
-      };
-    }
-    
-    async findOne(topicId: string): Promise<Topic> {
-      return this.topicRepository.findOne({
-        where: {
-          id: topicId,
-        },
-        withDeleted: true,
-      });
-    }
-    
-    /*async takeTopicData(topicId: string): Promise<FindOneModel> {
-      console.log('__________start_____________');
-      
-<<<<<<< HEAD
-      const topics = await getRepository(Topic)
-=======
-      const topic = await getRepository(Topic)
-      .take(take)
-      .skip(skip);
-
-    const topics = category
-      ? await query.where(`t.categoryId = '${category}'`).getMany()
-      : await query.getMany();
-
     return {
       topics,
       currentPage: page,
@@ -234,11 +144,19 @@ export class TopicsService {
       nextPage: take >= skip + take ? page + 1 : null,
       totalRegisters: total,
     };
-  }*/
-
+  }
+    
+  async findOne(topicId: string): Promise<Topic> {
+    return this.topicRepository.findOne({
+      where: {
+        id: topicId,
+      },
+      withDeleted: true,
+    });
+  }
   async takeTopicData(topicId: string): Promise<Topic> {
     const topic = await getRepository(Topic)
->>>>>>> 07fdefea9f446ca5ea1ead5d04d995da5f46cacc
+
       .createQueryBuilder('t')
       .leftJoin('t.category', 'cat', 'cat.id = t.categoryId')
       .leftJoin('t.comments', 'com', 'com.topicId = t.id')
@@ -247,143 +165,72 @@ export class TopicsService {
         'com.user',
         'userComment',
         'com.userId = userComment.id',
-        )
-        .where('t.id = :id', { id: topicId })
+      )
+      .where('t.id = :id', { id: topicId })
         
-        .select([
-          'userComment.id',
-          'userComment.name',
-          'userComment.avatar',
-          'userComment.email',
-          'userComment.created_at',
+      .select([
+        'userComment.id',
+        'userComment.name',
+        'userComment.avatar',
+        'userComment.email',
+        'userComment.created_at',
           
-          'user.id',
-          'user.name',
-          'user.avatar',
-          'user.email',
-          'user.created_at',
+        'user.id',
+        'user.name',
+        'user.avatar',
+        'user.email',
+        'user.created_at',
           
-          't.id',
-          't.name',
-          't.textBody',
-          't.imageStorage',
-          't.created_at',
-          't.updated_at',
+        't.id',
+        't.name',
+        't.textBody',
+        't.imageStorage',
+        't.created_at',
+        't.updated_at',
           
-          'cat.id',
-          'cat.name',
-          'cat.authorId',
-          'cat.description',
-          'cat.imageStorage',
-          'cat.created_at',
-          'cat.updated_at',
+        'cat.id',
+        'cat.name',
+        'cat.authorId',
+        'cat.description',
+        'cat.imageStorage',
+        'cat.created_at',
+        'cat.updated_at',
           
-          'com.id',
-          'com.userId',
-          'com.textBody',
-          'com.created_at',
-          'com.updated_at',
-        ])
-        .orderBy({
-          'com.created_at': 'ASC', // Getting the last comment
-        })
-        .getOne();
+        'com.id',
+        'com.userId',
+        'com.textBody',
+        'com.created_at',
+        'com.updated_at',
+      ])
+      .orderBy({
+        'com.created_at': 'ASC', // Getting the last comment
+      })
+      .getOne();
         
-        console.log('__________end_______________');
+    console.log('__________end_______________');
         
-<<<<<<< HEAD
-        return {topics};
-      }
-=======
-        return topic;
-      } 
->>>>>>> 07fdefea9f446ca5ea1ead5d04d995da5f46cacc
-      
-      async findWithOrderBy():Promise<Topic[]> {
-        const qb = this.topicRepository.createQueryBuilder('Topic');
-        qb.orderBy('Topic.created_at', 'DESC');
-        console.log(qb.getQuery());
-        return await qb.getMany();
-      }
-      
-      async findNoResponse(id: string):Promise<Topic[]> {
-        const qb = this.topicRepository.createQueryBuilder('Topic');
-        qb.where('Topic.response = 0');
-        console.log(qb.getQuery());
-        return await qb.getMany();
-      }
-      
-<<<<<<< HEAD
-      async findByCategory(categoryId: string):Promise<Topic[]> {
-        const qb = this.topicRepository.createQueryBuilder('topic');
-        qb.where('topic.categoryId = :categoryId', { categoryId });
-        
-        qb.select([
-          'topic.id',
-          'topic.name',
-          'topic.textBody',
-          'topic.imageStorage',
-          'topic.created_at',
-          'topic.updated_at',
-        ]);
-        
-        console.log(qb.getQuery());
-        const topic = await qb.getMany();
-        
-        return  topic ;
-      }
-=======
->>>>>>> 07fdefea9f446ca5ea1ead5d04d995da5f46cacc
-      
-      async findById(id: string): Promise<Topic> {
-        return this.topicRepository.findOne({
-          where: {
-            id: id,
-          },
-        });
-      }
-      
-      async update(topicId: string, data): Promise<TopicModel> {
-        await this.topicRepository.update(topicId, data);
-        
-        const{
-          id,name,textBody,category,
-          created_at,imageStorage,
-          user,updated_at,deleted_at,
-          
-        }= await this.topicRepository.findOne(topicId);
-        
-        return {
-          id,name,textBody,category,
-          created_at,imageStorage,
-          user,updated_at,deleted_at,
-        }
-      }
-      
-      async delete(id: string): Promise<void> {
-        await this.topicRepository.softDelete(id);
-      }
-<<<<<<< HEAD
-      async addImage(topicId: string, imageBuffer: Buffer, filename: string):Promise<string> {
-        const imageStorage = await this.filesService.uploadPublicFile(
-          imageBuffer,
-          filename,
-          );
-          const topic = await this.findById(topicId);
-          await this.topicRepository.update(topicId, {
-            ...topic,
-            imageStorage,
-          });
-          return imageStorage;
-        }
-      }
-      
-=======
 
-  async findByCategory(categoryId: string) {
+    return topic;
+  }
+      
+  async findWithOrderBy(): Promise<Topic[]> {
+    const qb = this.topicRepository.createQueryBuilder('Topic');
+    qb.orderBy('Topic.created_at', 'DESC');
+    console.log(qb.getQuery());
+    return await qb.getMany();
+  }
+      
+  async findNoResponse(id: string): Promise<Topic[]> {
+    const qb = this.topicRepository.createQueryBuilder('Topic');
+    qb.where('Topic.response = 0');
+    console.log(qb.getQuery());
+    return await qb.getMany();
+  }
+      
+  async findByCategory(categoryId: string): Promise<Topic[]> {
     const qb = this.topicRepository.createQueryBuilder('topic');
     qb.where('topic.categoryId = :categoryId', { categoryId });
-
+        
     qb.select([
       'topic.id',
       'topic.name',
@@ -396,10 +243,39 @@ export class TopicsService {
     console.log(qb.getQuery());
     const topic = await qb.getMany();
 
-    return { topic };
+    return topic;
   }
 
-  async addImage(topicId: string, imageBuffer: Buffer, filename: string) {
+  async findById(id: string): Promise<Topic> {
+    return this.topicRepository.findOne({
+      where: {
+        id: id,
+      },
+    });
+  }
+      
+  async update(topicId: string, data): Promise<TopicModel> {
+    await this.topicRepository.update(topicId, data);
+        
+    const {
+      id, name, textBody, category,
+      created_at, imageStorage,
+      user, updated_at, deleted_at,
+          
+    } = await this.topicRepository.findOne(topicId);
+        
+    return {
+      id, name, textBody, category,
+      created_at, imageStorage,
+      user, updated_at, deleted_at,
+    }
+  }
+      
+  async delete(id: string): Promise<void> {
+    await this.topicRepository.softDelete(id);
+  }
+
+  async addImage(topicId: string, imageBuffer: Buffer, filename: string): Promise<string> {
     const imageStorage = await this.filesService.uploadPublicFile(
       imageBuffer,
       filename,
@@ -411,5 +287,8 @@ export class TopicsService {
     });
     return imageStorage;
   }
+      
+    
 }
->>>>>>> 07fdefea9f446ca5ea1ead5d04d995da5f46cacc
+
+
