@@ -167,7 +167,7 @@ export class UserService {
         tokenLogout: token,
       },
       select: [
-        'avatar', 'bio', 'email', 'id','created_at', 'name'
+        'avatar', 'bio', 'email', 'id','created_at', 'name', 'password'
       ]
     });
 
@@ -215,4 +215,5 @@ export class UserService {
     })
     return avatar;
   }
+
 }

@@ -13,6 +13,7 @@ import {
   UnauthorizedException,
   NotFoundException,
   ForbiddenException,
+  UnprocessableEntityException,
   HttpException,
   Query,
   HttpStatus,
@@ -35,6 +36,7 @@ import UserModel from './api-model/user-default-model';
 import {FindAllModel} from './api-model/find-all-model';
 import { User } from '@entities/user.entity';
 import { UpdateUserDTO } from './dto/update-user-dto';
+import {UpdatePasswordDTO } from './dto/upadate-password.dto'
 
 @ApiTags('users')
 @Controller('users')
@@ -188,7 +190,78 @@ export class UserController {
     }
   }
 
-  // REFATORAR E DIVIDIR
+  @Patch()
+  @UseGuards(JwtAuthGuard)
+  @ApiOkResponse({ description: 'The user has been succesfull deleted' })
+  @ApiBadRequestResponse({ description: 'Bad request' })
+  @ApiHeader({
+    name: 'JWT',
+    description: 'JWT token must to be passed to do this request',
+  })
+  async updateUser(
+    @Body() data: UpdateUserDTO,
+    @Request() req,
+  ): Promise<UserModel> {
+    const token = req.headers.authorization;
+    const check = await this.userService.authorizationCheck(token);
+    const requestedUser = await await this.userService.findByToken(token);
+
+
+    if (!requestedUser || requestedUser === undefined) {
+      throw new NotFoundException({ error: 'Esse usuário não existe' });
+    }
+      requestedUser.name = data.name;
+      requestedUser.bio = data.bio;
+
+      const user = await this.userService.update(
+        requestedUser.id,
+        requestedUser,
+      );
+
+      const { name, email, bio, id } = user;
+
+      return user;
+  }
+
+  @Patch('/changePassword')
+  @UseGuards(JwtAuthGuard)
+  @ApiOkResponse({ description: 'The user has been succesfull deleted' })
+  @ApiBadRequestResponse({ description: 'Bad request' })
+  @ApiHeader({
+    name: 'JWT',
+    description: 'JWT token must to be passed to do this request',
+  })
+  async updatePassword(
+    @Body() data: UpdatePasswordDTO,
+    @Request() req,
+  ): Promise<UserModel> {
+    const token = req.headers.authorization;
+    const check = await this.userService.authorizationCheck(token);
+    const requestedUser = await await this.userService.findByToken(token);
+
+
+    if (!requestedUser || requestedUser === undefined) {
+      throw new NotFoundException({ error: 'Esse usuário não existe' });
+    }
+    if (requestedUser.password != data.oldpassword){
+      console.log(requestedUser.password)
+      throw new UnprocessableEntityException({error: 'Senha atual incorreta'});
+    }
+    if(data.oldpassword == data.newpassword){
+      throw new UnprocessableEntityException({error: 'A nova senha não pode ser igual a senha atual'});
+    }else{
+      requestedUser.password = data.newpassword;
+
+      const user = await this.userService.update(
+        requestedUser.id,
+        requestedUser,
+      );
+
+      const { name, email, bio, id } = user;
+
+      return user;
+    }
+  }
 
   @Patch(':id')
   @UseGuards(JwtAuthGuard)
