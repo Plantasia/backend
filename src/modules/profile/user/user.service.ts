@@ -181,8 +181,7 @@ export class UserService {
   async authorizationCheck(tokenRequest: string): Promise<User> {
     const userToCheck = await this.findByToken(tokenRequest);
     if (userToCheck.tokenLogout === tokenRequest || userToCheck) {
-      return;
-      'Token válido ';
+      return 'Token válido ';
     } else {
       throw new UnauthorizedException({
         error: 'Não autorizado, seu token esta inválido',
