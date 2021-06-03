@@ -28,25 +28,14 @@ export class User extends BaseEntity {
   @Column({ default: 'USER' })
   role: string;
 
-<<<<<<< HEAD
-  @Column({default: "https://plantasia.s3-sa-east-1.amazonaws.com/default-profile.png"})
-=======
-  @Column({
-    default: 'https://plantasia.s3-sa-east-1.amazonaws.com/default-profile.png',
-  })
->>>>>>> 07fdefea9f446ca5ea1ead5d04d995da5f46cacc
+  @Column({ default: 'https://plantasia.s3-sa-east-1.amazonaws.com/default-profile.png' })
   avatar: string;
 
   @Column()
   email: string;
 
-<<<<<<< HEAD
-  @Column({default: null})
-  seedingId:number
-=======
   @Column({ default: null })
   seedingId: number;
->>>>>>> 07fdefea9f446ca5ea1ead5d04d995da5f46cacc
 
   @Column()
   password: string;
