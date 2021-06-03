@@ -166,6 +166,9 @@ export class UserService {
       where: {
         tokenLogout: token,
       },
+      select: [
+        'avatar', 'bio', 'email', 'id','created_at', 'name'
+      ]
     });
 
     if (!userToCheck) {
@@ -191,7 +194,7 @@ export class UserService {
      await this.userRepository.update(id, password);
      const user = await this.findOne(id);
      console.log(user);
-    return user.password;
+     return user.password;
   }
 
   async findByRecoverToken(recoverToken: string):Promise<UserModel> {
