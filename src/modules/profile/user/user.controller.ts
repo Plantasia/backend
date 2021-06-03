@@ -20,19 +20,21 @@ import {
   UploadedFile,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserDTO } from './create-user.dto';
-import { DeletedItemUserDTO } from './delete-user.dto';
-import { User } from '@entities/user.entity';
+import { CreateUserDTO } from './dto/create-user.dto';
+import {  DeleteModel } from './dto/delete-user.dto';
 import { JwtAuthGuard } from '@auth/jwt-auth.guard'; //' ' auth/jwt-auth.guard';
 import { ValidationPipe } from '@nestjs/common/pipes/validation.pipe';
 import {
   ApiBadRequestResponse,
-  ApiForbiddenResponse,
   ApiHeader,
   ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
+import UserModel from './api-model/user-default-model';
+import {FindAllModel} from './api-model/find-all-model';
+import { User } from '@entities/user.entity';
+import { UpdateUserDTO } from './dto/update-user-dto';
 
 @ApiTags('users')
 @Controller('users')
@@ -47,7 +49,7 @@ export class UserController {
     description: 'JWT token must to be passed to do this request',
   })
   @Get()
-  async findAll(@Request() req, @Query() query: QueryPage) {
+  async findAll(@Request() req, @Query() query: QueryPage): Promise<FindAllModel> {
     console.log(req.headers.authorization);
 
     const thisUser = await this.userService.findByEmail(req.user.email);
@@ -92,12 +94,12 @@ export class UserController {
     description: 'JWT token must to be passed to do this request',
   })
   @Post()
-  async create(@Body() createUserDTO: CreateUserDTO): Promise<Partial<User>> {
+  async create(@Body() data: CreateUserDTO): Promise<UserModel> {
     const userAlreadyExists = await this.userService.checkIfAlreadyExists(
-      createUserDTO.email,
+      data.email,
     );
     if (userAlreadyExists === undefined || !userAlreadyExists) {
-      const createdUser = await this.userService.create(createUserDTO);
+      const createdUser = await this.userService.create(data);
 
       const { name, email, bio, id } = createdUser;
 
@@ -109,7 +111,7 @@ export class UserController {
       };
     } else {
       throw new ForbiddenException({
-        error: `O email : ${createUserDTO.email} já esta sendo usado!`,
+        error: `O email : ${data.email} já esta sendo usado!`,
       });
     }
   }
@@ -122,7 +124,7 @@ export class UserController {
     name: 'JWT',
     description: 'JWT token must to be passed to do this request',
   })
-  async findOne(@Param('id') idUser: string): Promise<Partial<User>> {
+  async findOne(@Param('id') idUser: string): Promise<UserModel> {
     const foundUser = await this.userService.findById(idUser);
 
     if (!foundUser) {
@@ -151,7 +153,7 @@ export class UserController {
   async remove(
     @Request() req,
     @Param('id') id: string,
-  ): Promise<DeletedItemUserDTO> {
+  ): Promise<DeleteModel> {
     const token = req.headers.authorization;
     const check = await this.userService.authorizationCheck(token);
     const requestedUser = await this.findOneByToken(token);
@@ -186,6 +188,8 @@ export class UserController {
     }
   }
 
+  // REFATORAR E DIVIDIR
+
   @Patch(':id')
   @UseGuards(JwtAuthGuard)
   @ApiOkResponse({ description: 'The user has been succesfull deleted' })
@@ -196,9 +200,9 @@ export class UserController {
   })
   async update(
     @Param('id') idUser: string,
-    @Body() createUserDTO: CreateUserDTO,
+    @Body() data: UpdateUserDTO,
     @Request() req,
-  ): Promise<Partial<User>> {
+  ): Promise<UserModel> {
     const token = req.headers.authorization;
     const check = await this.userService.authorizationCheck(token);
     const requestedUser = await await this.userService.findByToken(token);
@@ -214,9 +218,9 @@ export class UserController {
       requestedUser.isAdmin === true
     ) {
       /**NOTE: Only these values below 'll be updated */
-      userRequestedToUpdate.name = createUserDTO.name;
-      userRequestedToUpdate.bio = createUserDTO.bio;
-      userRequestedToUpdate.password = createUserDTO.password;
+      userRequestedToUpdate.name = data.name;
+      userRequestedToUpdate.bio = data.bio;
+      userRequestedToUpdate.password = data.password;
 
       const user = await this.userService.update(
         userRequestedToUpdate.id,
@@ -234,7 +238,7 @@ export class UserController {
   }
 
   @Get('admin')
-  async adminFindAll(@Request() req, @Query() query: QueryPage) {
+  async adminFindAll(@Request() req, @Query() query: QueryPage):Promise<User[]> {
     const page = query.page;
     return this.userService.adminFindAll();
   }
@@ -245,7 +249,7 @@ export class UserController {
   async addAvatar(
     @Request() request,
     @UploadedFile() file: Express.Multer.File,
-  ) {
+  ):Promise<string> {
     return this.userService.addAvatar(
       request.user.id,
       file.buffer,

@@ -66,7 +66,7 @@ export class CommentController {
   @ApiCreatedResponse({ description: 'comment succesfully created' })
   @ApiBadRequestResponse({ description: 'Bad request' })
   @UsePipes(ValidationPipe)
-  async createComment(
+  async create(
     @Body() data: CreateCommentDTO,
     @Request() req,
   ): Promise<CommentModel> {
@@ -129,7 +129,7 @@ export class CommentController {
     name: 'JWT',
     description: 'JWT token must to be passed to do this request',
   })
-  async deleteComment(@Param('id') id: string, @Request() req): Promise<void> {
+  async delete(@Param('id') id: string, @Request() req): Promise<void> {
     
     const token = req.headers.authorization
     await this.userService.authorizationCheck(token);
