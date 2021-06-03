@@ -116,7 +116,7 @@ export class CommentController {
   async findOne(@Param('id') id: string, @Request() req): Promise<CommentModel> {
     
     const token = req.headers.authorization
-   this.userService.authorizationCheck(token);
+    await this.userService.authorizationCheck(token);
 
     return this.commentService.findOne(id);
   }
@@ -137,8 +137,7 @@ export class CommentController {
     const author = await this.commentService.findOne(id)
     const user = await this.userService.findByToken(token)
 
-    if (author.user.id ===  user.id ||
-      user.isAdmin === true){
+    if (author.user.id ===  user.id || user.isAdmin){
 
         const deleted = await this.commentService.delete(id);
 
