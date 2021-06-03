@@ -178,7 +178,7 @@ export class UserService {
     return { avatar, bio, email, id, created_at, name };
   }
 
-  async authorizationCheck(tokenRequest: string): Promise<User> {
+  async authorizationCheck(tokenRequest: string): Promise<string> {
     const userToCheck = await this.findByToken(tokenRequest);
     if (userToCheck.tokenLogout === tokenRequest || userToCheck) {
       return 'Token válido ';
