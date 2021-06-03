@@ -85,7 +85,7 @@ export class UserController {
   @Get('findme')
   async findOneByToken(@Request() req) {
     const token = req.headers.authorization;
-    return this.userService.findByToken(token);
+    return this.userService.findMe(token);
   }
 
   @UsePipes(ValidationPipe)
