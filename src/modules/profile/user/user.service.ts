@@ -178,15 +178,13 @@ export class UserService {
     return { avatar, bio, email, id, created_at, name };
   }
 
-  async authorizationCheck(tokenRequest: string): Promise<string> {
+  async authorizationCheck(tokenRequest: string): Promise<void> {
     const userToCheck = await this.findByToken(tokenRequest);
-    if (userToCheck.tokenLogout === tokenRequest || userToCheck) {
-      return 'Token válido ';
-    } else {
+    if (!(userToCheck.tokenLogout === tokenRequest || userToCheck)) 
       throw new UnauthorizedException({
         error: 'Não autorizado, seu token esta inválido',
       });
-    }
+    
   }
   async changePassword(id: string, password: NewPasswordDto): Promise<string> {
     await this.userRepository.update(id, password);
