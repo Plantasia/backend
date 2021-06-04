@@ -71,21 +71,11 @@ export class CommentController {
     @Request() req,
   ): Promise<CommentModel> {
     const token =  req.headers.authorization
-    const userAlreadyExists = await this.userService.authorizationCheck(
-      token,
-    );
+    await this.userService.authorizationCheck(token);
     const topic_id = data.topic_id;
     const topicAlreadyExists = await this.topicsService.findById(topic_id);
-    if (!userAlreadyExists) {
-      throw new HttpException(
-        {
-          status: HttpStatus.UNAUTHORIZED,
-          error: 'Usuário não autorizado ou inexistente!',
-        },
-        HttpStatus.UNAUTHORIZED,
-      );
-    }
-    else if (!topicAlreadyExists) {
+
+    if (!topicAlreadyExists) {
       throw new HttpException(
         {
           status: HttpStatus.UNPROCESSABLE_ENTITY,
@@ -116,7 +106,7 @@ export class CommentController {
   async findOne(@Param('id') id: string, @Request() req): Promise<CommentModel> {
     
     const token = req.headers.authorization
-   this.userService.authorizationCheck(token);
+    await this.userService.authorizationCheck(token);
 
     return this.commentService.findOne(id);
   }
