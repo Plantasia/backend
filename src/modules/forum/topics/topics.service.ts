@@ -29,17 +29,19 @@ export class TopicsService {
     this.topicRepository = topicRepository;
   }
 
-  async create(createTopicDTO: CreateTopicDTO): Promise<TopicModel> {
+  async create(data: CreateTopicDTO): Promise<TopicModel> {
+    const { user_id, category_id } = data
     const topic = new Topic();
       
-    topic.name = createTopicDTO.name;
-    topic.textBody = createTopicDTO.textBody;
-    const user_id = createTopicDTO.user_id;
-    const category_id = createTopicDTO.category_id;
+    topic.name = data.name;
+    topic.textBody = data.textBody;
       
     topic.user = await this.UserRepository.findOne(user_id);
     topic.category = await this.CategoryRepository.findOne(category_id);
       
+    const createdTopic = await this.topicRepository.create(topic);
+    topic.save()
+
     const {
       id,
       name,
@@ -49,8 +51,8 @@ export class TopicsService {
       created_at,
       updated_at,
       deleted_at,
-    } = await this.topicRepository.create(topic);
-
+    } = createdTopic
+    
     return {
       id,
       name,
@@ -113,6 +115,8 @@ export class TopicsService {
       .leftJoin('t.user', 'topicOwner', 't.userId = topicOwner.id')
       .leftJoin('com.user', 'ownerComment', 'com.userId = ownerComment.id')
       .addSelect('SUM(comments.id)', 'totalComments')
+      .take(take)
+      .skip(skip)
       .select([
         't.id',
         't.name',

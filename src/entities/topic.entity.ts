@@ -26,8 +26,8 @@ export class Topic extends BaseEntity {
   @Column({type: 'mediumtext'})
   textBody: string;
 
-  @Column()
-  imageStorage: string;
+  @Column({default: ''})
+  imageStorage?: string;
 
   @Column({ default: true })
   isActive: boolean;
