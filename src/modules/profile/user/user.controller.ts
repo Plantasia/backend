@@ -160,7 +160,7 @@ export class UserController {
   async remove(@Request() req, @Param('id') id: string): Promise<DeleteModel> {
     const token = req.headers.authorization;
     const check = await this.userService.authorizationCheck(token);
-    const requestedUser = await this.findOneByToken(token);
+    const requestedUser = await this.userService.findByToken(token);
     const userRequestedToDelete = await this.userService.findById(id);
 
     console.log(userRequestedToDelete);
@@ -168,7 +168,7 @@ export class UserController {
     if (
       (userRequestedToDelete.id === requestedUser.id &&
         userRequestedToDelete.email === requestedUser.email) ||
-      requestedUser.isAdmin === true
+      requestedUser.isAdmin
     ) {
       const deletedIten = this.userService.delete(id);
       if (!deletedIten) {
