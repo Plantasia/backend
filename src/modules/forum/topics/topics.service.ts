@@ -106,15 +106,13 @@ export class TopicsService {
     const skip = 10 * (page - 1);
     const take = 10;
 
-    const topics = await getRepository(Topic)
+    const query = await getRepository(Topic)
       .createQueryBuilder('t')
       .leftJoin('t.category', 'cat', 'cat.id = t.categoryId')
       .leftJoin('t.comments', 'com', 'com.topicId = t.id')
       .leftJoin('t.user', 'topicOwner', 't.userId = topicOwner.id')
       .leftJoin('com.user', 'ownerComment', 'com.userId = ownerComment.id')
       .addSelect('SUM(comments.id)', 'totalComments')
-      .take(take)
-      .skip(skip)
       .select([
         't.id',
         't.name',
@@ -136,7 +134,12 @@ export class TopicsService {
       .orderBy({
         'com.created_at': 'ASC',
       })
-      .getMany();
+      .take(take)
+      .skip(skip);
+
+    const topics = category
+      ? await query.where(`t.categoryId = '${category}'`).getMany()
+      : await query.getMany();
 
     return {
       topics,
