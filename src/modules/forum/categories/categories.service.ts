@@ -41,7 +41,7 @@ export class CategoryService {
         FROM categories 
         LEFT JOIN topics 
         ON categories.id = topics.categoryId 
-        inner join comments 
+        LEFT join comments 
         on comments.topicId = topics.id
         WHERE topics.id is not null`,
       )
@@ -195,7 +195,7 @@ export class CategoryService {
     const query = await this.categoryRepository.query(
       `SELECT categories.id, categories.name
       FROM categories WHERE categories.deleted_at is null`,
-    )
+    );
     return query;
   }
 }
