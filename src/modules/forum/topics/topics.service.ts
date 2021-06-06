@@ -50,7 +50,8 @@ export class TopicsService {
       updated_at,
       deleted_at,
     } = await this.topicRepository.create(topic);
-
+    this.topicRepository.save(topic);
+    
     return {
       id,
       name,

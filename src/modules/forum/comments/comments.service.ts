@@ -39,9 +39,9 @@ export class CommentService {
       = await this.commentsRepository.findOne({
         where: {
           id,
-        }, relations: ["user"]
+        }, relations: ["user", "topic"]
       });
-    
+      
     var userId = user.id;
     var topicId = topic.id;
     
@@ -53,7 +53,7 @@ export class CommentService {
       userId,
       topicId
     }
-
+ 
   }
 
   async adminFindAll(page): Promise<Comment[]> {

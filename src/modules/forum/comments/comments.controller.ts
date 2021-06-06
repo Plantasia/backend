@@ -40,13 +40,13 @@ export class CommentController {
     private readonly commentService: CommentService,
     private readonly userService: UserService,
     private readonly topicsService: TopicsService,
-  ) {}
+  ) { }
 
   @Get()
   @ApiCreatedResponse({ description: 'comment succesfully created' })
   @ApiBadRequestResponse({ description: 'Bad request' })
-  findAll(@Query() query: QueryPage ):Promise<FindAllModel>{
-  
+  findAll(@Query() query: QueryPage): Promise<FindAllModel> {
+
     const page = query.page;
     return this.commentService.findAll(page);
   }
@@ -54,8 +54,8 @@ export class CommentController {
   @Get('admin')
   @ApiCreatedResponse({ description: 'comment succesfully created' })
   @ApiForbiddenResponse({ description: 'Forbidden' })
-  adminFindAll(@Query() query: QueryPage ):Promise<Comment[]> {
-  
+  adminFindAll(@Query() query: QueryPage): Promise<Comment[]> {
+
     const page = query.page;
     return this.commentService.adminFindAll(page);
   }
@@ -104,9 +104,9 @@ export class CommentController {
     description: 'JWT token must to be passed to do this request',
   })
   async findOne(@Param('id') id: string, @Request() req): Promise<CommentModel> {
-    
+
     const token = req.headers.authorization
-   this.userService.authorizationCheck(token);
+    this.userService.authorizationCheck(token);
 
     return this.commentService.findOneAndFetchUserAndTopic(id);
   }
@@ -120,34 +120,34 @@ export class CommentController {
     description: 'JWT token must to be passed to do this request',
   })
   async delete(@Param('id') id: string, @Request() req): Promise<void> {
-    
+
     const token = req.headers.authorization
     await this.userService.authorizationCheck(token);
 
     const author = await this.commentService.findOne(id)
     const user = await this.userService.findByToken(token)
 
-    if (author.user.id ===  user.id ||
-      user.isAdmin === true){
+    if (author.user.id === user.id ||
+      user.isAdmin === true) {
 
-        const deleted = await this.commentService.delete(id);
+      const deleted = await this.commentService.delete(id);
 
-        if (!deleted){
-          throw new HttpException(
-            {
-              status: HttpStatus.EXPECTATION_FAILED,
-              error: 'Erro ao deletar comentário!',
-            },
-            HttpStatus.EXPECTATION_FAILED,
-          );
-        }
+      if (!deleted) {
+        throw new HttpException(
+          {
+            status: HttpStatus.EXPECTATION_FAILED,
+            error: 'Erro ao deletar comentário!',
+          },
+          HttpStatus.EXPECTATION_FAILED,
+        );
       }
-      else{
-        throw new UnauthorizedException({
-          error: 'Você não está autorizado a deletar esse comentário',
-        });
-      }
-    
+    }
+    else {
+      throw new UnauthorizedException({
+        error: 'Você não está autorizado a deletar esse comentário',
+      });
+    }
+
   }
 
   @UseGuards(JwtAuthGuard)
@@ -159,20 +159,27 @@ export class CommentController {
     @Body() data: UpdateCommentDTO,
     @Request() req: any,
   ): Promise<CommentModel> {
-
+    console.log("entrei nessa bexiga")
     const token = req.headers.authorization
     this.userService.authorizationCheck(token);
 
-    const author = await this.commentService.findOne(id)
+    const authorId = await (await this.commentService
+      .findOneAndFetchUserAndTopic(id))
+      .userId;
+
     const user = await this.userService.findByToken(token)
 
-    if (author.user.id ===  user.id ||
-        user.isAdmin === true){
 
-        return this.commentService.update(id, data);
+    console.log("user")
+    console.log(user)
+
+    if ((authorId) && (user.id === authorId ||
+         user.isAdmin === true)) {
+
+      return this.commentService.update(id, data);
     }
-    else{
-     
+    else {
+
       throw new UnauthorizedException({
         error: 'Você não está autorizado a atualizar esse comentário!',
       });
