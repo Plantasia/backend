@@ -172,7 +172,7 @@ export class UserService {
         tokenLogout: token,
       },
       select: [
-        'avatar', 'bio', 'email', 'id','created_at', 'name'
+        'avatar', 'bio', 'email', 'id','created_at', 'name', 'isAdmin'
       ]
     });
 

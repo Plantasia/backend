@@ -101,22 +101,17 @@ export class TopicsController {
 
     const token = req.headers.authorization;
     const check = await this.userService.authorizationCheck(token);
-    const author = await (await (this.topicsService.findOneAndFetchUser(id)));
-
-
     const user = await this.userService.findByToken(token);
+    const topic = await (this.topicsService.findOneAndFetchUser(id));
 
-    console.log("author")
-    console.log(author)
-    console.log("user")
-    console.log(user)
+    console.log("topic id")
+    console.log(id)
+    console.log("user id")
+    console.log(topic.user.id)
 
-    if (author.id === user.id ||
-       user.isAdmin === true) {
-
-
-
-      return this.topicsService.update(user.id, createTopicDTO);
+    if (user.id === topic.user.id ||
+        user.isAdmin === true) {
+      return this.topicsService.update(topic.id, createTopicDTO);
     } else {
       throw new UnauthorizedException({
         error: 'Você não esta autorizado a atualizar esse tópico!',

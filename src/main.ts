@@ -16,7 +16,7 @@ async function bootstrap() {
 
    // app.enableCors("*");
   
-    //CallingSeeders();
+    CallingSeeders();
     
   try {
     const swaggerConfig = new DocumentBuilder()
