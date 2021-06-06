@@ -108,7 +108,7 @@ export class CommentController {
     const token = req.headers.authorization
    this.userService.authorizationCheck(token);
 
-    return this.commentService.findOne(id);
+    return this.commentService.findOneAndFetchUserAndTopic(id);
   }
 
   @Delete(':id')

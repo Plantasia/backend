@@ -1,10 +1,10 @@
-export default class CommentModel{
-    id:string;
-    textBody:string;
-    updated_at:string | Date;
-    created_at:string | Date;
-    deleted_at: string | Date;
+export default class CommentModel {
+    id: string;
+    textBody: string;
+    updated_at: Date;
+    created_at: Date;
+    deleted_at: Date;
     userId: string;
     topicId: string;
-    
+
 }
