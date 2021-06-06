@@ -41,7 +41,7 @@ export class CategoryService {
         FROM categories 
         LEFT JOIN topics 
         ON categories.id = topics.categoryId 
-        inner join comments 
+        LEFT join comments 
         on comments.topicId = topics.id
         WHERE topics.id is not null`,
       )
@@ -179,23 +179,23 @@ export class CategoryService {
   }
 
   async addImage(categoryId: string, imageBuffer: Buffer, filename: string) {
-    const imageStorage = await this.filesService.uploadPublicFile(
-      imageBuffer,
-      filename,
-    );
+    const {
+      path: imageStorage,
+      url,
+    } = await this.filesService.uploadPublicFile(imageBuffer, filename);
     const category = await this.findById(categoryId);
     await this.topicRepository.update(categoryId, {
       ...category,
       imageStorage,
     });
-    return imageStorage;
+    return url;
   }
 
   async findCombobox(): Promise<FindAllComboboxModel> {
     const query = await this.categoryRepository.query(
       `SELECT categories.id, categories.name
       FROM categories WHERE categories.deleted_at is null`,
-    )
+    );
     return query;
   }
 }

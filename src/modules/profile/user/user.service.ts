@@ -180,11 +180,10 @@ export class UserService {
 
   async authorizationCheck(tokenRequest: string): Promise<void> {
     const userToCheck = await this.findByToken(tokenRequest);
-    if (!(userToCheck.tokenLogout === tokenRequest || userToCheck)) 
+    if (!(userToCheck.tokenLogout === tokenRequest || userToCheck))
       throw new UnauthorizedException({
         error: 'Não autorizado, seu token esta inválido',
       });
-    
   }
   async changePassword(id: string, password: NewPasswordDto): Promise<string> {
     await this.userRepository.update(id, password);
@@ -207,7 +206,7 @@ export class UserService {
     imageBuffer: Buffer,
     filename: string,
   ): Promise<string> {
-    const avatar = await this.filesService.uploadPublicFile(
+    const { path: avatar, url } = await this.filesService.uploadPublicFile(
       imageBuffer,
       filename,
     );
@@ -216,7 +215,6 @@ export class UserService {
       ...user,
       avatar,
     });
-    return avatar;
+    return url;
   }
-
 }

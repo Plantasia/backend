@@ -38,6 +38,7 @@ import { UserService } from '../../profile/user/user.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FindAllModel } from './api-model/find-all-model';
 import { CreateTopicParams } from './api-model/create-model';
+import { FilesService } from '@src/modules/image/imageS3.service';
 
 @ApiTags('topics')
 @Controller('forum/topics')
@@ -45,6 +46,7 @@ export class TopicsController {
   constructor(
     private readonly topicsService: TopicsService,
     private readonly userService: UserService,
+    private readonly fileService: FilesService,
   ) {}
 
   // @Get('byCategory/:categoryId')
@@ -65,21 +67,12 @@ export class TopicsController {
   @ApiOkResponse({ description: 'topic succesfully returned' })
   @ApiBadRequestResponse({ description: 'Bad request' })
   @Get()
-  /*async findAll(@Query() query: QueryPage):Promise<FindAllModel> {
-    const page = query.page;
-    return this.topicsService.findAll(page);
-  }*/
   async findAll(
     @Query() query: QueryPage & { category: string | null },
   ): Promise<FindAllModel> {
     const { page, category } = query;
     return this.topicsService.findAll(page, category);
   }
-
-  /*async findAll(@Query() query: QueryPage & { category: string | null }):Promise<FindAllModel> {
-    const { page, category } = query;
-    return this.topicsService.findAll(page, category);
-  }*/
 
   @ApiOkResponse({ description: 'topic succesfully returned' })
   @ApiForbiddenResponse({ description: 'Forbidden' })
@@ -126,20 +119,30 @@ export class TopicsController {
   @ApiCreatedResponse({ description: 'topic succesfully created' })
   @ApiBadRequestResponse({ description: 'Bad request' })
   @Post()
+  @UseInterceptors(FileInterceptor('file'))
   async create(
     @Body() data: CreateTopicParams,
     @Request() req,
+    @UploadedFile() file: Express.Multer.File,
   ): Promise<TopicModel> {
     const token = req.headers.authorization;
-    const user = await this.userService.findByToken(token)
-    const { textBody, name, category_id} = data
+    await this.userService.authorizationCheck(token);
+    const { id: user_id } = await this.userService.findByToken(token);
+    const { textBody, name, category_id } = data;
+
+    const { path } = await this.fileService.uploadPublicFile(
+      file.buffer,
+      file.originalname,
+    );
+
     const response = await this.topicsService.create({
       category_id,
       name,
       textBody,
-      user_id: user.id,
+      user_id,
+      imageStorage: path,
     });
-    
+
     return response;
   }
 
@@ -198,13 +201,14 @@ export class TopicsController {
   ) {
     const token = req.headers.authorization;
     await this.userService.authorizationCheck(token);
-    const author = this.topicsService.findOne(id);
-    const requesterUser = this.userService.findByToken(token);
-    if (
-      (await author).user.id === (await requesterUser).id ||
-      (await requesterUser).isAdmin === true
-    ) {
-      return this.topicsService.addImage(id, file.buffer, file.originalname);
+    const author = await this.topicsService.findOne(id);
+    const requesterUser = await this.userService.findByToken(token);
+    if (author.user.id === requesterUser.id || requesterUser.isAdmin) {
+      return await this.topicsService.addImage(
+        id,
+        file.buffer,
+        file.originalname,
+      );
     } else {
       throw new UnauthorizedException({
         error: 'Você não esta permitido a atualizar esse tópico!',
