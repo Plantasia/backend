@@ -11,10 +11,10 @@ async function bootstrap() {
   const HOST = process.env.HOST || '0.0.0.0';
   const app = await NestFactory.create(AppModule);
   app.enableCors({
-    origin: [
-      process.env.FRONT_END_CORS, 
-      process.env.ADMIN_FRONT_END_CORS,
-    ]});
+    origin: "*"
+  });
+
+   // app.enableCors("*");
   
     //CallingSeeders();
     

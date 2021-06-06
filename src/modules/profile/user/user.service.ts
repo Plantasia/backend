@@ -88,7 +88,8 @@ export class UserService {
     await this.userRepository.softDelete(id);
   }
 
-  async adminFindAll():Promise<User[]> {
+  async adminFindAll(): Promise<User[]> {
+   
     return this.userRepository.find({
       select: [
         'name',
@@ -100,6 +101,10 @@ export class UserService {
         'updated_at',
         'deleted_at',
       ],
+      where: [
+        {isAdmin:true}
+      ]
+      
     });
   }
 
