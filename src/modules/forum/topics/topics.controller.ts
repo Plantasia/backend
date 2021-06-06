@@ -18,7 +18,7 @@ import {
   UnauthorizedException,
   HttpStatus,
   UseInterceptors,
-  UploadedFile 
+  UploadedFile
 } from '@nestjs/common';
 import { TopicsService } from './topics.service';
 import { Topic } from '@entities/topic.entity';
@@ -44,7 +44,7 @@ export class TopicsController {
   constructor(
     private readonly topicsService: TopicsService,
     private readonly userService: UserService,
-  ) {}
+  ) { }
 
   // @Get('byCategory/:categoryId')
   // async getTopicsByCategory(@Param('categoryId') categoryId: string):Promise<Topic[]> {
@@ -68,7 +68,7 @@ export class TopicsController {
     const page = query.page;
     return this.topicsService.findAll(page);
   }*/
-  async findAll(@Query() query: QueryPage & { category: string | null }):Promise<FindAllModel> {
+  async findAll(@Query() query: QueryPage & { category: string | null }): Promise<FindAllModel> {
     const { page, category } = query;
     return this.topicsService.findAll(page, category);
   }
@@ -81,7 +81,7 @@ export class TopicsController {
   @ApiOkResponse({ description: 'topic succesfully returned' })
   @ApiForbiddenResponse({ description: 'Forbidden' })
   @Get('admin/list')
-  async adminFindAll():Promise<Topic[]> {
+  async adminFindAll(): Promise<Topic[]> {
     return this.topicsService.adminFindAll();
   }
 
@@ -98,15 +98,25 @@ export class TopicsController {
     @Body() createTopicDTO: CreateTopicDTO,
     @Request() req,
   ): Promise<TopicModel> {
+
     const token = req.headers.authorization;
     const check = await this.userService.authorizationCheck(token);
-    const author = this.topicsService.findOne(id);
-    const requesterUser = this.userService.findByToken(token);
-    if (
-      (await author).user.id === (await requesterUser).id ||
-      (await requesterUser).isAdmin === true
-    ) {
-      return this.topicsService.update(id, createTopicDTO);
+    const author = await (await (this.topicsService.findOneAndFetchUser(id)));
+
+
+    const user = await this.userService.findByToken(token);
+
+    console.log("author")
+    console.log(author)
+    console.log("user")
+    console.log(user)
+
+    if (author.id === user.id ||
+       user.isAdmin === true) {
+
+
+
+      return this.topicsService.update(user.id, createTopicDTO);
     } else {
       throw new UnauthorizedException({
         error: 'Você não esta autorizado a atualizar esse tópico!',
@@ -165,15 +175,15 @@ export class TopicsController {
     const token = req.headers.authorization;
     const check = await this.userService.authorizationCheck(token);
     const author = this.topicsService.findOne(id);
-    const requesterUser = this.userService.findByToken(token);
+    const user = this.userService.findByToken(token);
 
     if (
-      (await author).user.id === (await requesterUser).id ||
-      (await requesterUser).isAdmin === true
+      (await author).user.id === (await user).id ||
+      (await user).isAdmin === true
     ) {
 
       this.topicsService.delete(id);
-      
+
       const deletedIten = this.topicsService.findOne(id);
       if (!deletedIten) {
         throw new HttpException(
@@ -203,12 +213,12 @@ export class TopicsController {
     const token = req.headers.authorization;
     const check = await this.userService.authorizationCheck(token);
     const author = this.topicsService.findOne(id);
-    const requesterUser = this.userService.findByToken(token);
+    const user = this.userService.findByToken(token);
     if (
-      (await author).user.id === (await requesterUser).id ||
-      (await requesterUser).isAdmin === true
+      (await author).user.id === (await user).id ||
+      (await user).isAdmin === true
     ) {
-      return this.topicsService.addImage(id,file.buffer, file.originalname);
+      return this.topicsService.addImage(id, file.buffer, file.originalname);
     } else {
       throw new UnauthorizedException({
         error: 'Você não esta permitido a atualizar esse tópico!',

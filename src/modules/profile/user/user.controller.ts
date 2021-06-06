@@ -237,9 +237,10 @@ export class UserController {
     }
   }
 
-  @Get('admin')
+  @Get('admin/findall')
   async adminFindAll(@Request() req, @Query() query: QueryPage):Promise<User[]> {
     const page = query.page;
+    console.log("*******")
     return this.userService.adminFindAll();
   }
 
