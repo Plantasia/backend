@@ -35,6 +35,7 @@ export class TopicsService {
 
     topic.name = data.name;
     topic.textBody = data.textBody;
+    topic.imageStorage = data.imageStorage;
 
     topic.user = await this.UserRepository.findOne(user_id);
     topic.category = await this.CategoryRepository.findOne(category_id);
@@ -171,7 +172,6 @@ export class TopicsService {
         'com.userId = userComment.id',
       )
       .where('t.id = :id', { id: topicId })
-
       .select([
         'userComment.id',
         'userComment.name',
@@ -206,6 +206,7 @@ export class TopicsService {
         'com.created_at',
         'com.updated_at',
       ])
+
       .orderBy({
         'com.created_at': 'ASC', // Getting the last comment
       })
@@ -293,17 +294,17 @@ export class TopicsService {
     topicId: string,
     imageBuffer: Buffer,
     filename: string,
-  ): Promise<string> {
-    const imageStorage = await this.filesService.uploadPublicFile(
+  ): Promise<{ path: string; url: string }> {
+    const { path, url } = await this.filesService.uploadPublicFile(
       imageBuffer,
       filename,
     );
     const topic = await this.findById(topicId);
     await this.topicRepository.update(topicId, {
       ...topic,
-      imageStorage,
+      imageStorage: path,
     });
     await this.topicRepository.save(topic);
-    return imageStorage;
+    return { path, url };
   }
 }

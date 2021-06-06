@@ -179,16 +179,16 @@ export class CategoryService {
   }
 
   async addImage(categoryId: string, imageBuffer: Buffer, filename: string) {
-    const imageStorage = await this.filesService.uploadPublicFile(
-      imageBuffer,
-      filename,
-    );
+    const {
+      path: imageStorage,
+      url,
+    } = await this.filesService.uploadPublicFile(imageBuffer, filename);
     const category = await this.findById(categoryId);
     await this.topicRepository.update(categoryId, {
       ...category,
       imageStorage,
     });
-    return imageStorage;
+    return url;
   }
 
   async findCombobox(): Promise<FindAllComboboxModel> {

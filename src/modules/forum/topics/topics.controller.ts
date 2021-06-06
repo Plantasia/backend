@@ -38,6 +38,7 @@ import { UserService } from '../../profile/user/user.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FindAllModel } from './api-model/find-all-model';
 import { CreateTopicParams } from './api-model/create-model';
+import { FilesService } from '@src/modules/image/imageS3.service';
 
 @ApiTags('topics')
 @Controller('forum/topics')
@@ -45,6 +46,7 @@ export class TopicsController {
   constructor(
     private readonly topicsService: TopicsService,
     private readonly userService: UserService,
+    private readonly fileService: FilesService,
   ) {}
 
   // @Get('byCategory/:categoryId')
@@ -128,23 +130,19 @@ export class TopicsController {
     const { id: user_id } = await this.userService.findByToken(token);
     const { textBody, name, category_id } = data;
 
+    const { path } = await this.fileService.uploadPublicFile(
+      file.buffer,
+      file.originalname,
+    );
+
     const response = await this.topicsService.create({
       category_id,
       name,
       textBody,
       user_id,
+      imageStorage: path,
     });
 
-    if (file) {
-      const { id } = response;
-      const imageStorage = await this.topicsService.addImage(
-        id,
-        file.buffer,
-        file.originalname,
-      );
-
-      return { ...response, imageStorage };
-    }
     return response;
   }
 
