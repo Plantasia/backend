@@ -25,7 +25,15 @@ export class CommentService {
     this.userService = userService;
   }
 
-  async findOne(id: string): Promise<CommentModel> {
+  async findOne(id: string): Promise<Comment> {
+    return  this.commentsRepository.findOne({
+        where: {
+          id,
+        }
+      });
+  }
+
+  async findOneAndFetchUserAndTopic(id: string): Promise<CommentModel> {
     var { id, created_at, deleted_at,
       textBody, topic, user, updated_at }
       = await this.commentsRepository.findOne({
@@ -33,8 +41,10 @@ export class CommentService {
           id,
         }, relations: ["user"]
       });
-     var userId = user.id;
-     var topicId = topic.id;
+    
+    var userId = user.id;
+    var topicId = topic.id;
+    
     return {
       id, created_at,
       deleted_at,
