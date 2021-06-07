@@ -49,16 +49,6 @@ export class TopicsController {
     private readonly fileService: FilesService,
   ) {}
 
-  // @Get('byCategory/:categoryId')
-  // async getTopicsByCategory(@Param('categoryId') categoryId: string):Promise<Topic[]> {
-  //   return this.topicsService.findByCategory(categoryId);
-  // }
-
-  /*@Get('admin/:topicId')
-  async adminGetTopicById(@Param('topicId') topicId: string) {
-    return this.topicsService.adminFindOne(topicId)
-  } */
-
   @Get(':topicId')
   async getTopicById(@Param('topicId') topicId: string): Promise<FindOneModel> {
     return this.topicsService.takeTopicData(topicId);
@@ -96,13 +86,11 @@ export class TopicsController {
   ): Promise<TopicModel> {
     const token = req.headers.authorization;
     await this.userService.authorizationCheck(token);
-    const author = this.topicsService.findOne(id);
-    const requesterUser = this.userService.findByToken(token);
-    if (
-      (await author).user.id === (await requesterUser).id ||
-      (await requesterUser).isAdmin === true
-    ) {
-      return this.topicsService.update(id, createTopicDTO);
+    const user = await this.userService.findByToken(token);
+    const topic = await this.topicsService.findOneAndFetchUser(id);
+
+    if (user.id === topic.user.id || user.isAdmin) {
+      return this.topicsService.update(topic.id, createTopicDTO);
     } else {
       throw new UnauthorizedException({
         error: 'Você não esta autorizado a atualizar esse tópico!',
@@ -161,11 +149,11 @@ export class TopicsController {
     const token = req.headers.authorization;
     await this.userService.authorizationCheck(token);
     const author = this.topicsService.findOne(id);
-    const requesterUser = this.userService.findByToken(token);
+    const user = this.userService.findByToken(token);
 
     if (
-      (await author).user.id === (await requesterUser).id ||
-      (await requesterUser).isAdmin === true
+      (await author).user.id === (await user).id ||
+      (await user).isAdmin === true
     ) {
       this.topicsService.delete(id);
 
@@ -200,6 +188,7 @@ export class TopicsController {
     @UploadedFile() file: Express.Multer.File,
   ) {
     const token = req.headers.authorization;
+
     await this.userService.authorizationCheck(token);
     const author = await this.topicsService.findOne(id);
     const requesterUser = await this.userService.findByToken(token);

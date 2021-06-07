@@ -160,6 +160,17 @@ export class TopicsService {
       withDeleted: true,
     });
   }
+
+  async findOneAndFetchUser(topicId: string): Promise<Topic> {
+    return this.topicRepository.findOne({
+      where: {
+        id: topicId,
+      },
+      relations: ['user'],
+      withDeleted: true,
+    });
+  }
+
   async takeTopicData(topicId: string): Promise<Topic> {
     const topic = await getRepository(Topic)
       .createQueryBuilder('t')

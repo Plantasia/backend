@@ -7,7 +7,7 @@ module.exports = {
   database: process.env.ORM_DB,
   host: 'database',
   synchronize: true,
-  port: 3306,
+  port: process.env.DATABASE_PORT,
   logging: true,
   entities: [path.resolve('build', 'entities', '*')],
   migrations: ['./src/database/migations/*.ts'],
