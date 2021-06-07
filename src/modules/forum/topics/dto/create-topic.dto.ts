@@ -23,7 +23,7 @@ export class CreateTopicDTO {
     description: 'The image of topic',
     default: '',
   })
-  public readonly imageStorage: string;
+  public readonly imageStorage?: string;
 
   @ApiProperty({
     type: String,

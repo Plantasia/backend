@@ -15,11 +15,11 @@ import {
   UsePipes,
   ValidationPipe,
   Query,
-  UnauthorizedException
+  UnauthorizedException,
 } from '@nestjs/common';
 import { CommentService } from './comments.service';
 import { CreateCommentDTO } from './dto/create-comment.dto';
-import { UpdateCommentDTO } from './dto/update-comment.dto'
+import { UpdateCommentDTO } from './dto/update-comment.dto';
 import { Comment } from '@entities/comments.entity';
 import { JwtAuthGuard } from '@auth/jwt-auth.guard';
 import {
@@ -40,13 +40,12 @@ export class CommentController {
     private readonly commentService: CommentService,
     private readonly userService: UserService,
     private readonly topicsService: TopicsService,
-  ) { }
+  ) {}
 
   @Get()
   @ApiCreatedResponse({ description: 'comment succesfully created' })
   @ApiBadRequestResponse({ description: 'Bad request' })
   findAll(@Query() query: QueryPage): Promise<FindAllModel> {
-
     const page = query.page;
     return this.commentService.findAll(page);
   }
@@ -55,7 +54,6 @@ export class CommentController {
   @ApiCreatedResponse({ description: 'comment succesfully created' })
   @ApiForbiddenResponse({ description: 'Forbidden' })
   adminFindAll(@Query() query: QueryPage): Promise<Comment[]> {
-
     const page = query.page;
     return this.commentService.adminFindAll(page);
   }
@@ -70,7 +68,7 @@ export class CommentController {
     @Body() data: CreateCommentDTO,
     @Request() req,
   ): Promise<CommentModel> {
-    const token = req.headers.authorization
+    const { authorization: token } = req.headers;
     await this.userService.authorizationCheck(token);
     const topic_id = data.topic_id;
     const topicAlreadyExists = await this.topicsService.findById(topic_id);
@@ -84,14 +82,16 @@ export class CommentController {
         HttpStatus.FORBIDDEN,
       );
     } else {
-
-      const { id, textBody, updated_at } = await this.commentService.create(data, token);
+      const { id, textBody, updated_at } = await this.commentService.create(
+        data,
+        token,
+      );
 
       return {
         id,
         textBody,
-        updated_at
-      }
+        updated_at,
+      };
     }
   }
 
@@ -103,10 +103,13 @@ export class CommentController {
     name: 'JWT',
     description: 'JWT token must to be passed to do this request',
   })
-  async findOne(@Param('id') id: string, @Request() req): Promise<CommentModel> {
+  async findOne(
+    @Param('id') id: string,
+    @Request() req,
+  ): Promise<CommentModel> {
+    const token = req.headers.authorization;
 
-    const token = req.headers.authorization
-    this.userService.authorizationCheck(token);
+    await this.userService.authorizationCheck(token);
 
     return this.commentService.findOneAndFetchUserAndTopic(id);
   }
@@ -120,16 +123,13 @@ export class CommentController {
     description: 'JWT token must to be passed to do this request',
   })
   async delete(@Param('id') id: string, @Request() req): Promise<void> {
-
-    const token = req.headers.authorization
+    const token = req.headers.authorization;
     await this.userService.authorizationCheck(token);
 
-    const author = await this.commentService.findOne(id)
-    const user = await this.userService.findByToken(token)
+    const author = await this.commentService.findOne(id);
+    const user = await this.userService.findByToken(token);
 
-    if (author.user.id === user.id ||
-      user.isAdmin === true) {
-
+    if (author.user.id === user.id || user.isAdmin) {
       const deleted = await this.commentService.delete(id);
 
       if (!deleted) {
@@ -141,13 +141,11 @@ export class CommentController {
           HttpStatus.EXPECTATION_FAILED,
         );
       }
-    }
-    else {
+    } else {
       throw new UnauthorizedException({
         error: 'Você não está autorizado a deletar esse comentário',
       });
     }
-
   }
 
   @UseGuards(JwtAuthGuard)
@@ -159,31 +157,25 @@ export class CommentController {
     @Body() data: UpdateCommentDTO,
     @Request() req: any,
   ): Promise<CommentModel> {
-    console.log("entrei nessa bexiga")
-    const token = req.headers.authorization
+    console.log('entrei nessa bexiga');
+    const token = req.headers.authorization;
     this.userService.authorizationCheck(token);
 
-    const authorId = await (await this.commentService
-      .findOneAndFetchUserAndTopic(id))
-      .userId;
+    const authorId = await (
+      await this.commentService.findOneAndFetchUserAndTopic(id)
+    ).userId;
 
-    const user = await this.userService.findByToken(token)
+    const user = await this.userService.findByToken(token);
 
+    console.log('user');
+    console.log(user);
 
-    console.log("user")
-    console.log(user)
-
-    if ((authorId) && (user.id === authorId ||
-         user.isAdmin === true)) {
-
+    if (authorId && (user.id === authorId || user.isAdmin === true)) {
       return this.commentService.update(id, data);
-    }
-    else {
-
+    } else {
       throw new UnauthorizedException({
         error: 'Você não está autorizado a atualizar esse comentário!',
       });
-
     }
   }
 }

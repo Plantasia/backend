@@ -10,10 +10,12 @@ import {
   BaseEntity,
   DeleteDateColumn,
   JoinColumn,
+  AfterLoad,
 } from 'typeorm';
 import { Category } from './category.entity';
 import { User } from './user.entity';
 import { Comment } from './comments.entity';
+import { S3Helper } from '@src/utils/S3Helper';
 
 @Entity('topics')
 export class Topic extends BaseEntity {
@@ -23,11 +25,11 @@ export class Topic extends BaseEntity {
   @Column()
   name: string;
 
-  @Column({type: 'mediumtext'})
+  @Column({ type: 'mediumtext' })
   textBody: string;
 
-  @Column()
-  imageStorage: string;
+  @Column({ default: '' })
+  imageStorage?: string;
 
   @Column({ default: true })
   isActive: boolean;
@@ -61,4 +63,12 @@ export class Topic extends BaseEntity {
 
   @Column({ default: null })
   seedingId: number;
+
+  imageStorageUrl: string;
+
+  @AfterLoad()
+  async load() {
+    if (!this.imageStorage) return;
+    this.imageStorageUrl = await new S3Helper().getUrl(this.imageStorage);
+  }
 }

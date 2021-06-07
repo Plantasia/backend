@@ -68,7 +68,7 @@ export class CategoryController {
   ): Promise<CreateModel> {
     const token = req.headers.authorization;
 
-    const check = await this.userService.authorizationCheck(token);
+    await this.userService.authorizationCheck(token);
 
     const author = await this.userService.findByToken(token);
     createCategoryDTO.authorEmail = author.email;
@@ -163,7 +163,7 @@ export class CategoryController {
   async remove(@Param('id') id: string, @Request() req): Promise<DeleteModel> {
     //NOTE: Verifying if this user is authorized
     const token = req.headers.authorization;
-    const check = await this.userService.authorizationCheck(token);
+    await this.userService.authorizationCheck(token);
     const author = await this.userService.findByToken(token);
     if (author.isAdmin === true) {
       const deletedItem = this.categoryService.delete(id);
@@ -208,7 +208,7 @@ export class CategoryController {
   ): Promise<UpdateModel> {
     const categoryExists = await this.categoryService.findById(id);
     const token = req.headers.authorization;
-    const check = await this.userService.authorizationCheck(token);
+    await this.userService.authorizationCheck(token);
     if (!categoryExists) {
       throw new NotFoundException({ error: 'Essa categoria não existe ' });
     }
@@ -232,7 +232,7 @@ export class CategoryController {
     @UploadedFile() file: Express.Multer.File,
   ) {
     const token = req.headers.authorization;
-    const check = await this.userService.authorizationCheck(token);
+    await this.userService.authorizationCheck(token);
     const requesterUser = this.userService.findByToken(token);
     if ((await requesterUser).isAdmin === true) {
       return this.categoryService.addImage(id, file.buffer, file.originalname);

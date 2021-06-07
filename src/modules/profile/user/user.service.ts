@@ -1,5 +1,4 @@
-
-import { FindAllModel}  from './api-model/find-all-model'
+import { FindAllModel } from './api-model/find-all-model';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -89,7 +88,6 @@ export class UserService {
   }
 
   async adminFindAll(): Promise<User[]> {
-   
     return this.userRepository.find({
       select: [
         'name',
@@ -101,10 +99,7 @@ export class UserService {
         'updated_at',
         'deleted_at',
       ],
-      where: [
-        {isAdmin:true}
-      ]
-      
+      where: [{ isAdmin: true }],
     });
   }
 
@@ -141,10 +136,7 @@ export class UserService {
     return this.userRepository.findOne(id);
   }
 
-  async passwordLogout(
-    id: string,
-    userData: UserDTO,
-  ): Promise<UserModel> {
+  async passwordLogout(id: string, userData: UserDTO): Promise<UserModel> {
     await this.userRepository.update(id, userData);
     return this.userRepository.findOne(id);
   }
@@ -167,42 +159,41 @@ export class UserService {
   }
 
   async findByToken(token: string): Promise<User> {
-    const userToCheck = await this.userRepository.findOne({
+    const user = await this.userRepository.findOne({
       where: {
         tokenLogout: token,
       },
-      select: [
-        'avatar', 'bio', 'email', 'id','created_at', 'name', 'isAdmin'
-      ]
     });
 
-    if (!userToCheck) {
+    if (!user) {
       throw new UnauthorizedException({ error: 'Unauthorized' });
     }
 
-    return userToCheck;
+    return user;
+  }
+  async findMe(token: string) {
+    const { avatar, bio, email, id, created_at, name } = await this.findByToken(
+      token,
+    );
+
+    return { avatar, bio, email, id, created_at, name };
   }
 
-  async authorizationCheck(tokenRequest: string): Promise<string> {
+  async authorizationCheck(tokenRequest: string): Promise<void> {
     const userToCheck = await this.findByToken(tokenRequest);
-    if (userToCheck.tokenLogout === tokenRequest || userToCheck) {
-      return 
-        'Token válido ';
-    } else {
+    if (!(userToCheck.tokenLogout === tokenRequest || userToCheck))
       throw new UnauthorizedException({
         error: 'Não autorizado, seu token esta inválido',
       });
-    }
   }
-  async changePassword(id: string, password: NewPasswordDto):Promise<string> {
-
-     await this.userRepository.update(id, password);
-     const user = await this.findOne(id);
-     console.log(user);
-     return user.password;
+  async changePassword(id: string, password: NewPasswordDto): Promise<string> {
+    await this.userRepository.update(id, password);
+    const user = await this.findOne(id);
+    console.log(user);
+    return user.password;
   }
 
-  async findByRecoverToken(recoverToken: string):Promise<UserModel> {
+  async findByRecoverToken(recoverToken: string): Promise<UserModel> {
     const idUser = await this.userRepository.findOne({
       where: {
         recoverToken: recoverToken,
@@ -211,13 +202,20 @@ export class UserService {
     return idUser;
   }
 
-  async addAvatar(userId:string, imageBuffer: Buffer, filename: string):Promise<string> {
-    const avatar = await this.filesService.uploadPublicFile(imageBuffer, filename);
+  async addAvatar(
+    userId: string,
+    imageBuffer: Buffer,
+    filename: string,
+  ): Promise<string> {
+    const { path: avatar, url } = await this.filesService.uploadPublicFile(
+      imageBuffer,
+      filename,
+    );
     const user = await this.findById(userId);
     await this.userRepository.update(userId, {
       ...user,
-      avatar
-    })
-    return avatar;
+      avatar,
+    });
+    return url;
   }
 }

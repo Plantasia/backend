@@ -18,7 +18,7 @@ import {
   UnauthorizedException,
   HttpStatus,
   UseInterceptors,
-  UploadedFile
+  UploadedFile,
 } from '@nestjs/common';
 import { TopicsService } from './topics.service';
 import { Topic } from '@entities/topic.entity';
@@ -37,6 +37,8 @@ import { HttpException } from '@nestjs/common/exceptions/http.exception';
 import { UserService } from '../../profile/user/user.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FindAllModel } from './api-model/find-all-model';
+import { CreateTopicParams } from './api-model/create-model';
+import { FilesService } from '@src/modules/image/imageS3.service';
 
 @ApiTags('topics')
 @Controller('forum/topics')
@@ -44,17 +46,8 @@ export class TopicsController {
   constructor(
     private readonly topicsService: TopicsService,
     private readonly userService: UserService,
-  ) { }
-
-  // @Get('byCategory/:categoryId')
-  // async getTopicsByCategory(@Param('categoryId') categoryId: string):Promise<Topic[]> {
-  //   return this.topicsService.findByCategory(categoryId);
-  // }
-
-  /*@Get('admin/:topicId')
-  async adminGetTopicById(@Param('topicId') topicId: string) {
-    return this.topicsService.adminFindOne(topicId)
-  } */
+    private readonly fileService: FilesService,
+  ) {}
 
   @Get(':topicId')
   async getTopicById(@Param('topicId') topicId: string): Promise<FindOneModel> {
@@ -64,19 +57,12 @@ export class TopicsController {
   @ApiOkResponse({ description: 'topic succesfully returned' })
   @ApiBadRequestResponse({ description: 'Bad request' })
   @Get()
-  /*async findAll(@Query() query: QueryPage):Promise<FindAllModel> {
-    const page = query.page;
-    return this.topicsService.findAll(page);
-  }*/
-  async findAll(@Query() query: QueryPage & { category: string | null }): Promise<FindAllModel> {
+  async findAll(
+    @Query() query: QueryPage & { category: string | null },
+  ): Promise<FindAllModel> {
     const { page, category } = query;
     return this.topicsService.findAll(page, category);
   }
-
-  /*async findAll(@Query() query: QueryPage & { category: string | null }):Promise<FindAllModel> {
-    const { page, category } = query;
-    return this.topicsService.findAll(page, category);
-  }*/
 
   @ApiOkResponse({ description: 'topic succesfully returned' })
   @ApiForbiddenResponse({ description: 'Forbidden' })
@@ -98,19 +84,12 @@ export class TopicsController {
     @Body() createTopicDTO: CreateTopicDTO,
     @Request() req,
   ): Promise<TopicModel> {
-
     const token = req.headers.authorization;
-    const check = await this.userService.authorizationCheck(token);
+    await this.userService.authorizationCheck(token);
     const user = await this.userService.findByToken(token);
-    const topic = await (this.topicsService.findOneAndFetchUser(id));
+    const topic = await this.topicsService.findOneAndFetchUser(id);
 
-    console.log("topic id")
-    console.log(id)
-    console.log("user id")
-    console.log(topic.user.id)
-
-    if (user.id === topic.user.id ||
-        user.isAdmin === true) {
+    if (user.id === topic.user.id || user.isAdmin) {
       return this.topicsService.update(topic.id, createTopicDTO);
     } else {
       throw new UnauthorizedException({
@@ -128,31 +107,31 @@ export class TopicsController {
   @ApiCreatedResponse({ description: 'topic succesfully created' })
   @ApiBadRequestResponse({ description: 'Bad request' })
   @Post()
+  @UseInterceptors(FileInterceptor('file'))
   async create(
-    @Body() createTopicDTO: CreateTopicDTO,
+    @Body() data: CreateTopicParams,
     @Request() req,
+    @UploadedFile() file: Express.Multer.File,
   ): Promise<TopicModel> {
     const token = req.headers.authorization;
-    const userAlreadyExists = await this.userService.authorizationCheck(token);
-    if (!userAlreadyExists) {
-      throw new HttpException(
-        {
-          status: HttpStatus.BAD_REQUEST,
-          error: 'Esse usuário não existe, por favor, verifique os dados',
-        },
-        HttpStatus.BAD_REQUEST,
-      );
-    } else {
-      const response = this.topicsService.create(createTopicDTO);
-      const category = this.topicsService.findOne(createTopicDTO.category_id);
-      const user = this.topicsService.findOne(createTopicDTO.user_id);
+    await this.userService.authorizationCheck(token);
+    const { id: user_id } = await this.userService.findByToken(token);
+    const { textBody, name, category_id } = data;
 
-      if (!category && !user) {
-        const errors = { Error: 'Campos obrigatórios, user e category, não foram passados' };
-        throw new HttpException({ errors }, 401);
-      }
-      return response;
-    }
+    const { path } = await this.fileService.uploadPublicFile(
+      file.buffer,
+      file.originalname,
+    );
+
+    const response = await this.topicsService.create({
+      category_id,
+      name,
+      textBody,
+      user_id,
+      imageStorage: path,
+    });
+
+    return response;
   }
 
   @UseGuards(JwtAuthGuard)
@@ -168,7 +147,7 @@ export class TopicsController {
     @Request() req,
   ): Promise<DeletedItemTopicDTO> {
     const token = req.headers.authorization;
-    const check = await this.userService.authorizationCheck(token);
+    await this.userService.authorizationCheck(token);
     const author = this.topicsService.findOne(id);
     const user = this.userService.findByToken(token);
 
@@ -176,7 +155,6 @@ export class TopicsController {
       (await author).user.id === (await user).id ||
       (await user).isAdmin === true
     ) {
-
       this.topicsService.delete(id);
 
       const deletedIten = this.topicsService.findOne(id);
@@ -204,16 +182,22 @@ export class TopicsController {
   @Post('image/:id')
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileInterceptor('file'))
-  async addImage(@Request() req, @Param('id') id: string, @UploadedFile() file: Express.Multer.File) {
+  async addImage(
+    @Request() req,
+    @Param('id') id: string,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
     const token = req.headers.authorization;
-    const check = await this.userService.authorizationCheck(token);
-    const author = this.topicsService.findOne(id);
-    const user = this.userService.findByToken(token);
-    if (
-      (await author).user.id === (await user).id ||
-      (await user).isAdmin === true
-    ) {
-      return this.topicsService.addImage(id, file.buffer, file.originalname);
+
+    await this.userService.authorizationCheck(token);
+    const author = await this.topicsService.findOne(id);
+    const requesterUser = await this.userService.findByToken(token);
+    if (author.user.id === requesterUser.id || requesterUser.isAdmin) {
+      return await this.topicsService.addImage(
+        id,
+        file.buffer,
+        file.originalname,
+      );
     } else {
       throw new UnauthorizedException({
         error: 'Você não esta permitido a atualizar esse tópico!',
