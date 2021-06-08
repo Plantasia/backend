@@ -99,7 +99,7 @@ export class UserService {
         'updated_at',
         'deleted_at',
       ],
-      where: [{ isAdmin: true }],
+     // where: [{ isAdmin: true }],
     });
   }
 
