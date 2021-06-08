@@ -169,15 +169,19 @@ export class UserService {
     if (!user) {
       throw new UnauthorizedException({ error: 'Unauthorized' });
     }
-
     return user;
   }
   async findMe(token: string) {
-    const { avatar, bio, email, id, created_at, name } = await this.findByToken(
-      token,
-    );
+    const {
+      avatarUrl,
+      bio,
+      email,
+      id,
+      created_at,
+      name,
+    } = await this.findByToken(token);
 
-    return { avatar, bio, email, id, created_at, name };
+    return { avatarUrl, bio, email, id, created_at, name };
   }
 
   async authorizationCheck(tokenRequest: string): Promise<void> {
