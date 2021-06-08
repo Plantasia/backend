@@ -30,12 +30,6 @@ export class User extends BaseEntity {
   @Column({ default: 'default-profile.jpeg' })
   avatar: string;
 
-  avatarUrl: string;
-  @AfterLoad()
-  async load() {
-    this.avatarUrl = await new S3Helper().getUrl(this.avatar);
-  }
-
   @Column()
   email: string;
 
@@ -77,4 +71,10 @@ export class User extends BaseEntity {
 
   @DeleteDateColumn()
   deleted_at: Date;
+
+  avatarUrl: string;
+  @AfterLoad()
+  async load() {
+    this.avatarUrl = await new S3Helper().getUrl(this.avatar);
+  }
 }
