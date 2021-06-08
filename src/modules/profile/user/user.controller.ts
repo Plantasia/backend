@@ -100,25 +100,18 @@ export class UserController {
   })
   @Post()
   async create(@Body() data: CreateUserDTO): Promise<UserModel> {
-    const userAlreadyExists = await this.userService.checkIfAlreadyExists(
-      data.email,
-    );
-    if (userAlreadyExists === undefined || !userAlreadyExists) {
-      const createdUser = await this.userService.create(data);
+    await this.userService.checkIfAlreadyExists(data.email);
 
-      const { name, email, bio, id } = createdUser;
+    const createdUser = await this.userService.create(data);
 
-      return {
-        name,
-        email,
-        bio,
-        id,
-      };
-    } else {
-      throw new ForbiddenException({
-        error: `O email : ${data.email} já esta sendo usado!`,
-      });
-    }
+    const { name, email, bio, id } = createdUser;
+
+    return {
+      name,
+      email,
+      bio,
+      id,
+    };
   }
 
   @Get(':id')
