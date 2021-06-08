@@ -118,6 +118,30 @@ export class CategoryController {
     return this.categoryService.adminFindAll();
   }
 
+  @Get(':id/admin')
+  @ApiOkResponse({ description: 'The category has been successful deleted' })
+  @ApiBadRequestResponse({ description: 'Bad request' })
+  async AdminfindOne(
+    @Param('id') categoryId: string,
+    @Request() req,
+  ): Promise<FindOneModel> {
+    const check = await this.userService.authorizationCheck(
+      req.headers.authorization,
+    );
+
+    const {
+      id,
+      name,
+      imageStorage,
+      description,
+      authorId,
+      authorEmail,
+    } = await this.categoryService.adminFindOne(categoryId);
+
+    return { id, name, imageStorage, description, authorEmail, authorId };
+  }
+
+
   @Get('/combobox')
   @ApiOkResponse({ description: 'The category has been successful deleted' })
   @ApiBadRequestResponse({ description: 'Bad request' })

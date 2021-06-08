@@ -114,6 +114,25 @@ export class CommentController {
     return this.commentService.findOneAndFetchUserAndTopic(id);
   }
 
+  @Get(':id/admin')
+  @UseGuards(JwtAuthGuard)
+  @ApiOkResponse({ description: 'The comments has been succesfful returned' })
+  @ApiBadRequestResponse({ description: 'Bad request' })
+  @ApiHeader({
+    name: 'JWT',
+    description: 'JWT token must to be passed to do this request',
+  })
+  async AdminFindOne(
+    @Param('id') id: string,
+    @Request() req,
+  ): Promise<CommentModel> {
+    const token = req.headers.authorization;
+
+    await this.userService.authorizationCheck(token);
+
+    return this.commentService.adminFindOneAndFetchUserAndTopic(id);
+  }
+
   @Delete(':id')
   @UseGuards(JwtAuthGuard)
   @ApiOkResponse({ description: 'The comment has been successful deleted' })
@@ -157,7 +176,6 @@ export class CommentController {
     @Body() data: UpdateCommentDTO,
     @Request() req: any,
   ): Promise<CommentModel> {
-    console.log('entrei nessa bexiga');
     const token = req.headers.authorization;
     this.userService.authorizationCheck(token);
 
@@ -166,9 +184,6 @@ export class CommentController {
     ).userId;
 
     const user = await this.userService.findByToken(token);
-
-    console.log('user');
-    console.log(user);
 
     if (authorId && (user.id === authorId || user.isAdmin === true)) {
       return this.commentService.update(id, data);
