@@ -305,7 +305,7 @@ export class UserController {
     }
   }
 
-  @Get('admin')
+  @Get('/admin/findall')
   async adminFindAll(
     @Request() req,
     @Query() query: QueryPage,
