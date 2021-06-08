@@ -1,14 +1,16 @@
 import { FindAllModel } from './api-model/find-all-model';
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserDTO } from './dto/create-user.dto';
 import { User } from '@entities/user.entity';
 import { FilesService } from '../../image/imageS3.service';
-import { AdminFindOneModel } from './api-model/find-all-admin';
 import UserModel from './api-model/user-default-model';
 import { UserDTO } from './dto/default-user-dto';
-import { UpdateUserDTO } from './dto/update-user-dto';
 import { NewPasswordDto } from '@src/auth/newPassworDTO';
 
 @Injectable()
@@ -27,16 +29,15 @@ export class UserService {
     });
   }
 
-  async checkIfAlreadyExists(email: string): Promise<UserModel> {
-    return this.userRepository.findOne({
-      where: {
-        email,
-      },
-    });
+  async checkIfAlreadyExists(email: string): Promise<void> {
+    if (this.userRepository.findOne({ where: { email } }))
+      throw new ForbiddenException({
+        error: `O email : ${email} já esta sendo usado!`,
+      });
   }
 
   async findByEmail(email: string): Promise<User> {
-    return this.userRepository.findOne({
+    return await this.userRepository.findOne({
       where: {
         email,
       },
