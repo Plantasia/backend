@@ -7,12 +7,11 @@ import {
   CreateDateColumn,
   BaseEntity,
   DeleteDateColumn,
-  Generated,
-  JoinColumn,
-  OneToOne,
+  AfterLoad,
 } from 'typeorm';
 import { Topic } from './topic.entity';
 import { Comment } from './comments.entity';
+import { S3Helper } from '@src/utils/S3Helper';
 
 @Entity('users')
 export class User extends BaseEntity {
@@ -28,8 +27,14 @@ export class User extends BaseEntity {
   @Column({ default: 'USER' })
   role: string;
 
-  @Column({ default: 'https://plantasia.s3-sa-east-1.amazonaws.com/default-profile.png' })
+  @Column({ default: 'default-profile.jpeg' })
   avatar: string;
+
+  avatarUrl: string;
+  @AfterLoad()
+  async load() {
+    this.avatarUrl = await new S3Helper().getUrl(this.avatar);
+  }
 
   @Column()
   email: string;
