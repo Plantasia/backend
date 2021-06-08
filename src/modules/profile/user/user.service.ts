@@ -132,7 +132,15 @@ export class UserService {
     };
   }
 
-  async update(id: string, data: any): Promise<UserModel> {
+  async update(
+    id: string,
+    data: { bio: string; name: string; avatar: string },
+  ): Promise<UserModel> {
+    const { avatar, bio, name } = data;
+    const user = new User();
+    user.avatar = avatar;
+    user.bio = bio;
+    user.name = name;
     await this.userRepository.update(id, data);
     return this.userRepository.findOne(id);
   }
@@ -169,20 +177,24 @@ export class UserService {
     if (!user) {
       throw new UnauthorizedException({ error: 'Unauthorized' });
     }
-
     return user;
   }
   async findMe(token: string) {
-    const { avatar, bio, email, id, created_at, name } = await this.findByToken(
-      token,
-    );
+    const {
+      bio,
+      email,
+      id,
+      created_at,
+      name,
+      avatarUrl,
+    } = await this.findByToken(token);
 
-    return { avatar, bio, email, id, created_at, name };
+    return { bio, email, id, created_at, name, avatarUrl };
   }
 
   async authorizationCheck(tokenRequest: string): Promise<void> {
-    const userToCheck = await this.findByToken(tokenRequest);
-    if (!(userToCheck.tokenLogout === tokenRequest || userToCheck))
+    const user = await this.findByToken(tokenRequest);
+    if (!(user && (user.tokenLogout === tokenRequest || user.isAdmin)))
       throw new UnauthorizedException({
         error: 'Não autorizado, seu token esta inválido',
       });
