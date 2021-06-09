@@ -37,11 +37,15 @@ import { FindAllModel } from './api-model/find-all-model';
 import { User } from '@entities/user.entity';
 import { UpdateUserDTO } from './dto/update-user-dto';
 import { UpdatePasswordDTO } from './dto/update-password.dto';
+import { FilesService } from '@src/modules/image/imageS3.service';
 
 @ApiTags('users')
 @Controller('users')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly filesService: FilesService,
+  ) {}
 
   @UseGuards(JwtAuthGuard)
   @ApiOkResponse({ description: 'The users has been succesfull returned' })
@@ -186,10 +190,11 @@ export class UserController {
     }
   }
 
-  @Patch()
+  @Post('update')
   @UseGuards(JwtAuthGuard)
   @ApiOkResponse({ description: 'The user has been succesfull deleted' })
   @ApiBadRequestResponse({ description: 'Bad request' })
+  @UseInterceptors(FileInterceptor('file'))
   @ApiHeader({
     name: 'JWT',
     description: 'JWT token must to be passed to do this request',
@@ -197,22 +202,25 @@ export class UserController {
   async updateUser(
     @Body() data: UpdateUserDTO,
     @Request() req,
+    @UploadedFile() file: Express.Multer.File,
   ): Promise<UserModel> {
-    const token = req.headers.authorization;
+    const { authorization: token } = req.headers;
     await this.userService.authorizationCheck(token);
-    const requestedUser = await await this.userService.findByToken(token);
+    const user = await this.userService.findByToken(token);
 
-    if (!requestedUser || requestedUser === undefined) {
-      throw new NotFoundException({ error: 'Esse usuário não existe' });
-    }
-    requestedUser.name = data.name;
-    requestedUser.bio = data.bio;
+    const { path, url } = await this.filesService.uploadPublicFile(
+      file.buffer,
+      file.originalname,
+    );
+    const { bio, name } = data;
 
-    const user = await this.userService.update(requestedUser.id, requestedUser);
+    const newUser = await this.userService.update(user.id, {
+      avatar: path,
+      bio,
+      name,
+    });
 
-    const { name, email, bio, id } = user;
-
-    return user;
+    return newUser;
   }
 
   @Patch('/changePassword')
@@ -258,52 +266,52 @@ export class UserController {
     }
   }
 
-  @Patch(':id')
-  @UseGuards(JwtAuthGuard)
-  @ApiOkResponse({ description: 'The user has been succesfull deleted' })
-  @ApiBadRequestResponse({ description: 'Bad request' })
-  @ApiHeader({
-    name: 'JWT',
-    description: 'JWT token must to be passed to do this request',
-  })
-  async update(
-    @Param('id') idUser: string,
-    @Body() data: UpdateUserDTO,
-    @Request() req,
-  ): Promise<UserModel> {
-    const token = req.headers.authorization;
-    await this.userService.authorizationCheck(token);
-    const requestedUser = await await this.userService.findByToken(token);
-    const userRequestedToUpdate = await this.userService.findById(idUser);
+  // @Patch(':id')
+  // @UseGuards(JwtAuthGuard)
+  // @ApiOkResponse({ description: 'The user has been succesfull deleted' })
+  // @ApiBadRequestResponse({ description: 'Bad request' })
+  // @ApiHeader({
+  //   name: 'JWT',
+  //   description: 'JWT token must to be passed to do this request',
+  // })
+  // async update(
+  //   @Param('id') idUser: string,
+  //   @Body() data: UpdateUserDTO,
+  //   @Request() req,
+  // ): Promise<UserModel> {
+  //   const token = req.headers.authorization;
+  //   await this.userService.authorizationCheck(token);
+  //   const requestedUser = await await this.userService.findByToken(token);
+  //   const userRequestedToUpdate = await this.userService.findById(idUser);
 
-    if (!userRequestedToUpdate || userRequestedToUpdate === undefined) {
-      throw new NotFoundException({ error: 'Esse usuário não existe' });
-    }
+  //   if (!userRequestedToUpdate || userRequestedToUpdate === undefined) {
+  //     throw new NotFoundException({ error: 'Esse usuário não existe' });
+  //   }
 
-    if (
-      (userRequestedToUpdate.id === requestedUser.id &&
-        userRequestedToUpdate.email === requestedUser.email) ||
-      requestedUser.isAdmin === true
-    ) {
-      /**NOTE: Only these values below 'll be updated */
-      userRequestedToUpdate.name = data.name;
-      userRequestedToUpdate.bio = data.bio;
-      userRequestedToUpdate.password = data.password;
+  //   if (
+  //     (userRequestedToUpdate.id === requestedUser.id &&
+  //       userRequestedToUpdate.email === requestedUser.email) ||
+  //     requestedUser.isAdmin === true
+  //   ) {
+  //     /**NOTE: Only these values below 'll be updated */
+  //     userRequestedToUpdate.name = data.name;
+  //     userRequestedToUpdate.bio = data.bio;
+  //     userRequestedToUpdate.password = data.password;
 
-      const user = await this.userService.update(
-        userRequestedToUpdate.id,
-        userRequestedToUpdate,
-      );
+  //     const user = await this.userService.update(
+  //       userRequestedToUpdate.id,
+  //       userRequestedToUpdate,
+  //     );
 
-      const { name, email, bio, id } = user;
+  //     const { name, email, bio, id } = user;
 
-      return user;
-    } else {
-      throw new UnauthorizedException({
-        error: 'Você não esta autorizado a atualizar essse usuário!',
-      });
-    }
-  }
+  //     return user;
+  //   } else {
+  //     throw new UnauthorizedException({
+  //       error: 'Você não esta autorizado a atualizar essse usuário!',
+  //     });
+  //   }
+  // }
 
   @Get('admin')
   async adminFindAll(
