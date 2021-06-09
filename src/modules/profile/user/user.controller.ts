@@ -347,7 +347,7 @@ export class UserController {
   //   }
   // }
 
-  @Get('/admin/findall')
+  @Get('admin/findall')
   async adminFindAll(
     @Request() req,
     @Query() query: QueryPage,

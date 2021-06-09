@@ -50,7 +50,7 @@ export class CommentController {
     return this.commentService.findAll(page);
   }
 
-  @Get('admin')
+  @Get('admin/list')
   @ApiCreatedResponse({ description: 'comment succesfully created' })
   @ApiForbiddenResponse({ description: 'Forbidden' })
   adminFindAll(@Query() query: QueryPage): Promise<Comment[]> {

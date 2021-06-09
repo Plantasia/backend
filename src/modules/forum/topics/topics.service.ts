@@ -171,6 +171,65 @@ export class TopicsService {
     });
   }
 
+  async adminTakeTopicData(topicId: string): Promise<Topic> {
+    const topic = await getRepository(Topic)
+      .createQueryBuilder('t')
+      .leftJoin('t.category', 'cat', 'cat.id = t.categoryId')
+      .leftJoin('t.comments', 'com', 'com.topicId = t.id')
+      .leftJoinAndSelect('t.user', 'user', 't.userId = user.id')
+      .leftJoinAndSelect(
+        'com.user',
+        'userComment',
+        'com.userId = userComment.id',
+      )
+      .where('t.id = :id', { id: topicId })
+      .select([
+        'userComment.id',
+        'userComment.name',
+        'userComment.avatar',
+        'userComment.email',
+        'userComment.created_at',
+
+        'user.id',
+        'user.name',
+        'user.avatar',
+        'user.email',
+        'user.created_at',
+
+        't.id',
+        't.name',
+        't.textBody',
+        't.imageStorage',
+        't.created_at',
+        't.updated_at',
+        't.deleted_at',
+
+        'cat.id',
+        'cat.name',
+        'cat.authorId',
+        'cat.description',
+        'cat.imageStorage',
+        'cat.created_at',
+        'cat.updated_at',
+
+        'com.id',
+        'com.userId',
+        'com.textBody',
+        'com.created_at',
+        'com.updated_at',
+      ])
+      .withDeleted()
+      .orderBy({
+        'com.created_at': 'ASC', // Getting the last comment
+      })
+      .getOne();
+
+    console.log('__________end_______________');
+
+    return topic;
+  }
+
+
   async takeTopicData(topicId: string): Promise<Topic> {
     const topic = await getRepository(Topic)
       .createQueryBuilder('t')

@@ -109,7 +109,7 @@ export class CategoryController {
     return this.categoryService.findAll(page);
   }
 
-  @Get('admin')
+  @Get('admin/list')
   @ApiOkResponse({ description: 'The categories has been succesfful returned' })
   @ApiForbiddenResponse({ description: 'Forbidden' })
   async adminFindAll(@Query() query: QueryPage): Promise<Category[]> {
