@@ -189,9 +189,11 @@ export class TopicsService {
         'userComment.avatar',
         'userComment.email',
         'userComment.created_at',
+        'userComment.bio',
 
         'user.id',
         'user.name',
+        'user.bio',
         'user.avatar',
         'user.email',
         'user.created_at',
