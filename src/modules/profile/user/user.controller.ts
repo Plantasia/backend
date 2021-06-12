@@ -207,20 +207,24 @@ export class UserController {
     const { authorization: token } = req.headers;
     await this.userService.authorizationCheck(token);
     const user = await this.userService.findByToken(token);
-
-    const { path, url } = await this.filesService.uploadPublicFile(
-      file.buffer,
-      file.originalname,
-    );
     const { bio, name } = data;
 
-    const newUser = await this.userService.update(user.id, {
-      avatar: path,
+    if (file) {
+      const { path, url } = await this.filesService.uploadPublicFile(
+        file.buffer,
+        file.originalname,
+      );
+      return await this.userService.update(user.id, {
+        avatar: path,
+        bio,
+        name,
+      });
+    }
+
+    return await this.userService.update(user.id, {
       bio,
       name,
     });
-
-    return newUser;
   }
 
   @Patch('/changePassword')

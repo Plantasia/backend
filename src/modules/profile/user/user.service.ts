@@ -134,11 +134,12 @@ export class UserService {
 
   async update(
     id: string,
-    data: { bio: string; name: string; avatar: string },
+    data: { bio: string; name: string; avatar?: string },
   ): Promise<UserModel> {
     const { avatar, bio, name } = data;
     const user = new User();
-    user.avatar = avatar;
+
+    if (avatar) user.avatar = avatar;
     user.bio = bio;
     user.name = name;
     await this.userRepository.update(id, data);
