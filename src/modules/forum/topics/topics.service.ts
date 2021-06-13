@@ -133,6 +133,7 @@ export class TopicsService {
         'ownerComment.avatar',
       ])
       .orderBy({
+        't.created_at': 'ASC',
         'com.created_at': 'ASC',
       })
       .take(take)
