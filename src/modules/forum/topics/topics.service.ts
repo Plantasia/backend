@@ -124,7 +124,6 @@ export class TopicsService {
         'topicOwner.id',
         'topicOwner.avatar',
         'topicOwner.name',
-
         'com.id',
         'com.updated_at',
         'com.created_at',
@@ -133,7 +132,7 @@ export class TopicsService {
         'ownerComment.avatar',
       ])
       .orderBy({
-        't.created_at': 'ASC',
+        't.created_at': 'DESC',
         'com.created_at': 'ASC',
       })
       .take(take)
