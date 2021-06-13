@@ -224,11 +224,11 @@ export class UserService {
     const user = await this.findByToken(token);
 
     if (user.password !== data.oldPassword)
-      throw new ForbiddenException('Senha incorreta');
+      throw new ForbiddenException('Senha atual incorreta');
     if (user.password === data.newPassword)
-      throw new UnprocessableEntityException({
-        error: 'A nova senha não pode ser igual a senha atual',
-      });
+      throw new UnprocessableEntityException(
+        'A nova senha não pode ser igual a senha atual',
+      );
     user.password = data.newPassword;
     return user.save();
   }

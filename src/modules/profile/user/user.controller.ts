@@ -279,12 +279,12 @@ export class UserController {
   async updatePassword(
     @Body() data: UpdatePasswordDTO,
     @Request() req,
-  ): Promise<UserModel> {
+  ): Promise<{ message: string }> {
     const token = req.headers.authorization;
     await this.userService.authorizationCheck(token);
-    const user = await this.userService.updatePassword(token, data);
+    await this.userService.updatePassword(token, data);
 
-    return user;
+    return { message: 'Senha alterada com sucesso' };
   }
 
   // @Patch(':id')
