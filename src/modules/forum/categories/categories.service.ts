@@ -75,6 +75,12 @@ export class CategoryService {
   }
 
   async adminFindAll(): Promise<Category[]> {
+    /*if (!page || page <= 0) {
+      page = 1;
+    } else page = parseInt(page);
+    const take = 10;
+    const skip = 10 * (page - 1);*/
+
     const categories = await this.categoryRepository.find({
       withDeleted: true,
     });
@@ -140,8 +146,8 @@ export class CategoryService {
 
     category.authorId = data.authorId;
     category.name = data.name;
-    category.authorEmail = data.authorEmail;
     category.description = data.description;
+    category.imageStorage = data.imageStorage;
     const cat = await this.categoryRepository.create(category);
 
     return this.categoryRepository.save(cat);
@@ -169,6 +175,9 @@ export class CategoryService {
       updated_at,
       description,
       created_at,
+      imageStorage,
+      authorEmail
+      
     };
   }
 

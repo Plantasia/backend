@@ -40,6 +40,8 @@ import { DeleteModel } from './dto/delete-model.dto';
 import UpdateModel from './api-model/update-model';
 import { UpdateCategoryDTO } from './dto/update-category.dto';
 import FindAllComboboxModel from './api-model/find-all-combobox-model';
+import { FilesService } from '@src/modules/image/imageS3.service';
+
 
 
 @ApiTags('categories')
@@ -48,6 +50,7 @@ export class CategoryController {
   constructor(
     private readonly categoryService: CategoryService,
     private readonly userService: UserService,
+    private readonly fileService: FilesService
   ) {}
 
   @ApiHeader({
@@ -62,31 +65,31 @@ export class CategoryController {
       'Ação não autorizada: Somente um admin pode criar uma categoria',
   })
   @UsePipes(ValidationPipe)
+  @UseInterceptors(FileInterceptor('file'))
   async create(
-    @Body() createCategoryDTO: CreateCategoryDTO,
+    @Body() data: CreateCategoryDTO,
     @Request() req,
+    @UploadedFile() file: Express.Multer.File,
   ): Promise<CreateModel> {
     const token = req.headers.authorization;
-
     await this.userService.authorizationCheck(token);
-
-    const author = await this.userService.findByToken(token);
-    createCategoryDTO.authorEmail = author.email;
-    createCategoryDTO.authorId = author.id;
-    const requestedName = createCategoryDTO.name;
-    const exists = await this.categoryService.findByName(requestedName);
-    if (author.isAdmin === true) {
+    const { id: authorId, isAdmin } = await this.userService.findByToken(token);
+    const {name, description} = data
+    const { path } = await this.fileService.uploadPublicFile(
+      file.buffer,
+      file.originalname,
+    );
+    const exists = await this.categoryService.findByName(name);
+    if (isAdmin === true) {
       if (!exists) {
-        const newCategory = await this.categoryService.create(
-          createCategoryDTO,
-        );
-        const { id, name, imageStorage } = newCategory;
-
-        return {
-          id,
-          name,
-          imageStorage,
-        };
+        return await this.categoryService.create({
+          name, 
+          authorId,
+          description,
+          imageStorage: path,
+          
+        });
+          
       } else {
         throw new HttpException(
           `Já existe uma categoria cadastrada com esse nome!`,
@@ -223,12 +226,14 @@ export class CategoryController {
 
   @UseGuards(JwtAuthGuard)
   @Patch(':id')
+  @UseInterceptors(FileInterceptor('file'))
   @ApiOkResponse({ description: 'The category has beenn successful updated' })
   @ApiForbiddenResponse({ description: 'Forbidden' })
   async update(
     @Param('id') id: string,
     @Body() data: UpdateCategoryDTO,
     @Request() req: any,
+    @UploadedFile() file: Express.Multer.File,
   ): Promise<UpdateModel> {
     const categoryExists = await this.categoryService.findById(id);
     const token = req.headers.authorization;
@@ -236,16 +241,23 @@ export class CategoryController {
     if (!categoryExists) {
       throw new NotFoundException({ error: 'Essa categoria não existe ' });
     }
-    const authorId = (await this.categoryService.findById(id)).authorId;
-    const userIsAuthorized = this.userService.findById(authorId);
-
-    if (!userIsAuthorized) {
+    const user = await this.userService.findByToken(token)
+    const { description, name} = data;
+    const { path } = await this.fileService.uploadPublicFile(
+      file.buffer,
+      file.originalname,
+      );
+    if (user.isAdmin == false) {
       throw new UnauthorizedException({
         error: 'Você não esta autorizado a ataualizar essa categoria!',
       });
     }
-
-    return this.categoryService.update(id, data);
+    
+    return this.categoryService.update(id, {
+      imageStorage: path,
+      name,
+      description,
+    });
   }
   @Post('image/:id')
   @UseGuards(JwtAuthGuard)
