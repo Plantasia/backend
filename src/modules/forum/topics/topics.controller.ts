@@ -54,6 +54,12 @@ export class TopicsController {
     return this.topicsService.takeTopicData(topicId);
   }
 
+  @Get(':topicId/admin')
+  async adminGetTopicById(@Param('topicId') topicId: string): Promise<FindOneModel> {
+    return this.topicsService.adminTakeTopicData(topicId);
+  }
+
+
   @ApiOkResponse({ description: 'topic succesfully returned' })
   @ApiBadRequestResponse({ description: 'Bad request' })
   @Get()

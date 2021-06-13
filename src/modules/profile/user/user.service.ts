@@ -29,6 +29,16 @@ export class UserService {
     });
   }
 
+  async checkIfIsAdmin(id: string):Promise<boolean> {
+    const admin =  await this.userRepository.findOne({
+      where: {
+        id,
+        isAdmin:true
+      },
+    });
+    return ! admin ? false: true;
+  }
+
   async checkIfAlreadyExists(email: string): Promise<void> {
     if (this.userRepository.findOne({ where: { email } }))
       throw new ForbiddenException({

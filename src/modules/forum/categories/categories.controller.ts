@@ -109,7 +109,7 @@ export class CategoryController {
     return this.categoryService.findAll(page);
   }
 
-  @Get('admin')
+  @Get('admin/list')
   @ApiOkResponse({ description: 'The categories has been succesfful returned' })
   @ApiForbiddenResponse({ description: 'Forbidden' })
   async adminFindAll(@Query() query: QueryPage): Promise<Category[]> {
@@ -117,6 +117,30 @@ export class CategoryController {
     console.log(page);
     return this.categoryService.adminFindAll();
   }
+
+  @Get(':id/admin')
+  @ApiOkResponse({ description: 'The category has been successful deleted' })
+  @ApiBadRequestResponse({ description: 'Bad request' })
+  async AdminfindOne(
+    @Param('id') categoryId: string,
+    @Request() req,
+  ): Promise<FindOneModel> {
+    const check = await this.userService.authorizationCheck(
+      req.headers.authorization,
+    );
+
+    const {
+      id,
+      name,
+      imageStorage,
+      description,
+      authorId,
+      authorEmail,
+    } = await this.categoryService.adminFindOne(categoryId);
+
+    return { id, name, imageStorage, description, authorEmail, authorId };
+  }
+
 
   @Get('/combobox')
   @ApiOkResponse({ description: 'The category has been successful deleted' })
@@ -138,7 +162,7 @@ export class CategoryController {
     @Param('id') categoryId: string,
     @Request() req,
   ): Promise<FindOneModel> {
-    const check = await this.userService.authorizationCheck(
+    await this.userService.authorizationCheck(
       req.headers.authorization,
     );
 

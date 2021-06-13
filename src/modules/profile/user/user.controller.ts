@@ -136,13 +136,47 @@ export class UserController {
     }
 
     const selectedUser = await this.userService.findOne(idUser);
-    const { name, email, bio, id } = selectedUser;
+    const { name, email, bio, id, } = selectedUser;
 
     return {
       name,
       email,
       bio,
       id,
+
+    };
+  }
+
+  @Get(':id/admin')
+  @UseGuards(JwtAuthGuard)
+  @ApiOkResponse({ description: 'The user has been succesfull returned' })
+  @ApiBadRequestResponse({ description: 'Bad request' })
+  @ApiHeader({
+    name: 'JWT',
+    description: 'JWT token must to be passed to do this request',
+  })
+  async AdminFindOne(@Param('id') idUser: string): Promise<UserModel> {
+    const foundUser = await this.userService.findById(idUser);
+
+    if (!foundUser) {
+      throw new NotFoundException(
+        `Error: usuário com o  ID: ${idUser} não existe`,
+      );
+    }
+
+    const selectedUser = await this.userService.findOne(idUser);
+    const { name, email, bio, id, avatar,
+      created_at, deleted_at, updated_at } = selectedUser;
+
+    return {
+      name,
+      email,
+      bio,
+      id,
+      avatar,
+      created_at,
+      deleted_at,
+      updated_at
     };
   }
 
@@ -317,7 +351,7 @@ export class UserController {
   //   }
   // }
 
-  @Get('admin')
+  @Get('admin/findall')
   async adminFindAll(
     @Request() req,
     @Query() query: QueryPage,
