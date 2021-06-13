@@ -26,11 +26,19 @@ export class CommentService {
   }
 
   async findOne(id: string): Promise<Comment> {
-    return  this.commentsRepository.findOne({
-        where: {
-          id,
-        }
-      });
+    return this.commentsRepository.findOne({
+      where: {
+        id,
+      }
+    });
+  }
+
+  async adminFindOne(id: string): Promise<Comment> {
+    return this.commentsRepository.findOne({
+      where: {
+        id,
+      }, withDeleted: true
+    });
   }
 
   async findOneAndFetchUserAndTopic(id: string): Promise<CommentModel> {
@@ -41,10 +49,10 @@ export class CommentService {
           id,
         }, relations: ["user", "topic"]
       });
-      
+
     var userId = user.id;
     var topicId = topic.id;
-    
+
     return {
       id, created_at,
       deleted_at,
@@ -53,7 +61,34 @@ export class CommentService {
       userId,
       topicId
     }
- 
+
+  }
+
+  /**
+   * This is to fetch user and topic 
+   * and to catching up deleted registers
+   **/
+  async adminFindOneAndFetchUserAndTopic(id: string): Promise<CommentModel> {
+    var { id, created_at, deleted_at,
+      textBody, topic, user, updated_at }
+      = await this.commentsRepository.findOne({
+        where: {
+          id,
+        }, relations: ["user", "topic"],
+        withDeleted: true
+      });
+
+    var userId = user.id;
+    var topicId = topic.id;
+
+    return {
+      id, created_at,
+      deleted_at,
+      textBody,
+      updated_at,
+      userId,
+      topicId
+    }
   }
 
   async adminFindAll(page): Promise<Comment[]> {
@@ -62,7 +97,11 @@ export class CommentService {
       page = 1;
     } else page = parseInt(page);
 
-    return this.commentsRepository.find();
+    return this.commentsRepository.find(
+      {
+        withDeleted: true
+      }
+    );
   }
 
   async findAll(page): Promise<FindAllModel> {
