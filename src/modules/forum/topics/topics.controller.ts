@@ -92,7 +92,6 @@ export class TopicsController {
     @Request() req,
     @UploadedFile() file: Express.Multer.File,
   ): Promise<TopicModel> {
-    console.log("entrou mano")
     const token = req.headers.authorization;
     await this.userService.authorizationCheck(token);
     const user = await this.userService.findByToken(token);
