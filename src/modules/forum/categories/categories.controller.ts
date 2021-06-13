@@ -65,31 +65,31 @@ export class CategoryController {
       'Ação não autorizada: Somente um admin pode criar uma categoria',
   })
   @UsePipes(ValidationPipe)
+  @UseInterceptors(FileInterceptor('file'))
   async create(
-    @Body() createCategoryDTO: CreateCategoryDTO,
+    @Body() data: CreateCategoryDTO,
     @Request() req,
+    @UploadedFile() file: Express.Multer.File,
   ): Promise<CreateModel> {
     const token = req.headers.authorization;
-
     await this.userService.authorizationCheck(token);
-
-    const author = await this.userService.findByToken(token);
-    createCategoryDTO.authorEmail = author.email;
-    createCategoryDTO.authorId = author.id;
-    const requestedName = createCategoryDTO.name;
-    const exists = await this.categoryService.findByName(requestedName);
-    if (author.isAdmin === true) {
+    const { id: authorId, isAdmin } = await this.userService.findByToken(token);
+    const {name, description} = data
+    const { path } = await this.fileService.uploadPublicFile(
+      file.buffer,
+      file.originalname,
+    );
+    const exists = await this.categoryService.findByName(name);
+    if (isAdmin === true) {
       if (!exists) {
-        const newCategory = await this.categoryService.create(
-          createCategoryDTO,
-        );
-        const { id, name, imageStorage } = newCategory;
-
-        return {
-          id,
-          name,
-          imageStorage,
-        };
+        return await this.categoryService.create({
+          name, 
+          authorId,
+          description,
+          imageStorage: path,
+          
+        });
+          
       } else {
         throw new HttpException(
           `Já existe uma categoria cadastrada com esse nome!`,

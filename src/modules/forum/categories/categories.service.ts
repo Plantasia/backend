@@ -146,8 +146,8 @@ export class CategoryService {
 
     category.authorId = data.authorId;
     category.name = data.name;
-    category.authorEmail = data.authorEmail;
     category.description = data.description;
+    category.imageStorage = data.imageStorage;
     const cat = await this.categoryRepository.create(category);
 
     return this.categoryRepository.save(cat);
