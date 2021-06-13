@@ -3,16 +3,15 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   Entity,
-  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
-  OneToOne,
-  JoinColumn,
   BaseEntity,
   DeleteDateColumn,
+  AfterLoad,
 } from 'typeorm';
 import { Topic } from './topic.entity';
 import { Comment } from './comments.entity';
+import { S3Helper } from '@src/utils/S3Helper';
 
 @Entity('categories')
 export class Category extends BaseEntity {
@@ -33,6 +32,13 @@ export class Category extends BaseEntity {
 
   @Column()
   imageStorage: string;
+
+  imageStorageUrl: string;
+
+  @AfterLoad()
+  async load() {
+    this.imageStorageUrl = await new S3Helper().getUrl(this.imageStorage);
+  }
 
   @Column({ default: true })
   isActive: boolean;
