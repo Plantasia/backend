@@ -97,7 +97,7 @@ export class TopicsController {
       file.buffer,
       file.originalname,
     );
-    if (user.id === topic.user.id || user.isAdmin) {
+    if (user.isAdmin) {
       return this.topicsService.update(topic.id, {
         imageStorage: path,
         textBody,
