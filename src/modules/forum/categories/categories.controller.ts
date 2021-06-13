@@ -162,7 +162,7 @@ export class CategoryController {
     @Param('id') categoryId: string,
     @Request() req,
   ): Promise<FindOneModel> {
-    const check = await this.userService.authorizationCheck(
+    await this.userService.authorizationCheck(
       req.headers.authorization,
     );
 
