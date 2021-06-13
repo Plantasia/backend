@@ -136,14 +136,13 @@ export class UserController {
     }
 
     const selectedUser = await this.userService.findOne(idUser);
-    const { name, email, bio, id, } = selectedUser;
+    const { name, email, bio, id } = selectedUser;
 
     return {
       name,
       email,
       bio,
       id,
-
     };
   }
 
@@ -165,8 +164,16 @@ export class UserController {
     }
 
     const selectedUser = await this.userService.findOne(idUser);
-    const { name, email, bio, id, avatar,
-      created_at, deleted_at, updated_at } = selectedUser;
+    const {
+      name,
+      email,
+      bio,
+      id,
+      avatar,
+      created_at,
+      deleted_at,
+      updated_at,
+    } = selectedUser;
 
     return {
       name,
@@ -176,7 +183,7 @@ export class UserController {
       avatar,
       created_at,
       deleted_at,
-      updated_at
+      updated_at,
     };
   }
 
@@ -275,33 +282,9 @@ export class UserController {
   ): Promise<UserModel> {
     const token = req.headers.authorization;
     await this.userService.authorizationCheck(token);
-    const requestedUser = await await this.userService.findByToken(token);
+    const user = await this.userService.updatePassword(token, data);
 
-    if (!requestedUser || requestedUser === undefined) {
-      throw new NotFoundException({ error: 'Esse usuário não existe' });
-    }
-    if (requestedUser.password != data.oldpassword) {
-      console.log(requestedUser.password);
-      throw new UnprocessableEntityException({
-        error: 'Senha atual incorreta',
-      });
-    }
-    if (data.oldpassword == data.newpassword) {
-      throw new UnprocessableEntityException({
-        error: 'A nova senha não pode ser igual a senha atual',
-      });
-    } else {
-      requestedUser.password = data.newpassword;
-
-      const user = await this.userService.update(
-        requestedUser.id,
-        requestedUser,
-      );
-
-      const { name, email, bio, id } = user;
-
-      return user;
-    }
+    return user;
   }
 
   // @Patch(':id')
