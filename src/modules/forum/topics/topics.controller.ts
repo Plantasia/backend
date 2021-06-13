@@ -55,10 +55,11 @@ export class TopicsController {
   }
 
   @Get(':topicId/admin')
-  async adminGetTopicById(@Param('topicId') topicId: string): Promise<FindOneModel> {
+  async adminGetTopicById(
+    @Param('topicId') topicId: string,
+  ): Promise<FindOneModel> {
     return this.topicsService.adminTakeTopicData(topicId);
   }
-
 
   @ApiOkResponse({ description: 'topic succesfully returned' })
   @ApiBadRequestResponse({ description: 'Bad request' })
@@ -96,7 +97,7 @@ export class TopicsController {
     await this.userService.authorizationCheck(token);
     const user = await this.userService.findByToken(token);
     const topic = await this.topicsService.findOneAndFetchUser(id);
-    const { textBody, name} = data;
+    const { textBody, name } = data;
 
     const { path } = await this.fileService.uploadPublicFile(
       file.buffer,
@@ -135,20 +136,26 @@ export class TopicsController {
     const { id: user_id } = await this.userService.findByToken(token);
     const { textBody, name, category_id } = data;
 
-    const { path } = await this.fileService.uploadPublicFile(
-      file.buffer,
-      file.originalname,
-    );
+    if (file) {
+      const { path } = await this.fileService.uploadPublicFile(
+        file.buffer,
+        file.originalname,
+      );
 
-    const response = await this.topicsService.create({
+      return await this.topicsService.create({
+        category_id,
+        name,
+        textBody,
+        user_id,
+        imageStorage: path,
+      });
+    }
+    return await this.topicsService.create({
       category_id,
       name,
       textBody,
       user_id,
-      imageStorage: path,
     });
-
-    return response;
   }
 
   @UseGuards(JwtAuthGuard)
