@@ -79,18 +79,30 @@ export class TopicsController {
     description: 'JWT token must to be passed to do this request',
   })
   @Patch(':id')
+  @UseInterceptors(FileInterceptor('file'))
   async update(
     @Param('id') id: string,
-    @Body() createTopicDTO: CreateTopicDTO,
+    @Body() data: CreateTopicDTO,
     @Request() req,
+    @UploadedFile() file: Express.Multer.File,
   ): Promise<TopicModel> {
+    console.log("entrou mano")
     const token = req.headers.authorization;
     await this.userService.authorizationCheck(token);
     const user = await this.userService.findByToken(token);
     const topic = await this.topicsService.findOneAndFetchUser(id);
+    const { textBody, name} = data;
 
-    if (user.id === topic.user.id || user.isAdmin) {
-      return this.topicsService.update(topic.id, createTopicDTO);
+    const { path } = await this.fileService.uploadPublicFile(
+      file.buffer,
+      file.originalname,
+    );
+    if (user.isAdmin) {
+      return this.topicsService.update(topic.id, {
+        imageStorage: path,
+        textBody,
+        name,
+      });
     } else {
       throw new UnauthorizedException({
         error: 'Você não esta autorizado a atualizar esse tópico!',
