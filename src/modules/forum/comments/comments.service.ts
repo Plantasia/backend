@@ -48,6 +48,7 @@ export class CommentService {
         where: {
           id,
         }, relations: ["user", "topic"]
+        ,withDeleted:true
       });
 
     var userId = user.id;
