@@ -5,7 +5,8 @@
     "sourceType":"module"
   },
   "plugins":[
-    "@typescript-eslint/eslint-plugin"
+    "@typescript-eslint/eslint-plugin",
+    "@typescript-eslint/parser"
   ],
   "extends":[
     "plugin:@typescript-eslint/eslint-recommended",
