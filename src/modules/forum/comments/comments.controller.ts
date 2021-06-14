@@ -16,6 +16,7 @@ import {
   ValidationPipe,
   Query,
   UnauthorizedException,
+  BadRequestException,
 } from '@nestjs/common';
 import { CommentService } from './comments.service';
 import { CreateCommentDTO } from './dto/create-comment.dto';
@@ -179,13 +180,11 @@ export class CommentController {
     const token = req.headers.authorization;
     this.userService.authorizationCheck(token);
 
-    const authorId = await (
-      await this.commentService.findOneAndFetchUserAndTopic(id)
-    ).userId;
-
+    const comment = await this.commentService.findOneAndFetchUserAndTopic(id);
+    if (!comment) throw new BadRequestException('Comentário não existe');
     const user = await this.userService.findByToken(token);
 
-    if (authorId && (user.id === authorId || user.isAdmin === true)) {
+    if (user.id === comment.userId || user.isAdmin) {
       return this.commentService.update(id, data);
     } else {
       throw new UnauthorizedException({
