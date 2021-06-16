@@ -3,6 +3,7 @@ import {
   ForbiddenException,
   Injectable,
   UnauthorizedException,
+  UnprocessableEntityException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -12,6 +13,7 @@ import { FilesService } from '../../image/imageS3.service';
 import UserModel from './api-model/user-default-model';
 import { UserDTO } from './dto/default-user-dto';
 import { NewPasswordDto } from '@src/auth/newPassworDTO';
+import { UpdatePasswordDTO } from './dto/update-password.dto';
 
 @Injectable()
 export class UserService {
@@ -29,14 +31,14 @@ export class UserService {
     });
   }
 
-  async checkIfIsAdmin(id: string):Promise<boolean> {
-    const admin =  await this.userRepository.findOne({
+  async checkIfIsAdmin(id: string): Promise<boolean> {
+    const admin = await this.userRepository.findOne({
       where: {
         id,
-        isAdmin:true
+        isAdmin: true,
       },
     });
-    return ! admin ? false: true;
+    return !admin ? false : true;
   }
 
   async checkIfAlreadyExists(email: string): Promise<void> {
@@ -210,11 +212,25 @@ export class UserService {
         error: 'Não autorizado, seu token esta inválido',
       });
   }
+
   async changePassword(id: string, password: NewPasswordDto): Promise<string> {
     await this.userRepository.update(id, password);
     const user = await this.findOne(id);
     console.log(user);
     return user.password;
+  }
+
+  async updatePassword(token: string, data: UpdatePasswordDTO): Promise<User> {
+    const user = await this.findByToken(token);
+
+    if (user.password !== data.oldPassword)
+      throw new ForbiddenException('Senha atual incorreta');
+    if (user.password === data.newPassword)
+      throw new UnprocessableEntityException(
+        'A nova senha não pode ser igual a senha atual',
+      );
+    user.password = data.newPassword;
+    return user.save();
   }
 
   async findByRecoverToken(recoverToken: string): Promise<UserModel> {

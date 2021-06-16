@@ -47,7 +47,7 @@ export class AuthService {
    *  which was already deactivated by logoff
    *
    ***/
-  async checkToken(token: string):Promise<User> {
+  async checkToken(token: string): Promise<User> {
     const userLogged = await this.UserRepository.findOne({
       where: {
         tokenLogout: token,
@@ -108,7 +108,10 @@ export class AuthService {
   async nullPasswordLogout(userEmail: string) {
     const user = new UserDTO();
     user.tokenLogout = process.env.LOGOUT_CONSTANT;
-    const update = await this.userService.passwordLogoutByEmail(userEmail, user);
+    const update = await this.userService.passwordLogoutByEmail(
+      userEmail,
+      user,
+    );
     return console.log(update);
   }
 
@@ -132,18 +135,15 @@ export class AuthService {
     };
     await this.mailerService.sendMail(mail);
   }
-
-  async changePassword(
-    id: string,
-    newPasswordDto: NewPasswordDto,
-  ): Promise<void> {
-    const { password, passwordConfirmation } = newPasswordDto;
+  // @TO-DO  NEED REFACTOR THIS, PLX
+  async changePassword(id: string, data: NewPasswordDto): Promise<void> {
+    const { password, passwordConfirmation } = data;
 
     if (password != passwordConfirmation)
       throw new UnprocessableEntityException('As senhas não conferem');
     const user = new CreateUserDTO();
     user.password = password;
-    await this.userService.changePassword(id, newPasswordDto);
+    await this.userService.changePassword(id, data);
   }
 
   async resetPassword(
