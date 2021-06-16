@@ -11,7 +11,6 @@ import PaginatedCommentsModel from './dto/paginated-comments-dtio';
 import { UpdateCommentDTO } from './dto/update-comment.dto';
 import CommentModel from './api-model/comment-default-model';
 
-
 @Injectable()
 export class CommentService {
   constructor(
@@ -29,7 +28,7 @@ export class CommentService {
     return this.commentsRepository.findOne({
       where: {
         id,
-      }
+      },
     });
   }
 
@@ -37,88 +36,100 @@ export class CommentService {
     return this.commentsRepository.findOne({
       where: {
         id,
-      }, withDeleted: true
+      },
+      withDeleted: true,
     });
   }
 
-  async findOneAndFetchUserAndTopic(id: string): Promise<CommentModel> {
-    var { id, created_at, deleted_at,
-      textBody, topic, user, updated_at }
-      = await this.commentsRepository.findOne({
-        where: {
-          id,
-        }, relations: ["user", "topic"]
-        ,withDeleted:true
-      });
+  async findOneAndFetchUserAndTopic(commentId: string): Promise<CommentModel> {
+    const {
+      id,
+      created_at,
+      deleted_at,
+      textBody,
+      topic,
+      user,
+      updated_at,
+    } = await this.commentsRepository.findOne({
+      where: {
+        id: commentId,
+      },
+      relations: ['user', 'topic'],
+    });
 
-    var userId = user.id;
-    var topicId = topic.id;
+    const userId = user.id;
+    const topicId = topic.id;
 
     return {
-      id, created_at,
+      id,
+      created_at,
       deleted_at,
       textBody,
       updated_at,
       userId,
-      topicId
-    }
-
+      topicId,
+    };
   }
 
   /**
-   * This is to fetch user and topic 
+   * This is to fetch user and topic
    * and to catching up deleted registers
    **/
-  async adminFindOneAndFetchUserAndTopic(id: string): Promise<CommentModel> {
-    var { id, created_at, deleted_at,
-      textBody, topic, user, updated_at }
-      = await this.commentsRepository.findOne({
-        where: {
-          id,
-        }, relations: ["user", "topic"],
-        withDeleted: true
-      });
+  async adminFindOneAndFetchUserAndTopic(
+    commendId: string,
+  ): Promise<CommentModel> {
+    const {
+      id,
+      created_at,
+      deleted_at,
+      textBody,
+      topic,
+      user,
+      updated_at,
+    } = await this.commentsRepository.findOne({
+      where: {
+        id: commendId,
+      },
+      relations: ['user', 'topic'],
+      withDeleted: true,
+    });
 
-    var userId = user.id;
-    var topicId = topic.id;
+    const userId = user.id;
+    const topicId = topic.id;
 
     return {
-      id, created_at,
+      id,
+      created_at,
       deleted_at,
       textBody,
       updated_at,
       userId,
-      topicId
-    }
+      topicId,
+    };
   }
 
   async adminFindAll(page): Promise<Comment[]> {
-
     if (!page || page <= 0) {
       page = 1;
     } else page = parseInt(page);
 
-    return this.commentsRepository.find(
-      {
-        withDeleted: true
-      }
-    );
+    return this.commentsRepository.find({
+      withDeleted: true,
+    });
   }
 
   async findAll(page): Promise<FindAllModel> {
-
     if (!page || page <= 0) {
       page = 1;
     } else page = parseInt(page);
-    const take = 10
-    const skip = 10 * (page - 1)
-
+    const take = 10;
+    const skip = 10 * (page - 1);
 
     const [result, total] = await this.commentsRepository.findAndCount();
 
     const comments = await this.commentsRepository.find({
       take,
-      skip
+      skip,
     });
 
     return {
@@ -127,19 +138,18 @@ export class CommentService {
       perPage: take,
       prevPage: page > 1 ? page - 1 : null,
       nextPage: take >= skip + take ? page + 1 : null,
-      totalRegisters: total
-    }
+      totalRegisters: total,
+    };
   }
 
   async delete(id: string) {
-    return (await this.commentsRepository.softDelete(id)).generatedMaps
+    return (await this.commentsRepository.softDelete(id)).generatedMaps;
   }
 
   async create(data: CreateCommentDTO, req: any): Promise<Comment> {
-
     const comment = new Comment();
     const topic = new Topic();
-    comment.textBody = data.textBody
+    comment.textBody = data.textBody;
     const topic_id = data.topic_id;
     const token = req;
     this.topicService.findOne(topic_id);
@@ -149,12 +159,11 @@ export class CommentService {
     const newComment = await this.commentsRepository.create(comment);
     this.commentsRepository.save(newComment);
 
-    return newComment
-
+    return newComment;
   }
 
   async update(id: string, data: UpdateCommentDTO): Promise<Comment> {
-    await this.commentsRepository.update(id, data);
+    await this.commentsRepository.update(id, { textBody: data.textBody });
     return this.commentsRepository.findOne(id);
   }
 }

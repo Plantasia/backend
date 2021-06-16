@@ -8,7 +8,7 @@ module.exports = {
   host: 'database',
   synchronize: true,
   port: process.env.DATABASE_PORT,
-  logging: true,
+  logging: false,
   entities: [path.resolve('build', 'entities', '*')],
   migrations: ['./src/database/migations/*.ts'],
   cli: {

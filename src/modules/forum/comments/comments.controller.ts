@@ -16,6 +16,7 @@ import {
   ValidationPipe,
   Query,
   UnauthorizedException,
+  BadRequestException,
 } from '@nestjs/common';
 import { CommentService } from './comments.service';
 import { CreateCommentDTO } from './dto/create-comment.dto';
@@ -143,26 +144,17 @@ export class CommentController {
   })
   async delete(@Param('id') id: string, @Request() req): Promise<void> {
     const token = req.headers.authorization;
-    await this.userService.authorizationCheck(token);
+    this.userService.authorizationCheck(token);
 
-    const author = await this.commentService.findOne(id);
+    const comment = await this.commentService.findOneAndFetchUserAndTopic(id);
+    if (!comment) throw new BadRequestException('Comentário não existe');
     const user = await this.userService.findByToken(token);
 
-    if (author.user.id === user.id || user.isAdmin) {
-      const deleted = await this.commentService.delete(id);
-
-      if (!deleted) {
-        throw new HttpException(
-          {
-            status: HttpStatus.EXPECTATION_FAILED,
-            error: 'Erro ao deletar comentário!',
-          },
-          HttpStatus.EXPECTATION_FAILED,
-        );
-      }
+    if (user.id === comment.userId || user.isAdmin) {
+      await this.commentService.delete(id);
     } else {
       throw new UnauthorizedException({
-        error: 'Você não está autorizado a deletar esse comentário',
+        error: 'Você não está autorizado a deletar esse comentário!',
       });
     }
   }
@@ -179,13 +171,11 @@ export class CommentController {
     const token = req.headers.authorization;
     this.userService.authorizationCheck(token);
 
-    const authorId = await (
-      await this.commentService.findOneAndFetchUserAndTopic(id)
-    ).userId;
-
+    const comment = await this.commentService.findOneAndFetchUserAndTopic(id);
+    if (!comment) throw new BadRequestException('Comentário não existe');
     const user = await this.userService.findByToken(token);
 
-    if (authorId && (user.id === authorId || user.isAdmin === true)) {
+    if (user.id === comment.userId || user.isAdmin) {
       return this.commentService.update(id, data);
     } else {
       throw new UnauthorizedException({
