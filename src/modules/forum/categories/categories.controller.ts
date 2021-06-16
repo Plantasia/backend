@@ -42,15 +42,13 @@ import { UpdateCategoryDTO } from './dto/update-category.dto';
 import FindAllComboboxModel from './api-model/find-all-combobox-model';
 import { FilesService } from '@src/modules/image/imageS3.service';
 
-
-
 @ApiTags('categories')
 @Controller('forum/categories')
 export class CategoryController {
   constructor(
     private readonly categoryService: CategoryService,
     private readonly userService: UserService,
-    private readonly fileService: FilesService
+    private readonly fileService: FilesService,
   ) {}
 
   @ApiHeader({
@@ -74,7 +72,7 @@ export class CategoryController {
     const token = req.headers.authorization;
     await this.userService.authorizationCheck(token);
     const { id: authorId, isAdmin } = await this.userService.findByToken(token);
-    const {name, description} = data
+    const { name, description } = data;
     const { path } = await this.fileService.uploadPublicFile(
       file.buffer,
       file.originalname,
@@ -83,13 +81,11 @@ export class CategoryController {
     if (isAdmin === true) {
       if (!exists) {
         return await this.categoryService.create({
-          name, 
+          name,
           authorId,
           description,
           imageStorage: path,
-          
         });
-          
       } else {
         throw new HttpException(
           `Já existe uma categoria cadastrada com esse nome!`,
@@ -144,13 +140,10 @@ export class CategoryController {
     return { id, name, imageStorage, description, authorEmail, authorId };
   }
 
-
   @Get('/combobox')
   @ApiOkResponse({ description: 'The category has been successful deleted' })
   @ApiBadRequestResponse({ description: 'Bad request' })
-  async find(
-    @Request() req,
-  ): Promise<FindAllComboboxModel> {
+  async find(@Request() req): Promise<FindAllComboboxModel> {
     const check = await this.userService.authorizationCheck(
       req.headers.authorization,
     );
@@ -165,9 +158,7 @@ export class CategoryController {
     @Param('id') categoryId: string,
     @Request() req,
   ): Promise<FindOneModel> {
-    await this.userService.authorizationCheck(
-      req.headers.authorization,
-    );
+    await this.userService.authorizationCheck(req.headers.authorization);
 
     const {
       id,
@@ -180,8 +171,6 @@ export class CategoryController {
 
     return { id, name, imageStorage, description, authorEmail, authorId };
   }
-
- 
 
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
@@ -241,14 +230,14 @@ export class CategoryController {
     if (!categoryExists) {
       throw new NotFoundException({ error: 'Essa categoria não existe ' });
     }
-    const user = await this.userService.findByToken(token)
-    const { description, name} = data;
+    const user = await this.userService.findByToken(token);
+    const { description, name } = data;
     if (user.isAdmin == false) {
       throw new UnauthorizedException({
         error: 'Você não esta autorizado a ataualizar essa categoria!',
       });
     }
-    
+
     return this.categoryService.update(id, {
       name,
       description,
@@ -264,12 +253,12 @@ export class CategoryController {
   ) {
     const token = req.headers.authorization;
     await this.userService.authorizationCheck(token);
-    const requesterUser = this.userService.findByToken(token);
+    const requesterUser = await this.userService.findByToken(token);
     const { path } = await this.fileService.uploadPublicFile(
       file.buffer,
       file.originalname,
     );
-    if ((await requesterUser).isAdmin === true) {
+    if (requesterUser.isAdmin === true) {
       return this.categoryService.update(id, {
         imageStorage: path,
       });
