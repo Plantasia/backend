@@ -98,14 +98,8 @@ export class TopicsController {
     const user = await this.userService.findByToken(token);
     const topic = await this.topicsService.findOneAndFetchUser(id);
     const { textBody, name } = data;
-
-    const { path } = await this.fileService.uploadPublicFile(
-      file.buffer,
-      file.originalname,
-    );
     if (user.isAdmin) {
       return this.topicsService.update(topic.id, {
-        imageStorage: path,
         textBody,
         name,
       });
@@ -212,16 +206,17 @@ export class TopicsController {
     @UploadedFile() file: Express.Multer.File,
   ) {
     const token = req.headers.authorization;
-
     await this.userService.authorizationCheck(token);
     const author = await this.topicsService.findOne(id);
     const requesterUser = await this.userService.findByToken(token);
-    if (author.user.id === requesterUser.id || requesterUser.isAdmin) {
-      return await this.topicsService.addImage(
-        id,
-        file.buffer,
-        file.originalname,
-      );
+    const { path } = await this.fileService.uploadPublicFile(
+      file.buffer,
+      file.originalname,
+    );
+    if (requesterUser.isAdmin) {
+      return this.topicsService.update(id, {
+        imageStorage: path,
+      });
     } else {
       throw new UnauthorizedException({
         error: 'Você não esta permitido a atualizar esse tópico!',

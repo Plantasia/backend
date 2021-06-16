@@ -243,10 +243,6 @@ export class CategoryController {
     }
     const user = await this.userService.findByToken(token)
     const { description, name} = data;
-    const { path } = await this.fileService.uploadPublicFile(
-      file.buffer,
-      file.originalname,
-      );
     if (user.isAdmin == false) {
       throw new UnauthorizedException({
         error: 'Você não esta autorizado a ataualizar essa categoria!',
@@ -254,7 +250,6 @@ export class CategoryController {
     }
     
     return this.categoryService.update(id, {
-      imageStorage: path,
       name,
       description,
     });
@@ -270,8 +265,14 @@ export class CategoryController {
     const token = req.headers.authorization;
     await this.userService.authorizationCheck(token);
     const requesterUser = this.userService.findByToken(token);
+    const { path } = await this.fileService.uploadPublicFile(
+      file.buffer,
+      file.originalname,
+    );
     if ((await requesterUser).isAdmin === true) {
-      return this.categoryService.addImage(id, file.buffer, file.originalname);
+      return this.categoryService.update(id, {
+        imageStorage: path,
+      });
     } else {
       throw new UnauthorizedException({
         error: 'Você não esta autorizado a ataualizar essa categoria!',
