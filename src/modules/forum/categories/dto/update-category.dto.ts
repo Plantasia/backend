@@ -8,7 +8,7 @@ export class UpdateCategoryDTO {
     description: 'Nome da categoria',
     default: '',
   })
-  public name: string;
+  public name?: string;
 
   @IsNotEmpty({message:"Descrição da categoria não pode ser vazio"})
   @ApiProperty({
@@ -16,7 +16,7 @@ export class UpdateCategoryDTO {
     description: 'Descrição da categoria',
     default: '',
   })
-  public description: string;
+  public description?: string;
 
   @ApiProperty({
     type: String,
