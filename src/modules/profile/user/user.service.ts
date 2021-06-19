@@ -42,7 +42,7 @@ export class UserService {
   }
 
   async checkIfAlreadyExists(email: string): Promise<void> {
-    if (this.userRepository.findOne({ where: { email } }))
+    if (await this.userRepository.findOne({ where: { email } }))
       throw new ForbiddenException({
         error: `O email : ${email} já esta sendo usado!`,
       });
