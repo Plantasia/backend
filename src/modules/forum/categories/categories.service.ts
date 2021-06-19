@@ -23,17 +23,12 @@ export class CategoryService {
   ) {}
 
   async findAll(page): Promise<FindAllModel> {
-    console.log('PAGE:\n');
-    console.log(page);
-
     if (!page || page <= 0) {
       page = 1;
     } else page = parseInt(page);
 
     const take = 5;
     const skip = 5 * (page - 1);
-
-    let categories: any;
 
     const { total } = (
       await this.categoryRepository.query(
@@ -50,16 +45,17 @@ export class CategoryService {
     const entityManager = getManager();
     const query = await entityManager.query(`
     select c.name, c.id, c.imageStorage, c.description, 
-    (select topics.id from topics where categoryId = c.id order by created_at asc limit 1) as lastTopicId, 
-    (select topics.name from topics where categoryId = c.id order by created_at asc limit 1) as lastTopicName, 
-    (select max(topics.created_at) from topics where categoryId = c.id order by created_at asc limit 1) as lastTopicActivity, 
+    (select topics.id from topics where categoryId = c.id order by created_at desc limit 1) as lastTopicId, 
+    (select topics.name from topics where categoryId = c.id order by created_at desc limit 1) as lastTopicName, 
+    (select max(topics.created_at) from topics where categoryId = c.id order by created_at desc limit 1) as lastTopicActivity, 
     max(c2.updated_at) as lastActivity, count(c2.id) as countComments, count(distinct(t.id)) as countTopics from categories c 
     left join topics t 
     on t.categoryId = c.id
     left join comments c2 
     on c2.topicId = t.id
-    where t.id is not null and c.deleted_at is null 
+    where t.id is not null and c.deleted_at is null
     group by c.id
+    ORDER BY 7 DESC
     LIMIT ${take} 
     OFFSET ${skip}
   `);
@@ -176,8 +172,7 @@ export class CategoryService {
       description,
       created_at,
       imageStorage,
-      authorEmail
-      
+      authorEmail,
     };
   }
 
