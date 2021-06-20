@@ -38,7 +38,9 @@ export class CategoryService {
         ON categories.id = topics.categoryId 
         LEFT join comments 
         on comments.topicId = topics.id
-        WHERE topics.id is not null`,
+        WHERE topics.id is not null
+        AND topics.deleted_at is null
+        `,
       )
     )[0];
 
