@@ -254,13 +254,13 @@ export class CategoryController {
     const token = req.headers.authorization;
     await this.userService.authorizationCheck(token);
     const requesterUser = await this.userService.findByToken(token);
-    const { path } = await this.fileService.uploadPublicFile(
+    const { path, url } = await this.fileService.uploadPublicFile(
       file.buffer,
       file.originalname,
     );
     if (requesterUser.isAdmin === true) {
       return this.categoryService.update(id, {
-        imageStorage: path,
+        imageStorage: url,
       });
     } else {
       throw new UnauthorizedException({
