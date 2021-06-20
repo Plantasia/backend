@@ -133,7 +133,7 @@ export class TopicsService {
       ])
       .orderBy({
         't.created_at': 'DESC',
-        'com.created_at': 'ASC',
+        'com.created_at': 'DESC',
       })
       .take(take)
       .skip(skip);
