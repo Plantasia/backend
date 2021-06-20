@@ -166,30 +166,13 @@ export class TopicsController {
   ): Promise<DeletedItemTopicDTO> {
     const token = req.headers.authorization;
     await this.userService.authorizationCheck(token);
-    const author = this.topicsService.findOne(id);
-    const user = this.userService.findByToken(token);
+    const { user: author } = await this.topicsService.findOne(id);
+    const user = await this.userService.findByToken(token);
+    console.log('topic_author', author);
 
-    if (
-      (await author).user.id === (await user).id ||
-      (await user).isAdmin === true
-    ) {
-      this.topicsService.delete(id);
-
-      const deletedIten = this.topicsService.findOne(id);
-      if (!deletedIten) {
-        throw new HttpException(
-          {
-            status: HttpStatus.BAD_REQUEST,
-            error: 'Error ao deletar o topico, por favor verifique os dados!',
-          },
-          HttpStatus.BAD_REQUEST,
-        );
-      } else {
-        const message = 'Item ' + id + ' deletado';
-        return {
-          message,
-        };
-      }
+    if (author.id === user.id || user.isAdmin) {
+      await this.topicsService.delete(id);
+      return { message: 'Tópico deletado' };
     } else {
       throw new UnauthorizedException({
         error: 'Você não esta autorizado a deletar esse tópico!',

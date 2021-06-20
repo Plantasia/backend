@@ -135,6 +135,7 @@ export class TopicsService {
         't.created_at': 'DESC',
         'com.created_at': 'DESC',
       })
+      .where('t.deleted_at is null')
       .take(take)
       .skip(skip);
 
@@ -152,11 +153,12 @@ export class TopicsService {
     };
   }
 
-  async findOne(topicId: string): Promise<Topic> {
+  async findOne(id: string): Promise<Topic> {
     return this.topicRepository.findOne({
       where: {
-        id: topicId,
+        id,
       },
+      relations: ['user'],
       withDeleted: true,
     });
   }
