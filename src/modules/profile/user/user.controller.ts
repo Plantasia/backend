@@ -163,13 +163,14 @@ export class UserController {
       );
     }
 
-    const selectedUser = await this.userService.findOne(idUser);
+    const selectedUser = await this.userService.adminFindOne(idUser);
     const {
       name,
       email,
       bio,
       id,
       avatar,
+      isAdmin,
       created_at,
       deleted_at,
       updated_at,
@@ -182,6 +183,7 @@ export class UserController {
       id,
       avatar,
       created_at,
+      isAdmin,
       deleted_at,
       updated_at,
     };

@@ -31,6 +31,15 @@ export class UserService {
     });
   }
 
+  async adminFindOne(id: string): Promise<User> {
+    return this.userRepository.findOne({
+      where: {
+        id,
+      }, withDeleted:true
+    });
+  }
+
+
   async checkIfIsAdmin(id: string): Promise<boolean> {
     const admin = await this.userRepository.findOne({
       where: {
