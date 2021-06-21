@@ -73,10 +73,13 @@ export class CategoryController {
     await this.userService.authorizationCheck(token);
     const { id: authorId, isAdmin } = await this.userService.findByToken(token);
     const { name, description } = data;
+
     const { path } = await this.fileService.uploadPublicFile(
       file.buffer,
       file.originalname,
     );
+
+
     const exists = await this.categoryService.findByName(name);
     if (isAdmin === true) {
       if (!exists) {
@@ -85,6 +88,53 @@ export class CategoryController {
           authorId,
           description,
           imageStorage: path,
+        });
+      } else {
+        throw new HttpException(
+          `Já existe uma categoria cadastrada com esse nome!`,
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+    } else {
+      throw new UnauthorizedException({
+        error: 'Somente um administrador pode criar categorias!',
+      });
+    }
+  }
+
+  @ApiHeader({
+    name: 'Bearer Token',
+    description: 'JWT Token',
+  })
+  @UseGuards(JwtAuthGuard)
+  @Post("/admin")
+  @ApiCreatedResponse({ description: 'Categoria criada com sucesso!' })
+  @ApiForbiddenResponse({
+    description:
+      'Ação não autorizada: Somente um admin pode criar uma categoria',
+  })
+  @UsePipes(ValidationPipe)
+  @UseInterceptors(FileInterceptor('file'))
+  async createWithoutUpload(
+    @Body() data: CreateCategoryDTO,
+    @Request() req,
+    @UploadedFile() file: Express.Multer.File,
+  ): Promise<CreateModel> {
+    const token = req.headers.authorization;
+    await this.userService.authorizationCheck(token);
+    const { id: authorId, isAdmin } = await this.userService.findByToken(token);
+    const { name, description } = data;
+
+    const exists = await this.categoryService.findByName(name);
+    
+    if (isAdmin === true) {
+
+      if (!exists) {
+        return await this.categoryService.create({
+          name,
+          authorId,
+          description,
+          imageStorage: "http://placeimg.com/640/480/nature",
         });
       } else {
         throw new HttpException(
@@ -111,9 +161,8 @@ export class CategoryController {
   @Get('admin/list')
   @ApiOkResponse({ description: 'The categories has been succesfful returned' })
   @ApiForbiddenResponse({ description: 'Forbidden' })
-  async adminFindAll(@Query() query: QueryPage): Promise<Category[]> {
-    const page = query.page;
-    console.log(page);
+  async adminFindAll(): Promise<Category[]> {
+    console.log("list admin")
     return this.categoryService.adminFindAll();
   }
 
@@ -250,6 +299,8 @@ export class CategoryController {
     });
 
   }
+
+
   @Post('image/:id')
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileInterceptor('file'))

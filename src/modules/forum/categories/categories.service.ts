@@ -75,12 +75,6 @@ export class CategoryService {
   }
 
   async adminFindAll(): Promise<Category[]> {
-    /*if (!page || page <= 0) {
-      page = 1;
-    } else page = parseInt(page);
-    const take = 10;
-    const skip = 10 * (page - 1);*/
-
     const categories = await this.categoryRepository.find({
       withDeleted: true,
     });

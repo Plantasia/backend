@@ -58,7 +58,7 @@ export class TopicsController {
   async adminGetTopicById(
     @Param('topicId') topicId: string,
   ): Promise<FindOneModel> {
-    return this.topicsService.adminTakeTopicData(topicId);
+    return this.topicsService.adminTakeOnlyTopicData(topicId);
   }
 
   @ApiOkResponse({ description: 'topic succesfully returned' })

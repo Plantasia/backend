@@ -171,6 +171,9 @@ export class TopicsService {
     });
   }
 
+  async adminTakeOnlyTopicData(topicId:string) {
+    return this.topicRepository.findOne({ where: { id: topicId } ,withDeleted:true})
+  }
   async adminTakeTopicData(topicId: string): Promise<Topic> {
     const topic = await getRepository(Topic)
       .createQueryBuilder('t')
@@ -203,6 +206,7 @@ export class TopicsService {
         't.created_at',
         't.updated_at',
         't.deleted_at',
+        't.isActive',
 
         'cat.id',
         'cat.name',
