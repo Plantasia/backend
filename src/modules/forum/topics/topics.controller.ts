@@ -22,7 +22,8 @@ import {
 } from '@nestjs/common';
 import { TopicsService } from './topics.service';
 import { Topic } from '@entities/topic.entity';
-import { CreateTopicDTO } from './dto/create-topic.dto';
+import { CreateTopicDTO } from './dto/create-topic-dto';
+import { UpdateTopicDTO } from './dto/update-topic.dto';
 import { DeletedItemTopicDTO } from './dto/delete-topic.dto';
 import { JwtAuthGuard } from '@auth/jwt-auth.guard';
 import {
@@ -89,7 +90,7 @@ export class TopicsController {
   @UseInterceptors(FileInterceptor('file'))
   async update(
     @Param('id') id: string,
-    @Body() data: CreateTopicDTO,
+    @Body() data: UpdateTopicDTO,
     @Request() req,
     @UploadedFile() file: Express.Multer.File,
   ): Promise<TopicModel> {
@@ -97,11 +98,57 @@ export class TopicsController {
     await this.userService.authorizationCheck(token);
     const user = await this.userService.findByToken(token);
     const topic = await this.topicsService.findOneAndFetchUser(id);
-    const { textBody, name } = data;
+    const { textBody, name, imageStorage, deleted_at, isActive } = data;
+    
+    console.log("data received")
+    console.log(data)
+
     if (user.isAdmin) {
       return this.topicsService.update(topic.id, {
         textBody,
         name,
+        imageStorage,
+        deleted_at,
+        isActive
+      });
+    } else {
+      throw new UnauthorizedException({
+        error: 'Você não esta autorizado a atualizar esse tópico!',
+      });
+    }
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @ApiOkResponse({ description: 'topic succesfully updated' })
+  @ApiBadRequestResponse({ description: 'Bad request' })
+  @ApiHeader({
+    name: 'JWT',
+    description: 'JWT token must to be passed to do this request',
+  })
+  @Patch(':id/admin')
+  @UseInterceptors(FileInterceptor('file'))
+  async updateAdmin(
+    @Param('id') id: string,
+    @Body() data: UpdateTopicDTO,
+    @Request() req,
+    @UploadedFile() file: Express.Multer.File,
+  ): Promise<TopicModel> {
+    const token = req.headers.authorization;
+    await this.userService.authorizationCheck(token);
+    const user = await this.userService.findByToken(token);
+    const topic = await this.topicsService.findOneAndFetchUser(id);
+    const { textBody, name, imageStorage, deleted_at, isActive } = data;
+
+    console.log("data received")
+    console.log(data)
+
+    if (user.isAdmin) {
+      return this.topicsService.adminUpdate(topic.id, {
+        textBody,
+        name,
+        imageStorage,
+        deleted_at,
+        isActive
       });
     } else {
       throw new UnauthorizedException({
