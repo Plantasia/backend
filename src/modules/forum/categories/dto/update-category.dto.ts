@@ -25,4 +25,10 @@ export class UpdateCategoryDTO {
   })
   public imageStorage?: string;
 
+  public deleted_at?:string;
+
+  public created_at?: string;
+
+  public isActive?: boolean;
+
 }

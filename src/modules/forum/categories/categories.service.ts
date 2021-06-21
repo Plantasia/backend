@@ -99,6 +99,14 @@ export class CategoryService {
     });
   }
 
+  async adminFindById(id: string): Promise<Category> {
+    return this.categoryRepository.findOne({
+      where: {
+        id,
+      },withDeleted:true
+    });
+  }
+
   async findByAuthorSlug(id: string, authorId: string): Promise<Category> {
     return this.categoryRepository.findOne({
       where: {
@@ -116,14 +124,14 @@ export class CategoryService {
     });
   }
 
-  async adminFindOne(id: string): Promise<Category> {
-    return this.categoryRepository.find({
+  async AdminFindOne(id: string): Promise<Category> {
+    return this.categoryRepository.findOne({
       where: {
-        id,
-      },
-      withDeleted: true,
-    })[0];
+        id
+      }, withDeleted:true
+    });
   }
+
 
   async findByName(name: string): Promise<Category> {
     return this.categoryRepository.findOne({
@@ -167,7 +175,7 @@ export class CategoryService {
       created_at,
       imageStorage,
       authorEmail,
-    } = await this.categoryRepository.findOne(categoryId);
+    } = await this.categoryRepository.findOne(categoryId,);
 
     return {
       name,
@@ -179,6 +187,15 @@ export class CategoryService {
       authorEmail
       
     };
+  }
+
+  async updateAdmin(
+    categoryId: string,
+    data: UpdateCategoryDTO,
+  ): Promise<any> {
+    await this.categoryRepository.update(categoryId, data);
+    return this.categoryRepository
+      .findOne({ where: { id: categoryId }, withDeleted: true });
   }
 
   async addImage(categoryId: string, imageBuffer: Buffer, filename: string) {

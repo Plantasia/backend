@@ -117,7 +117,7 @@ export class CategoryController {
     return this.categoryService.adminFindAll();
   }
 
-  @Get(':id/admin')
+  /*@Get('')
   @ApiOkResponse({ description: 'The category has been successful deleted' })
   @ApiBadRequestResponse({ description: 'Bad request' })
   async AdminfindOne(
@@ -138,7 +138,7 @@ export class CategoryController {
     } = await this.categoryService.adminFindOne(categoryId);
 
     return { id, name, imageStorage, description, authorEmail, authorId };
-  }
+  }*/
 
   @Get('/combobox')
   @ApiOkResponse({ description: 'The category has been successful deleted' })
@@ -210,7 +210,9 @@ export class CategoryController {
     @Param('id') categoryId: string,
     @Request() req,
   ): Promise<Category> {
-    return this.categoryService.findOne(categoryId);
+    
+    this.userService.authorizationCheck(req.headers.authorization);
+    return this.categoryService.AdminFindOne(categoryId);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -224,24 +226,29 @@ export class CategoryController {
     @Request() req: any,
     @UploadedFile() file: Express.Multer.File,
   ): Promise<UpdateModel> {
-    const categoryExists = await this.categoryService.findById(id);
+    const categoryExists = await this.categoryService.adminFindById(id);
+    console.log("category")
+    console.log(categoryExists)
+
     const token = req.headers.authorization;
     await this.userService.authorizationCheck(token);
     if (!categoryExists) {
       throw new NotFoundException({ error: 'Essa categoria não existe ' });
     }
     const user = await this.userService.findByToken(token);
-    const { description, name } = data;
+    console.log("data")
+    console.log(data)
+    const { description, name,imageStorage,deleted_at,isActive } = data;
     if (user.isAdmin == false) {
       throw new UnauthorizedException({
-        error: 'Você não esta autorizado a ataualizar essa categoria!',
+        error: 'Você não esta autorizado a atualizar essa categoria!',
       });
     }
 
-    return this.categoryService.update(id, {
-      name,
-      description,
+    return this.categoryService.updateAdmin(id, {
+      description,deleted_at,isActive,name,imageStorage
     });
+
   }
   @Post('image/:id')
   @UseGuards(JwtAuthGuard)
