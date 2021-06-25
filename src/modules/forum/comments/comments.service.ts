@@ -76,36 +76,18 @@ export class CommentService {
    * and to catching up deleted registers
    **/
   async adminFindOneAndFetchUserAndTopic(
-    commendId: string,
-  ): Promise<CommentModel> {
-    const {
-      id,
-      created_at,
-      deleted_at,
-      textBody,
-      topic,
-      user,
-      updated_at,
-    } = await this.commentsRepository.findOne({
+    commentId: string,
+  ): Promise<any> {
+
+    return  this.commentsRepository.findOne({
       where: {
-        id: commendId,
+        id: commentId,
       },
       relations: ['user', 'topic'],
       withDeleted: true,
     });
 
-    const userId = user.id;
-    const topicId = topic.id;
-
-    return {
-      id,
-      created_at,
-      deleted_at,
-      textBody,
-      updated_at,
-      userId,
-      topicId,
-    };
+  
   }
 
   async adminFindAll(page): Promise<Comment[]> {

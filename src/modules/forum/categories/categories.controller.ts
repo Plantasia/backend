@@ -150,8 +150,8 @@ export class CategoryController {
   }
 
   @Get()
-  @ApiOkResponse({ description: 'Categp' })
-  @ApiBadRequestResponse({ description: 'Bad request' })
+  @ApiOkResponse({ description: 'Listar todas as categorias' })
+  @ApiBadRequestResponse({ description: 'Erro! revise os dados enviados' })
   async findAll(@Query() query: QueryPage): Promise<FindAllModel> {
     const page = query.page;
     console.log(page);

@@ -140,7 +140,6 @@ export class UserService {
     user.tokenLogout = data.tokenLogout;
 
     const newUser = await this.userRepository.create(user);
-    console.log('User created!');
     this.userRepository.save(newUser);
 
     const { id, name, email, bio } = newUser;

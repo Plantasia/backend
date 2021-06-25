@@ -96,8 +96,8 @@ export class UserController {
   }
 
   @UsePipes(ValidationPipe)
-  @ApiOkResponse({ description: 'The user has been succesfull created' })
-  @ApiBadRequestResponse({ description: 'Bad request' })
+  @ApiOkResponse({ description: 'O usuário foi criado com sucesso!' })
+  @ApiBadRequestResponse({ description: 'Erro na requisição! Bad Request' })
   @ApiHeader({
     name: 'JWT',
     description: 'JWT token must to be passed to do this request',
@@ -105,17 +105,7 @@ export class UserController {
   @Post()
   async create(@Body() data: CreateUserDTO): Promise<UserModel> {
     await this.userService.checkIfAlreadyExists(data.email);
-
-    const createdUser = await this.userService.create(data);
-
-    const { name, email, bio, id } = createdUser;
-
-    return {
-      name,
-      email,
-      bio,
-      id,
-    };
+    return await this.userService.create(data);
   }
 
   @Get(':id')
