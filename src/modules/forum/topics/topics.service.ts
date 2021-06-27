@@ -7,7 +7,8 @@ import { getRepository, Repository } from 'typeorm';
 import { Topic } from '@entities/topic.entity';
 import { User } from '@entities/user.entity';
 import { Category } from '@entities/category.entity';
-import { CreateTopicDTO } from './dto';
+import { CreateTopicDTO } from './dto/create-topic-dto';
+import { UpdateTopicDTO } from './dto/update-topic.dto';
 import { FilesService } from '@image/imageS3.service';
 
 @Injectable()
@@ -173,6 +174,9 @@ export class TopicsService {
     });
   }
 
+  async adminTakeOnlyTopicData(topicId:string) {
+    return this.topicRepository.findOne({ where: { id: topicId } ,withDeleted:true})
+  }
   async adminTakeTopicData(topicId: string): Promise<Topic> {
     const topic = await getRepository(Topic)
       .createQueryBuilder('t')
@@ -205,6 +209,7 @@ export class TopicsService {
         't.created_at',
         't.updated_at',
         't.deleted_at',
+        't.isActive',
 
         'cat.id',
         'cat.name',
@@ -345,6 +350,34 @@ export class TopicsService {
       updated_at,
       deleted_at,
     } = await this.topicRepository.findOne(topicId);
+
+    return {
+      id,
+      name,
+      textBody,
+      category,
+      created_at,
+      imageStorage,
+      user,
+      updated_at,
+      deleted_at,
+    };
+  }
+
+  async adminUpdate(topicId: string, data): Promise<TopicModel> {
+    await this.topicRepository.update(topicId, data);
+
+    const {
+      id,
+      name,
+      textBody,
+      category,
+      created_at,
+      imageStorage,
+      user,
+      updated_at,
+      deleted_at,
+    } = await this.topicRepository.findOne({ where: { id: topicId},withDeleted:true});
 
     return {
       id,

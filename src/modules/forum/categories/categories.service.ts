@@ -74,12 +74,6 @@ export class CategoryService {
   }
 
   async adminFindAll(): Promise<Category[]> {
-    /*if (!page || page <= 0) {
-      page = 1;
-    } else page = parseInt(page);
-    const take = 10;
-    const skip = 10 * (page - 1);*/
-
     const categories = await this.categoryRepository.find({
       withDeleted: true,
     });
@@ -95,6 +89,14 @@ export class CategoryService {
       where: {
         id,
       },
+    });
+  }
+
+  async adminFindById(id: string): Promise<Category> {
+    return this.categoryRepository.findOne({
+      where: {
+        id,
+      },withDeleted:true
     });
   }
 
@@ -115,14 +117,14 @@ export class CategoryService {
     });
   }
 
-  async adminFindOne(id: string): Promise<Category> {
-    return this.categoryRepository.find({
+  async AdminFindOne(id: string): Promise<Category> {
+    return this.categoryRepository.findOne({
       where: {
-        id,
-      },
-      withDeleted: true,
-    })[0];
+        id
+      }, withDeleted:true
+    });
   }
+
 
   async findByName(name: string): Promise<Category> {
     return this.categoryRepository.findOne({
@@ -166,7 +168,7 @@ export class CategoryService {
       created_at,
       imageStorage,
       authorEmail,
-    } = await this.categoryRepository.findOne(categoryId);
+    } = await this.categoryRepository.findOne(categoryId,);
 
     return {
       name,
@@ -177,6 +179,15 @@ export class CategoryService {
       imageStorage,
       authorEmail,
     };
+  }
+
+  async updateAdmin(
+    categoryId: string,
+    data: UpdateCategoryDTO,
+  ): Promise<any> {
+    await this.categoryRepository.update(categoryId, data);
+    return this.categoryRepository
+      .findOne({ where: { id: categoryId }, withDeleted: true });
   }
 
   async addImage(categoryId: string, imageBuffer: Buffer, filename: string) {

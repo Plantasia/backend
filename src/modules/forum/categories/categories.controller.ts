@@ -73,10 +73,13 @@ export class CategoryController {
     await this.userService.authorizationCheck(token);
     const { id: authorId, isAdmin } = await this.userService.findByToken(token);
     const { name, description } = data;
+
     const { path } = await this.fileService.uploadPublicFile(
       file.buffer,
       file.originalname,
     );
+
+
     const exists = await this.categoryService.findByName(name);
     if (isAdmin === true) {
       if (!exists) {
@@ -99,9 +102,56 @@ export class CategoryController {
     }
   }
 
+  @ApiHeader({
+    name: 'Bearer Token',
+    description: 'JWT Token',
+  })
+  @UseGuards(JwtAuthGuard)
+  @Post("/admin")
+  @ApiCreatedResponse({ description: 'Categoria criada com sucesso!' })
+  @ApiForbiddenResponse({
+    description:
+      'Ação não autorizada: Somente um admin pode criar uma categoria',
+  })
+  @UsePipes(ValidationPipe)
+  @UseInterceptors(FileInterceptor('file'))
+  async createWithoutUpload(
+    @Body() data: CreateCategoryDTO,
+    @Request() req,
+    @UploadedFile() file: Express.Multer.File,
+  ): Promise<CreateModel> {
+    const token = req.headers.authorization;
+    await this.userService.authorizationCheck(token);
+    const { id: authorId, isAdmin } = await this.userService.findByToken(token);
+    const { name, description } = data;
+
+    const exists = await this.categoryService.findByName(name);
+    
+    if (isAdmin === true) {
+
+      if (!exists) {
+        return await this.categoryService.create({
+          name,
+          authorId,
+          description,
+          imageStorage: "http://placeimg.com/640/480/nature",
+        });
+      } else {
+        throw new HttpException(
+          `Já existe uma categoria cadastrada com esse nome!`,
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+    } else {
+      throw new UnauthorizedException({
+        error: 'Somente um administrador pode criar categorias!',
+      });
+    }
+  }
+
   @Get()
-  @ApiOkResponse({ description: 'Categp' })
-  @ApiBadRequestResponse({ description: 'Bad request' })
+  @ApiOkResponse({ description: 'Listar todas as categorias' })
+  @ApiBadRequestResponse({ description: 'Erro! revise os dados enviados' })
   async findAll(@Query() query: QueryPage): Promise<FindAllModel> {
     const page = query.page;
     console.log(page);
@@ -111,13 +161,12 @@ export class CategoryController {
   @Get('admin/list')
   @ApiOkResponse({ description: 'The categories has been succesfful returned' })
   @ApiForbiddenResponse({ description: 'Forbidden' })
-  async adminFindAll(@Query() query: QueryPage): Promise<Category[]> {
-    const page = query.page;
-    console.log(page);
+  async adminFindAll(): Promise<Category[]> {
+    console.log("list admin")
     return this.categoryService.adminFindAll();
   }
 
-  @Get(':id/admin')
+  /*@Get('')
   @ApiOkResponse({ description: 'The category has been successful deleted' })
   @ApiBadRequestResponse({ description: 'Bad request' })
   async AdminfindOne(
@@ -138,7 +187,7 @@ export class CategoryController {
     } = await this.categoryService.adminFindOne(categoryId);
 
     return { id, name, imageStorage, description, authorEmail, authorId };
-  }
+  }*/
 
   @Get('/combobox')
   @ApiOkResponse({ description: 'The category has been successful deleted' })
@@ -210,7 +259,9 @@ export class CategoryController {
     @Param('id') categoryId: string,
     @Request() req,
   ): Promise<Category> {
-    return this.categoryService.findOne(categoryId);
+    
+    this.userService.authorizationCheck(req.headers.authorization);
+    return this.categoryService.AdminFindOne(categoryId);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -224,25 +275,32 @@ export class CategoryController {
     @Request() req: any,
     @UploadedFile() file: Express.Multer.File,
   ): Promise<UpdateModel> {
-    const categoryExists = await this.categoryService.findById(id);
+    const categoryExists = await this.categoryService.adminFindById(id);
+    console.log("category")
+    console.log(categoryExists)
+
     const token = req.headers.authorization;
     await this.userService.authorizationCheck(token);
     if (!categoryExists) {
       throw new NotFoundException({ error: 'Essa categoria não existe ' });
     }
     const user = await this.userService.findByToken(token);
-    const { description, name } = data;
+    console.log("data")
+    console.log(data)
+    const { description, name,imageStorage,deleted_at,isActive } = data;
     if (user.isAdmin == false) {
       throw new UnauthorizedException({
-        error: 'Você não esta autorizado a ataualizar essa categoria!',
+        error: 'Você não esta autorizado a atualizar essa categoria!',
       });
     }
 
-    return this.categoryService.update(id, {
-      name,
-      description,
+    return this.categoryService.updateAdmin(id, {
+      description,deleted_at,isActive,name,imageStorage
     });
+
   }
+
+
   @Post('image/:id')
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileInterceptor('file'))

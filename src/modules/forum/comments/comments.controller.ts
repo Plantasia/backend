@@ -128,10 +128,13 @@ export class CommentController {
     @Request() req,
   ): Promise<CommentModel> {
     const token = req.headers.authorization;
-
+    console.log(id)
+    console.log("sua mãe com macarrão")
     await this.userService.authorizationCheck(token);
 
-    return this.commentService.adminFindOneAndFetchUserAndTopic(id);
+    var resp = await this.commentService.adminFindOneAndFetchUserAndTopic(id);
+    console.log(resp);
+    return resp;
   }
 
   @Delete(':id')
@@ -170,6 +173,7 @@ export class CommentController {
   ): Promise<CommentModel> {
     const token = req.headers.authorization;
     this.userService.authorizationCheck(token);
+   
 
     const comment = await this.commentService.findOneAndFetchUserAndTopic(id);
     if (!comment) throw new BadRequestException('Comentário não existe');

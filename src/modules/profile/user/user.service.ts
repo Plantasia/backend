@@ -31,6 +31,15 @@ export class UserService {
     });
   }
 
+  async adminFindOne(id: string): Promise<User> {
+    return this.userRepository.findOne({
+      where: {
+        id,
+      }, withDeleted:true
+    });
+  }
+
+
   async checkIfIsAdmin(id: string): Promise<boolean> {
     const admin = await this.userRepository.findOne({
       where: {
@@ -131,7 +140,6 @@ export class UserService {
     user.tokenLogout = data.tokenLogout;
 
     const newUser = await this.userRepository.create(user);
-    console.log('User created!');
     this.userRepository.save(newUser);
 
     const { id, name, email, bio } = newUser;

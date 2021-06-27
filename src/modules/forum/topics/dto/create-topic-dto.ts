@@ -31,7 +31,7 @@ export class CreateTopicDTO {
     default: '',
   })
   @IsNotEmpty({message:"O campo category_id não pode ser vazio"})
-  public category_id: string;
+  public category_id?: string;
 
   @ApiProperty({
     type: String,
@@ -39,5 +39,5 @@ export class CreateTopicDTO {
     default: '',
   })
   @IsNotEmpty({message:"O campo user_id não pode ser vazio"})
-  public user_id: string;
+  public user_id?: string;
 }
