@@ -20,7 +20,7 @@ export class S3Helper {
   }
   async getUrl(
     path: string,
-    seconds: number = 60 * 60 * 24 * 15,
+    seconds: number = 60 * 60 * 24 * 7,
   ): Promise<string> {
     return this.client.getSignedUrl('getObject', {
       Bucket: this.AWS_PUBLIC_BUCKET_NAME,

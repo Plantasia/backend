@@ -166,29 +166,6 @@ export class CategoryController {
     return this.categoryService.adminFindAll();
   }
 
-  /*@Get('')
-  @ApiOkResponse({ description: 'The category has been successful deleted' })
-  @ApiBadRequestResponse({ description: 'Bad request' })
-  async AdminfindOne(
-    @Param('id') categoryId: string,
-    @Request() req,
-  ): Promise<FindOneModel> {
-    const check = await this.userService.authorizationCheck(
-      req.headers.authorization,
-    );
-
-    const {
-      id,
-      name,
-      imageStorage,
-      description,
-      authorId,
-      authorEmail,
-    } = await this.categoryService.adminFindOne(categoryId);
-
-    return { id, name, imageStorage, description, authorEmail, authorId };
-  }*/
-
   @Get('/combobox')
   @ApiOkResponse({ description: 'The category has been successful deleted' })
   @ApiBadRequestResponse({ description: 'Bad request' })
@@ -316,13 +293,15 @@ export class CategoryController {
       file.buffer,
       file.originalname,
     );
+    console.log("url")
+    console.log(url)
     if (requesterUser.isAdmin === true) {
       return this.categoryService.update(id, {
         imageStorage: url,
       });
     } else {
       throw new UnauthorizedException({
-        error: 'Você não esta autorizado a ataualizar essa categoria!',
+        error: 'Você não está autorizado a atualizar essa categoria!',
       });
     }
   }
