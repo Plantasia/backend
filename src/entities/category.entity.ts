@@ -22,18 +22,18 @@ export class Category extends BaseEntity {
   name: string;
 
   @Column({ default: '' })
-  authorEmail: string;
-
-  @Column({ default: '' })
   authorId: string;
+
+  @Column()
+  authorEmail: string;
 
   @Column()
   description: string;
 
-  @Column()
-  imageStorage: string;
+  @Column({ default: 'default-category-image.jpeg' })
+  imageStorage?: string;
 
-  imageStorageUrl: string;
+  imageStorageUrl?: string;
 
   @AfterLoad()
   async load() {
@@ -47,13 +47,13 @@ export class Category extends BaseEntity {
     () => Topic,
     topic => topic.category,
   )
-  topics: Topic[];
+  topics?: Topic[];
 
   @OneToMany(
     () => Comment,
     comment => comment.category,
   )
-  comments: Comment[];
+  comments?: Comment[];
 
   @CreateDateColumn()
   created_at: Date;
