@@ -132,11 +132,11 @@ export class TopicsService {
         'ownerComment.name',
         'ownerComment.avatar',
       ])
+      .where('t.deleted_at is null')
       .orderBy({
         't.created_at': 'DESC',
         'com.created_at': 'DESC',
       })
-      .where('t.deleted_at is null')
       .take(take)
       .skip(skip);
 

@@ -27,7 +27,7 @@ export class User extends BaseEntity {
   @Column({ default: 'USER' })
   role: string;
 
-  @Column({ default: 'default-profile.jpeg' })
+  @Column({ default: 'user-default-profile.png' })
   avatar: string;
 
   @Column()
