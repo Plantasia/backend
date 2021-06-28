@@ -79,7 +79,6 @@ export class CategoryController {
       file.originalname,
     );
 
-
     const exists = await this.categoryService.findByName(name);
     if (isAdmin === true) {
       if (!exists) {
@@ -107,7 +106,7 @@ export class CategoryController {
     description: 'JWT Token',
   })
   @UseGuards(JwtAuthGuard)
-  @Post("/admin")
+  @Post('/admin')
   @ApiCreatedResponse({ description: 'Categoria criada com sucesso!' })
   @ApiForbiddenResponse({
     description:
@@ -126,15 +125,13 @@ export class CategoryController {
     const { name, description } = data;
 
     const exists = await this.categoryService.findByName(name);
-    
-    if (isAdmin === true) {
 
+    if (isAdmin === true) {
       if (!exists) {
         return await this.categoryService.create({
           name,
           authorId,
           description,
-          imageStorage: "http://placeimg.com/640/480/nature",
         });
       } else {
         throw new HttpException(
@@ -162,7 +159,7 @@ export class CategoryController {
   @ApiOkResponse({ description: 'The categories has been succesfful returned' })
   @ApiForbiddenResponse({ description: 'Forbidden' })
   async adminFindAll(): Promise<Category[]> {
-    console.log("list admin")
+    console.log('list admin');
     return this.categoryService.adminFindAll();
   }
 
@@ -236,7 +233,6 @@ export class CategoryController {
     @Param('id') categoryId: string,
     @Request() req,
   ): Promise<Category> {
-    
     this.userService.authorizationCheck(req.headers.authorization);
     return this.categoryService.AdminFindOne(categoryId);
   }
@@ -253,8 +249,8 @@ export class CategoryController {
     @UploadedFile() file: Express.Multer.File,
   ): Promise<UpdateModel> {
     const categoryExists = await this.categoryService.adminFindById(id);
-    console.log("category")
-    console.log(categoryExists)
+    console.log('category');
+    console.log(categoryExists);
 
     const token = req.headers.authorization;
     await this.userService.authorizationCheck(token);
@@ -262,9 +258,9 @@ export class CategoryController {
       throw new NotFoundException({ error: 'Essa categoria não existe ' });
     }
     const user = await this.userService.findByToken(token);
-    console.log("data")
-    console.log(data)
-    const { description, name,imageStorage,deleted_at,isActive } = data;
+    console.log('data');
+    console.log(data);
+    const { description, name, imageStorage, deleted_at, isActive } = data;
     if (user.isAdmin == false) {
       throw new UnauthorizedException({
         error: 'Você não esta autorizado a atualizar essa categoria!',
@@ -272,11 +268,13 @@ export class CategoryController {
     }
 
     return this.categoryService.updateAdmin(id, {
-      description,deleted_at,isActive,name,imageStorage
+      description,
+      deleted_at,
+      isActive,
+      name,
+      imageStorage,
     });
-
   }
-
 
   @Post('image/:id')
   @UseGuards(JwtAuthGuard)

@@ -1,6 +1,5 @@
-
-export class CreateModel{
+export class CreateModel {
   id: string;
-  name:string;
-  imageStorage:string;
+  name: string;
+  imageStorage?: string;
 }
