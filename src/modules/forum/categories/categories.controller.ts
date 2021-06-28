@@ -149,14 +149,16 @@ export class CategoryController {
   @Get()
   @ApiOkResponse({ description: 'Listar todas as categorias' })
   @ApiBadRequestResponse({ description: 'Erro! revise os dados enviados' })
-  async findAll(@Query() query: QueryPage): Promise<FindAllModel> {
+  async findAll(@Query() query: QueryPage): Promise<FindAllModel | Category[]> {
     const page = query.page;
     console.log(page);
     return this.categoryService.findAll(page);
   }
 
   @Get('admin/list')
-  @ApiOkResponse({ description: 'The categories has been succesfful returned' })
+  @ApiOkResponse({
+    description: 'The categories has been successfull returned',
+  })
   @ApiForbiddenResponse({ description: 'Forbidden' })
   async adminFindAll(): Promise<Category[]> {
     console.log('list admin');
@@ -180,19 +182,12 @@ export class CategoryController {
   async findOne(
     @Param('id') categoryId: string,
     @Request() req,
-  ): Promise<FindOneModel> {
+  ): Promise<Category> {
     await this.userService.authorizationCheck(req.headers.authorization);
 
-    const {
-      id,
-      name,
-      imageStorage,
-      description,
-      authorId,
-      authorEmail,
-    } = await this.categoryService.findOne(categoryId);
+    const category = await this.categoryService.findOne(categoryId);
 
-    return { id, name, imageStorage, description, authorEmail, authorId };
+    return category;
   }
 
   @UseGuards(JwtAuthGuard)
@@ -291,8 +286,8 @@ export class CategoryController {
       file.buffer,
       file.originalname,
     );
-    console.log("url")
-    console.log(url)
+    console.log('url');
+    console.log(url);
     if (requesterUser.isAdmin === true) {
       return this.categoryService.update(id, {
         imageStorage: url,

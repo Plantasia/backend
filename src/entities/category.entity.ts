@@ -8,11 +8,15 @@ import {
   BaseEntity,
   DeleteDateColumn,
   AfterLoad,
+  ManyToMany,
+  OneToOne,
+  ManyToOne,
 } from 'typeorm';
 import { Topic } from './topic.entity';
 import { Comment } from './comments.entity';
 import { S3Helper } from '@src/utils/S3Helper';
-
+import { User } from './user.entity';
+import 'reflect-metadata';
 @Entity('categories')
 export class Category extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
@@ -21,23 +25,19 @@ export class Category extends BaseEntity {
   @Column()
   name: string;
 
-  @Column({ default: '' })
-  authorId: string;
-
-  @Column()
-  authorEmail: string;
-
+  @ManyToOne(() => User, { createForeignKeyConstraints: true })
+  @Column({ type: 'varchar' })
+  author: User;
 
   @Column()
   description: string;
 
-  @Column({type: 'text'})
+  @Column({ type: 'text' })
   imageStorage?: string;
-  
 
   imageStorageUrl?: string;
 
- @AfterLoad()
+  @AfterLoad()
   async load() {
     //this.imageStorageUrl = await new S3Helper().getUrl(this.imageStorage);
   }
@@ -45,17 +45,17 @@ export class Category extends BaseEntity {
   @Column({ default: true })
   isActive: boolean;
 
-  @OneToMany(
+  @ManyToMany(
     () => Topic,
     topic => topic.category,
   )
   topics?: Topic[];
 
-  @OneToMany(
-    () => Comment,
-    comment => comment.category,
-  )
-  comments?: Comment[];
+  // @OneToMany(
+  //   () => Comment,
+  //   comment => comment.category,
+  // )
+  // comments?: Comment[];
 
   @CreateDateColumn()
   created_at: Date;

@@ -12,6 +12,7 @@ import {
   DeleteDateColumn,
 } from 'typeorm';
 import { Topic } from './topic.entity';
+import 'reflect-metadata';
 import { User } from '../entities/user.entity';
 
 @Entity('comments')
@@ -19,7 +20,7 @@ export class Comment {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({type: 'mediumtext'})
+  @Column({ type: 'mediumtext' })
   textBody: string;
 
   @ManyToOne(
@@ -33,12 +34,6 @@ export class Comment {
     topic => topic.comments,
   )
   topic: Topic;
-
-  @ManyToOne(
-    () => Category,
-    category => category.comments,
-  )
-  category: Category;
 
   @UpdateDateColumn()
   updated_at: Date;

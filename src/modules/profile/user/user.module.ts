@@ -9,15 +9,12 @@ import { Category } from '@entities/category.entity';
 import { UserController } from './user.controller';
 import { SharedModule } from 'src/modules/shared/shared.module';
 
-
-
-
 //import {} falta o user service
 
 @Module({
   imports: [TypeOrmModule.forFeature([User, Topic, Category]), SharedModule],
   //por causa do topic ele pede o category
-  providers: [UserService, TopicsService, CategoryService ],
+  providers: [UserService, TopicsService, CategoryService],
   controllers: [UserController],
   exports: [UserService],
 })

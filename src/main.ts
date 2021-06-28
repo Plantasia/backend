@@ -5,18 +5,18 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { CallingSeeders } from '@seeders/calling-seeders';
 import { ConfigService } from '@nestjs/config';
 import { config } from 'aws-sdk';
+import 'reflect-metadata';
 
 async function bootstrap() {
   const PORT = process.env.PORT || 3333;
   const HOST = process.env.HOST || '0.0.0.0';
   const app = await NestFactory.create(AppModule);
   app.enableCors({
-    origin: "*"
+    origin: '*',
   });
 
-  
-    CallingSeeders();
-    
+  CallingSeeders();
+
   try {
     const swaggerConfig = new DocumentBuilder()
       .setTitle('Plantasia Docs')

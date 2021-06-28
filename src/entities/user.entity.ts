@@ -12,6 +12,8 @@ import {
 import { Topic } from './topic.entity';
 import { Comment } from './comments.entity';
 import { S3Helper } from '@src/utils/S3Helper';
+import 'reflect-metadata';
+import { Category } from './category.entity';
 
 @Entity('users')
 export class User extends BaseEntity {
@@ -30,7 +32,7 @@ export class User extends BaseEntity {
   @Column({ default: 'user-default-profile.png' })
   avatar: string;
 
-  @Column({unique:true})
+  @Column({ unique: true })
   email: string;
 
   @Column({ default: null })
@@ -63,6 +65,12 @@ export class User extends BaseEntity {
   )
   topics: Topic[];
 
+  @OneToMany(
+    () => Category,
+    categories => categories.author,
+  )
+  categories: Category[];
+
   @CreateDateColumn()
   created_at: Date;
 
@@ -73,7 +81,7 @@ export class User extends BaseEntity {
   deleted_at: Date;
 
   avatarUrl: string;
-  
+
   @AfterLoad()
   async load() {
     this.avatarUrl = await new S3Helper().getUrl(this.avatar);

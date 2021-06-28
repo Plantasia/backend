@@ -21,6 +21,6 @@
       "@image/*": ["./src/modules/image/*"]
     }, 
   },
-  "include": ["**/*.ts"],
+  "include": ["**/**/*.ts"],
   "exclude": ["node_modules"],
 }

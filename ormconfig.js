@@ -9,7 +9,7 @@ module.exports = {
   synchronize: true,
   port: process.env.DATABASE_PORT,
   logging: false,
-  entities: [path.resolve('build', 'entities', '*')],
+  entities: ['./build/entitites/*.js'],
   migrations: ['./src/database/migations/*.ts'],
   cli: {
     entitiesDir: 'src/entities',

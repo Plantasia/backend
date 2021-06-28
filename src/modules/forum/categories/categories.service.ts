@@ -3,7 +3,12 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateCategoryDTO } from './dto/create-category.dto';
 import { Category } from '../../../entities/category.entity';
-import { Repository, getManager } from 'typeorm';
+import {
+  Repository,
+  getManager,
+  createQueryBuilder,
+  getRepository,
+} from 'typeorm';
 import { FindAllModel } from './api-model/find-all.model';
 import { Topic } from '@entities/topic.entity';
 import UpdateModel from './api-model/update-model';
@@ -22,7 +27,7 @@ export class CategoryService {
     private filesService: FilesService,
   ) {}
 
-  async findAll(page): Promise<FindAllModel> {
+  async findAll(page): Promise<FindAllModel | Category[]> {
     if (!page || page <= 0) {
       page = 1;
     } else page = parseInt(page);
@@ -43,6 +48,7 @@ export class CategoryService {
         `,
       )
     )[0];
+    const categories = await getRepository(Category).find();
 
     const entityManager = getManager();
 
@@ -64,7 +70,7 @@ export class CategoryService {
     `);
 
     return {
-      categories: query,
+      categories,
       currentPage: page,
       prevPage: page > 1 ? page - 1 : null,
       nextPage: take >= skip + take ? page + 1 : null,
@@ -96,7 +102,8 @@ export class CategoryService {
     return this.categoryRepository.findOne({
       where: {
         id,
-      },withDeleted:true
+      },
+      withDeleted: true,
     });
   }
 
@@ -120,11 +127,11 @@ export class CategoryService {
   async AdminFindOne(id: string): Promise<Category> {
     return this.categoryRepository.findOne({
       where: {
-        id
-      }, withDeleted:true
+        id,
+      },
+      withDeleted: true,
     });
   }
-
 
   async findByName(name: string): Promise<Category> {
     return this.categoryRepository.findOne({
@@ -137,7 +144,7 @@ export class CategoryService {
   async delete(id: string): Promise<void> {
     const resp = await this.categoryRepository.softDelete(id);
     console.log('has been deleted?  ', resp);
-    if (resp.affected !== 0) {
+    if (resp.affected > 0) {
       console.log(`deleted category ${id} `);
     }
   }
@@ -145,7 +152,7 @@ export class CategoryService {
   async create(data: CreateCategoryDTO): Promise<Category> {
     const category = new Category();
 
-    category.authorId = data.authorId;
+    category.author.id = data.authorId;
     category.name = data.name;
     category.description = data.description;
     category.imageStorage = data.imageStorage;
@@ -167,8 +174,10 @@ export class CategoryService {
       description,
       created_at,
       imageStorage,
-      authorEmail,
-    } = await this.categoryRepository.findOne({where:{id:categoryId},withDeleted:true},);
+    } = await this.categoryRepository.findOne({
+      where: { id: categoryId },
+      withDeleted: true,
+    });
 
     return {
       name,
@@ -177,17 +186,15 @@ export class CategoryService {
       description,
       created_at,
       imageStorage,
-      authorEmail,
     };
   }
 
-  async updateAdmin(
-    categoryId: string,
-    data: UpdateCategoryDTO,
-  ): Promise<any> {
+  async updateAdmin(categoryId: string, data: UpdateCategoryDTO): Promise<any> {
     await this.categoryRepository.update(categoryId, data);
-    return this.categoryRepository
-      .findOne({ where: { id: categoryId }, withDeleted: true });
+    return this.categoryRepository.findOne({
+      where: { id: categoryId },
+      withDeleted: true,
+    });
   }
 
   async addImage(categoryId: string, imageBuffer: Buffer, filename: string) {

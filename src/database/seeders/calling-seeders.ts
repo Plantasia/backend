@@ -32,23 +32,26 @@ export async function CallingSeeders() {
     name: 'Suculentas',
     description:
       'Essa categoria é destinada às plantas suculentas de todas espécie',
-    authorId: users[0].id,
-    authorEmail: users[0].email,
+    author: users[0],
+    // authorId: users[0].id,
+    // authorEmail: users[0].email,
     imageStorage: await new S3Helper().getUrl('default-category-image.jpeg'),
   });
   payloadCategories.push({
     name: 'Cactáceas',
     description:
       'Essa categoria é destinada às plantas cactáceas de todas espécie',
-    authorId: users[0].id,
-    authorEmail: users[0].email,
+    author: users[0],
+    // authorId: users[0].id,
+    // authorEmail: users[0].email,
     imageStorage: await new S3Helper().getUrl('default-category-image.jpeg'),
   });
   payloadCategories.push({
     name: 'Flores',
     description: 'Essa categoria é destinada às flores de todas espécie',
-    authorId: users[0].id,
-    authorEmail: users[0].email,
+    author: users[0],
+    // authorId: users[0].id,
+    // authorEmail: users[0].email,
     imageStorage: await new S3Helper().getUrl('default-category-image.jpeg'),
   });
 
@@ -65,6 +68,8 @@ export async function CallingSeeders() {
   });
   const Topics = getRepository(Topic).save(payloadTopics);
 
-  const newLog = new LogsSeeding(true);
-  logSeedingRepository.save(logSeedingRepository.create(newLog));
+  const newLog = getRepository(LogsSeeding).create({
+    runnedAllMigrations: true,
+  });
+  logSeedingRepository.save(newLog);
 }
