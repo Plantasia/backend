@@ -20,7 +20,7 @@ export async function CallingSeeders() {
   const adminUser = getRepository(User).create({
     name: name.findName(),
     bio: name.jobDescriptor(),
-    email: internet.email(),
+    email: 'admin@admin.com.br',
     password: '123abc@',
     isAdmin: true,
   });
