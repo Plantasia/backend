@@ -64,7 +64,6 @@ export class AuthController {
     if (!userIsLogged) {
       throw new NotFoundException({ error: 'Esse usuário não esta logado' });
     }
-
     return this.authService.logout(req.user.email);
   }
 

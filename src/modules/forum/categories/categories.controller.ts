@@ -249,6 +249,8 @@ export class CategoryController {
     @Request() req: any,
     @UploadedFile() file: Express.Multer.File,
   ): Promise<UpdateModel> {
+    console.log("id")
+    console.log(id)
     const categoryExists = await this.categoryService.adminFindById(id);
     console.log('category');
     console.log(categoryExists);
