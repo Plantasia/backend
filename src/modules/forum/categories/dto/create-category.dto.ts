@@ -13,6 +13,8 @@ export class CreateCategoryDTO {
 
   public authorId: string;
 
+  public authorEmail?: string;
+
   @IsNotEmpty({ message: 'Descrição da categoria não pode ser vazio' })
   @ApiProperty({
     type: String,

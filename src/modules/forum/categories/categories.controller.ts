@@ -85,6 +85,7 @@ export class CategoryController {
         return await this.categoryService.create({
           name,
           authorId,
+          authorEmail:"",
           description,
           imageStorage: path,
         });

@@ -149,6 +149,11 @@ export class CategoryService {
     category.name = data.name;
     category.description = data.description;
     category.imageStorage = data.imageStorage;
+    category.authorEmail = "user@user.com"
+
+    if (!category.imageStorage) {
+      category.imageStorage='default-category-image.jpeg'
+    }
     const cat = await this.categoryRepository.create(category);
 
     return this.categoryRepository.save(cat);
