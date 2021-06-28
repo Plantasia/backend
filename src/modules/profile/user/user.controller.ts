@@ -263,7 +263,7 @@ export class UserController {
     
     console.log("auth")
     console.log(check)
-    const user = await this.userService.adminFindByToken(token);
+    const user = await this.userService.AdminFindById(data.id);
     
     console.log("aqui")
     console.log(data)
