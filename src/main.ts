@@ -14,7 +14,6 @@ async function bootstrap() {
     origin: "*"
   });
 
-   // app.enableCors("*");
   
     CallingSeeders();
     

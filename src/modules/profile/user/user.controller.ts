@@ -19,6 +19,7 @@ import {
   HttpStatus,
   UseInterceptors,
   UploadedFile,
+  Res,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDTO } from './dto/create-user.dto';
@@ -144,8 +145,9 @@ export class UserController {
     name: 'JWT',
     description: 'JWT token must to be passed to do this request',
   })
+  
   async AdminFindOne(@Param('id') idUser: string): Promise<UserModel> {
-    const foundUser = await this.userService.findById(idUser);
+    const foundUser = await this.userService.AdminFindById(idUser);
 
     if (!foundUser) {
       throw new NotFoundException(
@@ -153,30 +155,7 @@ export class UserController {
       );
     }
 
-    const selectedUser = await this.userService.adminFindOne(idUser);
-    const {
-      name,
-      email,
-      bio,
-      id,
-      avatar,
-      isAdmin,
-      created_at,
-      deleted_at,
-      updated_at,
-    } = selectedUser;
-
-    return {
-      name,
-      email,
-      bio,
-      id,
-      avatar,
-      created_at,
-      isAdmin,
-      deleted_at,
-      updated_at,
-    };
+    return this.userService.adminFindOne(idUser);
   }
 
   @Delete(':id')
@@ -224,7 +203,7 @@ export class UserController {
   }
 
   @Post('update')
-  @UseGuards(JwtAuthGuard)
+ // @UseGuards(JwtAuthGuard)
   @ApiOkResponse({ description: 'The user has been succesfull deleted' })
   @ApiBadRequestResponse({ description: 'Bad request' })
   @UseInterceptors(FileInterceptor('file'))
@@ -237,10 +216,11 @@ export class UserController {
     @Request() req,
     @UploadedFile() file: Express.Multer.File,
   ): Promise<UserModel> {
+    console.log("aqui!!!")
     const { authorization: token } = req.headers;
     await this.userService.authorizationCheck(token);
     const user = await this.userService.findByToken(token);
-    const { bio, name } = data;
+    const { bio, name ,deleted_at,isActive, isAdmin  } = data;
 
     if (file) {
       const { path, url } = await this.filesService.uploadPublicFile(
@@ -251,6 +231,9 @@ export class UserController {
         avatar: path,
         bio,
         name,
+        deleted_at,
+        isActive,
+        isAdmin
       });
     }
 
@@ -275,28 +258,37 @@ export class UserController {
     @UploadedFile() file: Express.Multer.File,
     @Param('id') id:string,
   ): Promise<UserModel> {
-
     const { authorization: token } = req.headers;
-    await this.userService.authorizationCheck(token);
-    const user = await this.userService.findByToken(token);
-    const { bio, name } = data;
+    const check = await this.userService.adminAuthorizationCheck(token);
+    
+    console.log("auth")
+    console.log(check)
+    const user = await this.userService.adminFindByToken(token);
+    
+    console.log("aqui")
+    console.log(data)
 
     if (file) {
       const { path, url } = await this.filesService.uploadPublicFile(
         file.buffer,
         file.originalname,
       );
-      return await this.userService.update(user.id, {
+      return await this.userService.adminUpdate(user.id, {
         avatar: path,
-        bio,
-        name,
+        name: data.name,
+        bio:data.bio,
+        isAdmin: data.isAdmin,
+        deleted_at: data.deleted_at
       });
     }
 
-    return await this.userService.update(user.id, {
-      bio,
-      name,
-    });
+    return await this.userService.adminUpdate(user.id, {
+      bio: data.bio,
+      isAdmin: data.isAdmin,
+      name: data.name,
+      deleted_at: data.deleted_at
+    }
+    );
   }
 
   @Patch('/changePassword')
@@ -335,10 +327,12 @@ export class UserController {
     @Request() request,
     @UploadedFile() file: Express.Multer.File,
   ): Promise<string> {
-    return this.userService.addAvatar(
+    console.log(request.user)
+    var url = await  this.userService.addAvatar(
       request.user.id,
       file.buffer,
       file.originalname,
     );
+    return url;
   }
 }

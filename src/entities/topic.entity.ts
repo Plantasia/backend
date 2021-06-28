@@ -70,5 +70,6 @@ export class Topic extends BaseEntity {
   async load() {
     if (!this.imageStorage) return;
     this.imageStorageUrl = await new S3Helper().getUrl(this.imageStorage);
+    
   }
 }

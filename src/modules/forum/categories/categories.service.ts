@@ -168,7 +168,7 @@ export class CategoryService {
       created_at,
       imageStorage,
       authorEmail,
-    } = await this.categoryRepository.findOne(categoryId,);
+    } = await this.categoryRepository.findOne({where:{id:categoryId},withDeleted:true},);
 
     return {
       name,

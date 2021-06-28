@@ -244,7 +244,7 @@ export class TopicsController {
       file.originalname,
     );
     if (requesterUser.isAdmin) {
-      return this.topicsService.update(id, {
+      return this.topicsService.adminUpdate(id, {
         imageStorage: path,
       });
     } else {

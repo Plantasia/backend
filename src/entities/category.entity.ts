@@ -27,17 +27,19 @@ export class Category extends BaseEntity {
   @Column()
   authorEmail: string;
 
+
   @Column()
   description: string;
 
-  @Column({ default: 'default-category-image.jpeg' })
+  @Column({type: 'text'})
   imageStorage?: string;
+  
 
   imageStorageUrl?: string;
 
-  @AfterLoad()
+ @AfterLoad()
   async load() {
-    this.imageStorageUrl = await new S3Helper().getUrl(this.imageStorage);
+    //this.imageStorageUrl = await new S3Helper().getUrl(this.imageStorage);
   }
 
   @Column({ default: true })
