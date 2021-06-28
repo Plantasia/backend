@@ -6,7 +6,8 @@ export default class UserModel {
   password?: string;
   avatar?: string;
   isAdmin?: boolean;
-  created_at?: Date | null;
-  deleted_at?: Date | null;
-  updated_at?: Date | null;
+  isActive?: boolean;
+  created_at?: Date ;
+  deleted_at?: Date ;
+  updated_at?: Date ;
 }

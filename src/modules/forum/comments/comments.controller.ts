@@ -129,7 +129,6 @@ export class CommentController {
   ): Promise<CommentModel> {
     const token = req.headers.authorization;
     console.log(id)
-    console.log("sua mãe com macarrão")
     await this.userService.authorizationCheck(token);
 
     var resp = await this.commentService.adminFindOneAndFetchUserAndTopic(id);
@@ -178,6 +177,7 @@ export class CommentController {
     const comment = await this.commentService.findOneAndFetchUserAndTopic(id);
     if (!comment) throw new BadRequestException('Comentário não existe');
     const user = await this.userService.findByToken(token);
+
 
     if (user.id === comment.userId || user.isAdmin) {
       return this.commentService.update(id, data);

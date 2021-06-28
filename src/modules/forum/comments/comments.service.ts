@@ -53,7 +53,7 @@ export class CommentService {
     } = await this.commentsRepository.findOne({
       where: {
         id: commentId,
-      },
+      }, withDeleted:true,
       relations: ['user', 'topic'],
     });
 
@@ -145,7 +145,7 @@ export class CommentService {
   }
 
   async update(id: string, data: UpdateCommentDTO): Promise<Comment> {
-    await this.commentsRepository.update(id, { textBody: data.textBody });
+    await this.commentsRepository.update(id, data);
     return this.commentsRepository.findOne(id);
   }
 }

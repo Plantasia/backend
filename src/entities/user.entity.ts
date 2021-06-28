@@ -73,6 +73,7 @@ export class User extends BaseEntity {
   deleted_at: Date;
 
   avatarUrl: string;
+  
   @AfterLoad()
   async load() {
     this.avatarUrl = await new S3Helper().getUrl(this.avatar);

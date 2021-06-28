@@ -21,14 +21,14 @@ export class UpdateUserDTO {
   public bio: string;
 
   @IsEmpty()
-  public role: string;
+  public role?: string;
 
   @ApiProperty({
     type: String,
     description: 'Avatar URL',
     default: '',
   })
-  public avatar: string;
+  public avatar?: string;
 
   @IsNotEmpty()
   @ApiProperty({
@@ -36,7 +36,7 @@ export class UpdateUserDTO {
     description: 'Email',
     default: '',
   })
-  public email: string;
+  public email?: string;
 
   @IsNotEmpty()
   @ApiProperty({
@@ -44,19 +44,25 @@ export class UpdateUserDTO {
     description: 'Password',
     default: '',
   })
-  public password: string;
+  public password?: string;
 
   @IsEmpty()
-  public isActive: boolean;
+  public isActive?: boolean;
 
   @IsEmpty()
-  public quarentineNum: number;
+  public quarentineNum?: number;
 
-  public isAdmin: boolean;
+  public isAdmin?: boolean;
+
+  public created_at?: Date;
+
+  public updated_at?: Date;
+
+  public deleted_at?: Date;
 
   @IsEmpty()
-  public tokenLogout: string;
+  public tokenLogout?: string;
 
   @IsEmpty()
-  public recoverToken: string;
+  public recoverToken?: string;
 }
