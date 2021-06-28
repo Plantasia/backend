@@ -260,7 +260,7 @@ export class UserController {
   ): Promise<UserModel> {
     const { authorization: token } = req.headers;
     const check = await this.userService.adminAuthorizationCheck(token);
-
+    
     console.log("auth")
     console.log(check)
     const user = await this.userService.adminFindByToken(token);

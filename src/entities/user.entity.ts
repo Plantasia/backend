@@ -30,7 +30,7 @@ export class User extends BaseEntity {
   @Column({ default: 'user-default-profile.png' })
   avatar: string;
 
-  @Column()
+  @Column({unique:true})
   email: string;
 
   @Column({ default: null })

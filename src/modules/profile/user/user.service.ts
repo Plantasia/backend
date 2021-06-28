@@ -179,8 +179,10 @@ export class UserService {
 
 
   async adminUpdate(id: string,data:Partial<User>): Promise<UserModel> {
-    const user = new User();
-
+    
+    console.log("data que chegou na service");
+    console.log(data);
+    
     await this.userRepository.update(id, data);
     var upt = await this.userRepository.findOne(id, { withDeleted: true });
     console.log("upt")
